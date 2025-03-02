@@ -1,0 +1,11 @@
+export { default as Bell } from "./bell.svg?react";
+export { default as Email } from "./email.svg?react";
+export { default as Egypt } from "./egypt-flag.svg?react";
+export {default as  FacebookIcon } from "./facebook.svg?react";
+export { default as GoogleIcon } from "./google.svg?react";
+export { default as Arrow } from "./arrow.svg?react";
+export { default as HideEye } from "./hide.svg?react";
+export { default as MandatoryIcon } from "./mandatory.svg?react";
+export { default as ShowEye } from "./show.svg?react";
+export { default as Password } from "./password.svg?react";
+export { default as ProfileUser } from './user.svg?react';

@@ -1,0 +1,26 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": { 
+    "baseUrl": ".",  
+    "paths": {  
+      "@/*": ["src/*"]  
+    },
+    "jsx": "react-jsx"
+  },
+  "settings": {
+    "react": {
+      "version": "19.0.0", // Or specify your React version (e.g., "18.0")
+    },
+    "import/resolver": {
+        "alias": {
+          "@": "path.resolve(__dirname, './src')",
+          "map": [["@", "./src"]],
+          "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        },
+      },
+  },
+}
