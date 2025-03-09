@@ -22,3 +22,8 @@ export { default as BatteryIconB } from "./battery-icon-b.svg?react";
 export { default as LightOff } from "./light-off.svg?react";
 export { default as HomeIcon } from "./home-icon.svg?react";
 export { default as HelpIcon } from "./help-icon.svg?react";
+export { default as Battery } from "./battery.svg?react";
+export { default as LightIcon } from "./light.svg?react";
+export { default as Radio } from "./radio.svg?react";
+export { default as ArrowLeftIcon } from "./ArrowLeft.svg?react";
+
