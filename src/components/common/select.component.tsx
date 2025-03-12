@@ -1,6 +1,6 @@
-import clsx from 'clsx';
-import React, { JSX } from 'react';
-import ReactSelect, { PropsValue, SingleValue } from 'react-select';
+import clsx from "clsx";
+import React, { JSX } from "react";
+import ReactSelect, { PropsValue, SingleValue } from "react-select";
 
 interface Option {
   label: string;
@@ -41,11 +41,11 @@ export const Select: React.FC<Props> = ({
   return (
     <>
       {label ? (
-        <div className='flex w-full flex-row items-center justify-between'>
+        <div className="flex w-full flex-row items-center justify-between">
           <p
             className={clsx(
-              'text-xs font-bold ',
-              error ? 'text-red-600' : 'text-black',
+              "text-xs font-bold ",
+              error ? "text-red-600" : "text-black"
             )}
           >
             {label}
@@ -54,54 +54,56 @@ export const Select: React.FC<Props> = ({
         </div>
       ) : null}
 
-      {!label ? <></> : <div className='mt-2' />}
+      {!label ? <></> : <div className="mt-2" />}
 
       <ReactSelect
-        placeholder={placeholder ?? ''}
+        placeholder={placeholder ?? ""}
         options={options}
         isDisabled={isDisabled}
         onChange={handleOnChange}
         defaultValue={defaultValue}
         styles={{
-          control: styles => ({
+          control: (styles) => ({
             ...styles,
-            borderColor: error ? '#ff0000' : '#E2E2E2',
-            borderRadius: '6px',
-            width: '347px',
-            height: '40px',
-            color: 'black',
-            boxShadow: 'none',
-            '&:hover': {},
+            borderColor: error ? "#ff0000" : "#E2E2E2",
+            borderRadius: "6px",
+            width: "347px",
+            height: "40px",
+            color: "black",
+            boxShadow: "none",
+            "&:hover": {},
             ...styleCustom,
           }),
-          placeholder: styles => ({
+          placeholder: (styles) => ({
             ...styles,
-            color: '#58595B',
-            fontSize: '14px',
+            color: "#58595B",
+            fontSize: "14px",
             fontWeight: 400,
             opacity: 0.5,
           }),
-          dropdownIndicator: styles => ({
+          dropdownIndicator: (styles) => ({
             ...styles,
-            color: '#58595B',
-            opacity: 0.5,
-            '&:hover': {
-              color: '#58595B',
+            color: "white",
+            backgroundColor: "#6EC2CB",
+            borderRadius: "100%",
+            padding:"2px",
+            "&:hover": {
+              color: "white",
               opacity: 0.5,
             },
           }),
-          option: styles => ({
+          option: (styles) => ({
             ...styles,
-            borderColor: '#E2E2E2',
+            borderColor: "#E2E2E2",
             borderTopWidth: 1,
-            color: 'black',
-            fontSize: '14px',
+            color: "black",
+            fontSize: "14px",
           }),
         }}
         components={{ IndicatorSeparator: null }}
       />
       {errorMessage && (
-        <p className='mb-4 text-xs text-red-600 dark:text-red-500'>
+        <p className="mb-4 text-xs text-red-600 dark:text-red-500">
           {errorMessage}
         </p>
       )}

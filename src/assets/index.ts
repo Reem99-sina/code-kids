@@ -26,4 +26,62 @@ export { default as Battery } from "./battery.svg?react";
 export { default as LightIcon } from "./light.svg?react";
 export { default as Radio } from "./radio.svg?react";
 export { default as ArrowLeftIcon } from "./ArrowLeft.svg?react";
+export { default as Child } from "./child.svg?react";
+
+export { default as ChildRegister } from "./child-register.svg?react";
+export { default as Parent } from "./parent.svg?react";
+export { default as GoogleColor } from "./google-color.svg?react";
+export { default as VerifyEmail } from "./verify.svg?react";
+export { default as Children } from "./children.svg?react";
+
+export { default as FacebookFooter } from "./facebook-footer.svg?react";
+export { default as InstagremFooter } from "./instagram.svg?react";
+
+export { default as CC } from "./cc.svg?react";
+export { default as American } from "./American.svg?react";
+export { default as Applepay } from "./applepay.svg?react";
+export { default as Visa } from "./visa.svg?react";
+
+export { default as Avater } from "./avater1.svg?react";
+export { default as Avater2 } from "./avater2.svg?react";
+export { default as Avater3 } from "./avater3.svg?react";
+export { default as Avater4 } from "./avater4.svg?react";
+export { default as Avater5 } from "./avater5.svg?react";
+export { default as Avater6 } from "./avater6.svg?react";
+export { default as Avater7 } from "./avater7.svg?react";
+export { default as Avater8 } from "./avater8.svg?react";
+export { default as Avater9 } from "./avater9.svg?react";
+export { default as Avater10 } from "./avater10.svg?react";
+export { default as Avater11 } from "./avater11.svg?react";
+export { default as Avater12 } from "./avater12.svg?react";
+export { default as Avater13 } from "./avater13.svg?react";
+export { default as Avater14 } from "./avater14.svg?react";
+export { default as Avater15 } from "./avater15.svg?react";
+export { default as Avater16 } from "./avater16.svg?react";
+export { default as Avater17 } from "./avater17.svg?react";
+export { default as Avater18 } from "./avater18.svg?react";
+
+export { default as Code } from "./code.svg?react";
+export { default as ProblemSolve } from "./problem_solve.svg?react";
+export { default as Art } from "./art.svg?react";
+export { default as Logical } from "./logical.svg?react";
+export { default as Presentation } from "./presentation.svg?react";
+export { default as Communication } from "./communication.svg?react";
+export { default as Finance } from "./finance.svg?react";
+export { default as Teamwork } from "./teamwork.svg?react";
+export { default as Entrepreneurship } from "./entrepreneurship.svg?react";
+export { default as Emotional } from "./emotional.svg?react";
+export { default as Critical } from "./critical.svg?react";
+export { default as Responsibility } from "./responsibility.svg?react";
+export { default as Math } from "./math.svg?react";
+export { default as Decision } from "./decision.svg?react";
+
+export { default as Logo } from "./Logo.svg?react";
+export { default as Language } from "./Lang.svg?react";
+
+
+
+
+
+
 
