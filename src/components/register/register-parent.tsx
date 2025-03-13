@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Stepper } from "../common/stepper-component";
 import CommenSide from "./commen-side";
 import { Line } from "../common/line.component";
@@ -7,9 +7,40 @@ import AccountParent from "./account-parent";
 import VerifyEmailComponent from "./verify-email";
 import AddChild from "./add-child";
 import AddChildSkill from "./add-child-skill";
+import useLocalStorage from "@/hooks/useLocalStorage";
+import { AddChildRequest, IUser } from "@/types/user.type";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { skills } from "@/lib/common-data";
+import { useAddChildMutation } from "@/services/profile-service";
 
 const RegisterParent = () => {
-  const [currentStep, setStep] = useState(1);
+  const { getStoreValue } = useLocalStorage();
+  const { mutateAsync } = useAddChildMutation();
+  const formDate = useForm<AddChildRequest>({
+    defaultValues: {
+      skills: skills?.map((ele) => ele.title),
+    },
+  });
+  const storeValue = getStoreValue("user") as { user?: IUser } | undefined;
+
+  const { user } = storeValue ?? {};
+
+  const initalStep = useMemo(() => {
+    return user && user?.status == "active"
+      ? 3
+      : user && user?.status == "pending"
+        ? 2
+        : 1;
+  }, [user]);
+
+  const [currentStep, setStep] = useState(initalStep);
+
+  const onComplete: SubmitHandler<AddChildRequest> = async (data) => {
+    await mutateAsync(data)
+      .then(() => {})
+      .catch(() => {});
+  };
+
   const steps = [
     {
       title: "Create Parent Account",
@@ -32,7 +63,9 @@ const RegisterParent = () => {
       desc: "For your child’s safety, we need to make sure you're their parent.",
       className: "max-w-[641px] min-h-[682px]",
       component: (
-        <AddChild onComplete={() => setStep((prev) => prev + 1)} />
+        <FormProvider {...formDate}>
+          <AddChild onComplete={() => setStep((prev) => prev + 1)} />
+        </FormProvider>
       ),
     },
     {
@@ -40,11 +73,14 @@ const RegisterParent = () => {
       desc: "For your child’s safety, we need to make sure you're their parent.",
       className: "max-w-[641px] min-h-[700px]",
       component: (
-        <AddChildSkill onComplete={() => setStep((prev) => prev + 1)} />
+        <FormProvider {...formDate}>
+          {" "}
+          <AddChildSkill onComplete={onComplete} />
+        </FormProvider>
       ),
     },
   ];
-  
+
   return (
     <>
       <CommenSide

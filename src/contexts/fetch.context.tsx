@@ -79,7 +79,7 @@ export const FetchProvider: FC<{ children: ReactNode }> = ({ children }) => {
       logout: () => {
         logout();
       },
-      token: authData?.token,
+      token: "Bearer " + authData?.token,
     });
   }, [authData, logout]);
 

@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import MainHeader from "./components/header/main-header";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<MainHeader />}>
           <Route path="/" element={<Home />} index />
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
         </Route>
       </Routes>
     </div>

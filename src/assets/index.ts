@@ -78,10 +78,3 @@ export { default as Decision } from "./decision.svg?react";
 
 export { default as Logo } from "./Logo.svg?react";
 export { default as Language } from "./Lang.svg?react";
-
-
-
-
-
-
-

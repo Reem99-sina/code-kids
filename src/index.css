@@ -157,6 +157,7 @@ button:focus-visible {
 }
 .slick-slider .slick-track{
   display:flex;
+  align-items: flex-end;
 }
 
 .slick-next:before {

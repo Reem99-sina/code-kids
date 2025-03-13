@@ -1,15 +1,55 @@
 import { Children, VerifyEmail } from "@/assets";
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 import VerificationInput from "react-verification-input";
 import { Button } from "../common/button.component";
 import { Modal, ModalRef } from "../common/modal.component";
+
+import { useVerifyEmailMutation } from "@/services/profile-service";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { IUser, IUserVerifyRequest } from "@/types/user.type";
+import toast from "react-hot-toast";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 interface props {
   onComplete: () => void;
 }
 const VerifyEmailComponent: FC<props> = ({ onComplete }) => {
+  const [isLoading, setLoading] = useState(false);
+
   const refModal = useRef<ModalRef>(null);
+
+  const { mutateAsync } = useVerifyEmailMutation();
+
+  const { getStoreValue, setStoredValue } = useLocalStorage();
+
+  const { user } = getStoreValue("user") as { user: IUser };
   
+  const { setValue, handleSubmit } = useForm<IUserVerifyRequest>();
+
+  const onSubmit: SubmitHandler<IUserVerifyRequest> = async (data) => {
+    setLoading(true);
+
+    await mutateAsync({
+      ...data,
+      email: user ? user?.email : "",
+    })
+      .then((res) => {
+        if (res.data) {
+          setStoredValue("user", res.data);
+          toast?.success(res.message);
+          onComplete();
+        } else {
+          toast?.error(res.message);
+        }
+      })
+      .catch((error) => {
+        toast?.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <div className="w-full py-6 flex flex-col justify-between items-center min-h-[530px]">
       <div className="flex items-center justify-center">
@@ -35,6 +75,7 @@ const VerifyEmailComponent: FC<props> = ({ onComplete }) => {
           }}
           length={6}
           placeholder="-"
+          onChange={(value) => setValue("code", Number(value))}
         />
       </div>
       <div className="w-full mt-auto">
@@ -42,13 +83,14 @@ const VerifyEmailComponent: FC<props> = ({ onComplete }) => {
           className="rounded-full bg-yellowTwo !text-blackPurple mt-5"
           text="Verify My Account"
           onClick={() => refModal?.current?.open()}
+          isLoading={isLoading}
         />
       </div>
       <Modal
         ref={refModal}
         className="bg-transparent "
         classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
-        onClose={onComplete}
+        onClose={handleSubmit(onSubmit)}
       >
         <div className="bg-transparent rounded-t-3xl text-white">
           <div className="rounded-t-3xl  bg-pinkThree flex justify-center py-2">

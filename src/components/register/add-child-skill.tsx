@@ -1,87 +1,32 @@
-import {
-  Art,
-  Children,
-  Code,
-  Communication,
-  Critical,
-  Decision,
-  Emotional,
-  Entrepreneurship,
-  Finance,
-  Logical,
-  Math,
-  Presentation,
-  ProblemSolve,
-  Responsibility,
-  Teamwork,
-} from "@/assets";
 import { FC, useRef } from "react";
 import { Button } from "../common/button.component";
 import { Modal, ModalRef } from "../common/modal.component";
+import { SubmitHandler, useFormContext } from "react-hook-form";
+import { AddChildRequest } from "@/types/user.type";
+import { Children } from "@/assets";
+import { skills } from "@/lib/common-data";
+import clsx from "clsx";
 
 interface props {
-  onComplete: () => void;
+  onComplete: (data: AddChildRequest) => void;
 }
-const skills = [
-  {
-    title: "Logical Thinking",
-    icon: <Logical />,
-  },
-  {
-    title: "Problem Solving",
-    icon: <ProblemSolve />,
-  },
-  {
-    title: "Artistic Expression",
-    icon: <Art />,
-  },
-  {
-    title: "Basic Math Concepts",
-    icon: <Math />,
-  },
-  {
-    title: "Coding for Kids",
-    icon: <Code />,
-  },
-  {
-    title: "Presentation Skills",
-    icon: <Presentation />,
-  },
-  {
-    title: "Communication Skills",
-    icon: <Communication />,
-  },
-  {
-    title: "Basic Financial Literacy",
-    icon: <Finance />,
-  },
-  {
-    title: "Teamwork",
-    icon: <Teamwork />,
-  },
-  {
-    title: "Entrepreneurship",
-    icon: <Entrepreneurship />,
-  },
-  {
-    title: "Emotional Intelligence",
-    icon: <Emotional />,
-  },
-  {
-    title: "Decision-Making",
-    icon: <Decision />,
-  },
-  {
-    title: "Critical Thinking",
-    icon: <Critical />,
-  },
-  {
-    title: "Responsibility & Independence",
-    icon: <Responsibility />,
-  },
-];
-const AddChildSkill: FC<props> = () => {
+
+const AddChildSkill: FC<props> = ({ onComplete }) => {
   const refModal = useRef<ModalRef>(null);
+  const { watch, setValue, handleSubmit } = useFormContext<AddChildRequest>();
+  const skillsForm = watch("skills");
+
+  const toggleSkill = (skill: string) => {
+    const updatedSkills = skillsForm.includes(skill)
+      ? skillsForm.filter((s) => s !== skill) // Remove if exists
+      : [...skillsForm, skill]; // Add if not exists
+    setValue("skills", updatedSkills);
+  };
+
+  const onSubmit: SubmitHandler<AddChildRequest> = (data) => {
+    onComplete(data);
+    refModal?.current?.open();
+  };
 
   return (
     <div className="flex justify-start flex-col items-start gap-2 text-left py-5">
@@ -97,24 +42,36 @@ const AddChildSkill: FC<props> = () => {
           Learning Skills
         </h3>
         <div className="flex items-center gap-x-3 gap-y-4 flex-wrap max-h-[250px] overflow-y-auto">
-          {skills?.map((ele) => (
-            <div key={ele?.title} className="border border-grayTwo p-4 rounded-full flex items-center gap-2 bg-grayThree hover:border-blueTwo hover:bg-blueLightTwo cursor-pointer">
-              {ele?.icon}
-              <p className="text-sm text-gray-500">{ele?.title}</p>
-            </div>
-          ))}
+          {skills.map((ele) => {
+            const Icon = ele?.icon;
+            
+            return (
+              <div
+                key={ele?.title}
+                onClick={() => toggleSkill(ele?.title)}
+                className={clsx(
+                  "border border-grayTwo p-4 rounded-full flex items-center gap-2 bg-grayThree hover:border-blueTwo hover:bg-blueLightTwo cursor-pointer",
+                  skillsForm?.includes(ele?.title)
+                    ? "border-blueTwo bg-blueLightTwo"
+                    : ""
+                )}
+              >
+                <Icon />
+                <p className="text-sm text-gray-500">{ele?.title}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
       <Button
         className="rounded-full bg-yellowTwo !text-blackPurple mt-3 "
         text="Next"
-        onClick={() => refModal?.current?.open()}
+        onClick={handleSubmit(onSubmit)}
       />
       <Modal
         ref={refModal}
         className="bg-transparent "
         classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
-        
       >
         <div className="bg-transparent rounded-t-3xl text-white">
           <div className="rounded-t-3xl  bg-pinkThree flex justify-center py-2">

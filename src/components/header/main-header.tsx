@@ -43,7 +43,9 @@ const MainHeader = () => {
                 />
               </div>
             </div>
-            <p className="text-yellowOne ">Login</p>
+            <Link className="text-yellowOne" to={"/login"}>
+              Login
+            </Link>
             <Link
               to={"/register"}
               className="!rounded-full bg-yellowOne text-headerBlue !w-auto !text-sm !py-3 !px-8"

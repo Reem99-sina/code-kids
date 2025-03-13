@@ -29,5 +29,6 @@ export const colors = {
   grayThree:"#FCFCFC",
   blueTwo:"#7D9AE3",
   blueLightTwo:"#DFE9FF",
-  blueCustom:"#6EC2CB"
+  blueCustom:"#6EC2CB",
+  grayFour:"#666666"
 };

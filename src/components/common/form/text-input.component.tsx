@@ -41,7 +41,7 @@ export const TextInput: FC<Props> = ({
         <label
           className={clsx(
             "dark:text-text-dark mb-2  flex items-center gap-x-2 text-base font-black text-headerBlue capitalize",
-            errorMessage && "dark:text-error-dark text-error"
+            errorMessage && "dark:text-error-dark text-red-600"
           )}
         >
           {label}
@@ -90,7 +90,7 @@ export const TextInput: FC<Props> = ({
             disabled ? "bg-bg3" : "bg-white",
             "block min-h-[40px] text-black w-full  p-2.5 text-xs font-normal text-secondary3 py-0",
             `border ${
-              errorMessage ? "border-error" : "border-[#E2E2E2]"
+              errorMessage ? "border-red-600" : "border-[#E2E2E2]"
             } rounded-md `,
             "placeholder:!text-xs placeholder:!font-normal",
             `${
