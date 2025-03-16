@@ -1,6 +1,7 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import { LevelOne } from "@/components/levels/Level-one/level-one";
+import LevelThree from "@/components/levels/Level-three/level-three";
 import { LevelTwo } from "@/components/levels/Level-two/level-two";
 import { useState } from "react";
 
@@ -45,7 +46,12 @@ const Home = () => {
     {
       name: "level 3",
       view: <LevelCart title="Binary Subtraction" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(4)} />,
+      component: (
+        <LevelThree
+          onComplete={() => setSelectedLevel(4)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
     },
     {
       name: "level 4",
