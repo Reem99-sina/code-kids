@@ -19,7 +19,7 @@ const LoginParent = () => {
   const navigate = useNavigate();
 
   const { mutateAsync } = useLoginParentMutation();
-  
+
   const { authenticate } = useAuth();
 
   const {
@@ -63,11 +63,18 @@ const LoginParent = () => {
           <p className="text-lg font-normal text-textSecondary">
             One decision today can shape your child’s tomorrow
           </p>
-          <div className="rounded-full w-full py-2 flex justify-center items-center gap-4 border-2  border-[#EFF0F6] my-3">
+          <div
+            onClick={() => {
+              window.location.href =
+                window.location.origin + "/auth/google/login";
+            }}
+            className="cursor-pointer rounded-full w-full py-2 flex justify-center items-center gap-4 border-2  border-[#EFF0F6] my-3"
+          >
             <GoogleColor />
-            <p className="text-sm font-black text-textThird">
-              Continue with Google
-            </p>
+            <Button
+              className="text-sm font-black text-textThird !w-auto !bg-transparent"
+              text="Continue with Google"
+            />
           </div>
           <DividerWithText text="or Login with Email" />
         </div>

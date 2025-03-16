@@ -8,20 +8,21 @@ import VerifyEmailComponent from "./verify-email";
 import AddChild from "./add-child";
 import AddChildSkill from "./add-child-skill";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { AddChildRequest, IUser } from "@/types/user.type";
+import { AddChildRequest, AddChildResponse, IUser } from "@/types/user.type";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { skills } from "@/lib/common-data";
 import { useAddChildMutation } from "@/services/profile-service";
+import toast from "react-hot-toast";
 
 const RegisterParent = () => {
   const { getStoreValue } = useLocalStorage();
   const { mutateAsync } = useAddChildMutation();
+  const [result, setResult] = useState<AddChildResponse | undefined>();
   const formDate = useForm<AddChildRequest>({
     defaultValues: {
-      skills: skills?.map((ele) => ele.title),
+      skills: [],
     },
   });
-  const storeValue = getStoreValue("user") as { user?: IUser } | undefined;
+  const storeValue = getStoreValue("authData") as { user?: IUser } | undefined;
 
   const { user } = storeValue ?? {};
 
@@ -37,8 +38,16 @@ const RegisterParent = () => {
 
   const onComplete: SubmitHandler<AddChildRequest> = async (data) => {
     await mutateAsync(data)
-      .then(() => {})
-      .catch(() => {});
+      .then((res) => {
+        if (res.data) {
+          setResult(res.data);
+        } else {
+          toast.error(res.message);
+        }
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
   };
 
   const steps = [
@@ -74,8 +83,7 @@ const RegisterParent = () => {
       className: "max-w-[641px] min-h-[700px]",
       component: (
         <FormProvider {...formDate}>
-          {" "}
-          <AddChildSkill onComplete={onComplete} />
+          <AddChildSkill onComplete={onComplete} result={result} />
         </FormProvider>
       ),
     },

@@ -5,6 +5,9 @@ export interface IUser {
   status: "pending" | "active";
   updatedAt: string;
   username: string;
+  skills?: string[];
+  userType?: "parent" | "child";
+  avatarId?: null | string | number;
 }
 
 // export interface IUserResponse {
@@ -25,7 +28,6 @@ export interface IUserLoginParentRequest {
   email: string;
   password: string;
 }
-
 
 export interface IUserLoginChildRequest {
   username: string;
@@ -48,6 +50,13 @@ export interface IUserRequest {
 export interface AddChildRequest {
   name: string;
   age: number;
-  avatar_id: number;
+  avatarId: number;
+  skills: string[];
+}
+
+export interface AddChildResponse {
+  username: string;
+  password: string;
+  age: number;
   skills: string[];
 }

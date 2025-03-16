@@ -30,5 +30,6 @@ export const colors = {
   blueTwo:"#7D9AE3",
   blueLightTwo:"#DFE9FF",
   blueCustom:"#6EC2CB",
-  grayFour:"#666666"
+  grayFour:"#666666",
+  purpleSix:"#8F02D1"
 };

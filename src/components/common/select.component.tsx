@@ -18,6 +18,7 @@ interface Props {
   error?: boolean;
   errorMessage?: string;
   isDisabled?: boolean;
+  dropdownIndicator?: { [key: string]: string };
 }
 
 export const Select: React.FC<Props> = ({
@@ -31,6 +32,7 @@ export const Select: React.FC<Props> = ({
   error,
   errorMessage,
   isDisabled = false,
+  dropdownIndicator,
 }) => {
   const handleOnChange = (selectedOption: SingleValue<Option>) => {
     if (selectedOption?.value) {
@@ -84,9 +86,7 @@ export const Select: React.FC<Props> = ({
           dropdownIndicator: (styles) => ({
             ...styles,
             color: "white",
-            backgroundColor: "#6EC2CB",
-            borderRadius: "100%",
-            padding:"2px",
+            ...dropdownIndicator,
             "&:hover": {
               color: "white",
               opacity: 0.5,

@@ -1,5 +1,7 @@
 import { config } from "@/config";
 import { useAuth } from "@/hooks/auth.hook";
+import useLocalStorage from "@/hooks/useLocalStorage";
+import { IUser } from "@/types/user.type";
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { createContext, FC, ReactNode, useMemo } from "react";
 import toast from "react-hot-toast";
@@ -68,7 +70,13 @@ const createInstance = ({
 };
 export const FetchProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { authData, logout, authenticate } = useAuth();
+  const { getStoreValue } = useLocalStorage();
+  const storeValue = getStoreValue("authData") as
+    | { user?: IUser; token?: string }
+    | undefined;
 
+  const { token } = storeValue ?? {};
+ 
   const api = useMemo(() => {
     return createInstance({
       url: API_URL as string,
@@ -79,9 +87,9 @@ export const FetchProvider: FC<{ children: ReactNode }> = ({ children }) => {
       logout: () => {
         logout();
       },
-      token: "Bearer " + authData?.token,
+      token: "Bearer " + authData ? authData?.token : token,
     });
-  }, [authData, logout]);
+  }, [authData, logout, token]);
 
   const contextValue = useMemo(() => ({ api }), [api]);
 

@@ -158,11 +158,11 @@ const AddChild: FC<props> = ({ onComplete }) => {
           <h3 className="text-headerBlue font-bold text-base">
             Choose an Avatar
           </h3>
-          {errors?.avatar_id?.message && (
-            <ErrorInputComponent errorMessage={errors?.avatar_id?.message} />
+          {errors?.avatarId?.message && (
+            <ErrorInputComponent errorMessage={errors?.avatarId?.message} />
           )}
           <Controller
-            name="avatar_id"
+            name="avatarId"
             control={control}
             rules={{
               required: { value: true, message: "the avatar is required" },

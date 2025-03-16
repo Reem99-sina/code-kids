@@ -31,7 +31,7 @@ const AccountParent: FC<props> = ({ onComplete }) => {
     await mutateAsync({ ...data, repeate_password: data?.password })
       .then((res) => {
         if (res.data) {
-          setStoredValue("user", res.data);
+          setStoredValue("authData", res.data);
           toast?.success(res.message);
           onComplete();
         } else {

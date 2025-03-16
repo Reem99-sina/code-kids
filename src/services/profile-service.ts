@@ -3,6 +3,7 @@ import { useFetch } from "@/hooks/fetch.hooks";
 import { IResponse } from "@/types/common.type";
 import {
   AddChildRequest,
+  AddChildResponse,
   IUser,
   IUserLoginChildRequest,
   IUserLoginParentRequest,
@@ -15,10 +16,10 @@ import { useSearchParams } from "react-router-dom";
 export const useUserQuery = ({ id }: { id?: number }) => {
   const { api } = useFetch();
 
-  return useAuthenticatedQuery<IUser>({
+  return useAuthenticatedQuery<{ user: IUser }>({
     queryKey: ["user"],
     queryFn: async () => {
-      const response: IResponse<IUser> = await api.get("/user/" + id);
+      const response: IResponse<{ user: IUser }> = await api.get("/user/" + id);
 
       return response.data;
     },
@@ -76,19 +77,26 @@ export const useRegisterMutation = () => {
 export const useVerifyEmailMutation = () => {
   const { api } = useFetch();
 
-  return useMutation<IResponse<IUser>, { message: string }, IUserVerifyRequest>(
-    {
-      mutationFn: (data) => {
-        return api.put("/auth/parent/code", data);
-      },
-    }
-  );
+  return useMutation<
+    IResponse<{ user: IUser; token: string }>,
+    { message: string },
+    IUserVerifyRequest
+  >({
+    mutationFn: (data) => {
+      return api.put("/auth/parent/code", data);
+    },
+  });
 };
 
 export const useAddChildMutation = () => {
   const { api } = useFetch();
+  // console.log(api,"api")
 
-  return useMutation<IResponse<IUser>, { message: string }, AddChildRequest>({
+  return useMutation<
+    IResponse<AddChildResponse>,
+    { message: string },
+    AddChildRequest
+  >({
     mutationFn: (data) => {
       return api.post("/auth/parent/child", data);
     },

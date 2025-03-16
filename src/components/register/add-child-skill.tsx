@@ -1,20 +1,28 @@
-import { FC, useRef } from "react";
+import { FC, useCallback, useRef } from "react";
 import { Button } from "../common/button.component";
 import { Modal, ModalRef } from "../common/modal.component";
 import { SubmitHandler, useFormContext } from "react-hook-form";
-import { AddChildRequest } from "@/types/user.type";
+import { AddChildRequest, AddChildResponse } from "@/types/user.type";
 import { Children } from "@/assets";
 import { skills } from "@/lib/common-data";
 import clsx from "clsx";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/auth.hook";
+
 
 interface props {
   onComplete: (data: AddChildRequest) => void;
+  result?: AddChildResponse;
 }
 
-const AddChildSkill: FC<props> = ({ onComplete }) => {
+const AddChildSkill: FC<props> = ({ onComplete, result }) => {
   const refModal = useRef<ModalRef>(null);
+  const router = useNavigate();
+  const { authData } = useAuth();
   const { watch, setValue, handleSubmit } = useFormContext<AddChildRequest>();
   const skillsForm = watch("skills");
+  
+ 
 
   const toggleSkill = (skill: string) => {
     const updatedSkills = skillsForm.includes(skill)
@@ -23,10 +31,14 @@ const AddChildSkill: FC<props> = ({ onComplete }) => {
     setValue("skills", updatedSkills);
   };
 
-  const onSubmit: SubmitHandler<AddChildRequest> = (data) => {
-    onComplete(data);
-    refModal?.current?.open();
-  };
+  const onSubmit: SubmitHandler<AddChildRequest> = useCallback(
+    (data) => {
+      onComplete(data);
+      refModal?.current?.open();
+    },
+    [authData]
+  );
+ 
 
   return (
     <div className="flex justify-start flex-col items-start gap-2 text-left py-5">
@@ -44,7 +56,7 @@ const AddChildSkill: FC<props> = ({ onComplete }) => {
         <div className="flex items-center gap-x-3 gap-y-4 flex-wrap max-h-[250px] overflow-y-auto">
           {skills.map((ele) => {
             const Icon = ele?.icon;
-            
+
             return (
               <div
                 key={ele?.title}
@@ -52,7 +64,7 @@ const AddChildSkill: FC<props> = ({ onComplete }) => {
                 className={clsx(
                   "border border-grayTwo p-4 rounded-full flex items-center gap-2 bg-grayThree hover:border-blueTwo hover:bg-blueLightTwo cursor-pointer",
                   skillsForm?.includes(ele?.title)
-                    ? "border-blueTwo bg-blueLightTwo"
+                    ? "!border-blueTwo !bg-blueLightTwo"
                     : ""
                 )}
               >
@@ -72,6 +84,7 @@ const AddChildSkill: FC<props> = ({ onComplete }) => {
         ref={refModal}
         className="bg-transparent "
         classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        onClose={() => router("/login")}
       >
         <div className="bg-transparent rounded-t-3xl text-white">
           <div className="rounded-t-3xl  bg-pinkThree flex justify-center py-2">
@@ -89,11 +102,11 @@ const AddChildSkill: FC<props> = ({ onComplete }) => {
               Here are the login details you can share with your child:
             </p>
             <p className="text-yellowOne text-base font-black">
-              Username: kareem123
+              Username: {result?.username || "kareem123"}
             </p>
             <p className="text-yellowOne text-base font-black">
               {" "}
-              Password: K!r33m@2024
+              Password:{result?.password || "K!r33m@2024"}
             </p>
             <Children className="mt-7" />
           </div>

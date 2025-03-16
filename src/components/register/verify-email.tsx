@@ -9,6 +9,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { IUser, IUserVerifyRequest } from "@/types/user.type";
 import toast from "react-hot-toast";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import { useAuth } from "@/hooks/auth.hook";
 
 interface props {
   onComplete: () => void;
@@ -20,10 +21,11 @@ const VerifyEmailComponent: FC<props> = ({ onComplete }) => {
 
   const { mutateAsync } = useVerifyEmailMutation();
 
-  const { getStoreValue, setStoredValue } = useLocalStorage();
+  const { getStoreValue } = useLocalStorage();
+  const { authenticate } = useAuth();
 
-  const { user } = getStoreValue("user") as { user: IUser };
-  
+  const { user } = getStoreValue("authData") as { user: IUser };
+
   const { setValue, handleSubmit } = useForm<IUserVerifyRequest>();
 
   const onSubmit: SubmitHandler<IUserVerifyRequest> = async (data) => {
@@ -35,9 +37,9 @@ const VerifyEmailComponent: FC<props> = ({ onComplete }) => {
     })
       .then((res) => {
         if (res.data) {
-          setStoredValue("user", res.data);
+          authenticate(res.data);
           toast?.success(res.message);
-          onComplete();
+          refModal.current?.open();
         } else {
           toast?.error(res.message);
         }
@@ -82,7 +84,7 @@ const VerifyEmailComponent: FC<props> = ({ onComplete }) => {
         <Button
           className="rounded-full bg-yellowTwo !text-blackPurple mt-5"
           text="Verify My Account"
-          onClick={() => refModal?.current?.open()}
+          onClick={handleSubmit(onSubmit)}
           isLoading={isLoading}
         />
       </div>
@@ -90,7 +92,7 @@ const VerifyEmailComponent: FC<props> = ({ onComplete }) => {
         ref={refModal}
         className="bg-transparent "
         classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
-        onClose={handleSubmit(onSubmit)}
+        onClose={() => onComplete()}
       >
         <div className="bg-transparent rounded-t-3xl text-white">
           <div className="rounded-t-3xl  bg-pinkThree flex justify-center py-2">
