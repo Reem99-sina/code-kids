@@ -1,9 +1,11 @@
+
 import { useState } from "react";
 
 type LocalStorageHookReturnType<T> = {
   storedValue: T | undefined;
   setStoredValue: (key: string, value: T) => void;
   removeStoredValue: (key: string) => void;
+  getStoreValue: (key: string) => T | null;
 };
 const useLocalStorage = <T>(key?: string): LocalStorageHookReturnType<T> => {
   const [storedValue, setStoredValue] = useState<T | undefined>(() => {
@@ -29,6 +31,17 @@ const useLocalStorage = <T>(key?: string): LocalStorageHookReturnType<T> => {
       console.error("Error storing data in local storage:", error);
     }
   };
+  const getStoreValue = (key: string) => {
+    try {
+      const data = localStorage.getItem(key);
+      
+      return data ? JSON.parse(data) : undefined;
+    } catch (error) {
+      console.error("Error storing data in local storage:", error);
+
+      return undefined;
+    }
+  };
   const removeStoredValue = (key: string) => {
     try {
       setStoredValue(undefined);
@@ -38,6 +51,11 @@ const useLocalStorage = <T>(key?: string): LocalStorageHookReturnType<T> => {
     }
   };
 
-  return { storedValue, setStoredValue: setAndStoreValue, removeStoredValue };
+  return {
+    storedValue,
+    setStoredValue: setAndStoreValue,
+    removeStoredValue,
+    getStoreValue,
+  };
 };
 export default useLocalStorage;

@@ -1,6 +1,6 @@
 export interface IResponse<T> {
   data: T;
-  status: string;
+  status?: string;
   message: string;
 }
 export interface IGetResponse<T> {

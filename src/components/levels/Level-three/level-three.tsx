@@ -2,6 +2,7 @@ import {
   ArrowLeftIcon,
   Battery,
   BatteryIcon,
+  HelpIcon,
   HomeIcon,
   LightIcon,
   Radio,
@@ -150,6 +151,9 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome }) => {
             className="!max-w-[220px] !rounded-[50px]"
           />
         </div>
+      </div>
+      <div className="absolute  bottom-0 right-0">
+        <HelpIcon />
       </div>
     </div>
   );

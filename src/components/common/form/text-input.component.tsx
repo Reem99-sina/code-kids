@@ -1,5 +1,3 @@
-
-
 import { HideEye, MandatoryIcon, ShowEye } from "@/assets";
 import clsx from "clsx";
 import React, { FC, ReactNode, useState } from "react";
@@ -14,6 +12,7 @@ interface Props {
   >;
   onChangeText?: (text: string) => void;
   leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   mandatoryIcon?: boolean;
   className?: string;
   disabled?: boolean;
@@ -26,6 +25,7 @@ export const TextInput: FC<Props> = ({
   errorMessage,
   mandatoryIcon,
   leftIcon,
+  rightIcon,
   disabled,
   className,
   children,
@@ -36,12 +36,12 @@ export const TextInput: FC<Props> = ({
   };
 
   return (
-    <div className="">
+    <div className="w-full">
       {label && (
         <label
           className={clsx(
-            "dark:text-text-dark mb-2  flex items-center gap-x-2 text-xs font-bold text-black capitalize",
-            errorMessage && "dark:text-error-dark text-error"
+            "dark:text-text-dark mb-2  flex items-center gap-x-2 text-base font-black text-headerBlue capitalize",
+            errorMessage && "dark:text-error-dark text-red-600"
           )}
         >
           {label}
@@ -65,30 +65,41 @@ export const TextInput: FC<Props> = ({
             (showPassword ? <HideEye /> : <ShowEye />)}
           {leftIcon ? leftIcon : null}
         </div>
+        
+        <div
+          className={clsx(
+            "absolute  top-1/2 -translate-y-1/2 transform cursor-pointer p-3",
+            "left-0"
+          )}
+        >
+          {rightIcon ? rightIcon : null}
+        </div>
         <input
           {...inputProps}
           type={
             !showPassword && inputProps.type === "password"
               ? "password"
               : showPassword && inputProps.type === "password"
-              ? "text"
-              : inputProps.type != "password"
-              ? inputProps.type
-              : "text"
+                ? "text"
+                : inputProps.type != "password"
+                  ? inputProps.type
+                  : "text"
           }
           disabled={disabled}
           className={clsx(
             disabled ? "bg-bg3" : "bg-white",
-            "block min-h-[40px] text-black w-full  p-2.5 text-sm font-normal text-secondary3 py-0",
+            "block min-h-[40px] text-black w-full  p-2.5 text-xs font-normal text-secondary3 py-0",
             `border ${
-              errorMessage ? "border-error" : "border-[#E2E2E2]"
+              errorMessage ? "border-red-600" : "border-[#E2E2E2]"
             } rounded-md `,
             "placeholder:!text-xs placeholder:!font-normal",
             `${
               className ? className : "rounded-lg  px-4"
             } focus-visible:outline-0`
           )}
+        
         />
+       
       </div>
       {children}
 

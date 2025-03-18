@@ -1,3 +1,4 @@
+import useLocalStorage from "@/hooks/useLocalStorage";
 import { useUserQuery } from "@/services/profile-service";
 import { IUser } from "@/types/user.type";
 import {
@@ -8,11 +9,11 @@ import {
 import React, { createContext } from "react";
 
 interface UserContextType {
-  user?: IUser | null;
+  user?: { user: IUser } | null;
   isLoadingUser: boolean;
   refetchUser: (
     options?: (RefetchOptions & RefetchQueryFilters) | undefined
-  ) => Promise<QueryObserverResult<IUser, unknown>>;
+  ) => Promise<QueryObserverResult<{ user: IUser }, unknown>>;
 }
 
 type Props = {
@@ -24,7 +25,14 @@ export const UserContext = createContext<UserContextType | undefined>(
 );
 
 export const UserProvider: React.FC<Props> = ({ children }) => {
-  const { data: userResponse, refetch, isLoading } = useUserQuery();
+  const { getStoreValue } = useLocalStorage();
+  const auth = getStoreValue("authData") as { user: IUser; token: string };
+  const { user } = auth ?? {};
+  const {
+    data: userResponse,
+    refetch,
+    isLoading,
+  } = useUserQuery({ id: user?.id });
 
   const contextValue: UserContextType = {
     user: userResponse,

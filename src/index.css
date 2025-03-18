@@ -155,3 +155,15 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+.slick-slider .slick-track{
+  display:flex;
+  align-items: flex-end;
+}
+
+.slick-next:before {
+  content: '';
+}
+
+.slick-prev:before {
+  content: '';
+}
