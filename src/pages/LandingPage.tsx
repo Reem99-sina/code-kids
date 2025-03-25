@@ -1,6 +1,7 @@
 import { CoursesSection } from "@/components/landing-page/courses-section";
 import { DigitalLearning } from "@/components/landing-page/digital-learning-section";
 import { IntroductionSection } from "@/components/landing-page/IntroductionSection";
+import { SmartLearningSection } from "@/components/landing-page/smart-learning-section";
 
 const LandingPage = () => {
   return (
@@ -13,6 +14,9 @@ const LandingPage = () => {
       </section>
       <section className="bg-[url('/courses-section-background.png')] bg-no-repeat  bg-cover bg-center w-full h-full">
         <CoursesSection />
+      </section>
+      <section className="bg-[url('/SmartLearningBg.png')] bg-no-repeat  bg-cover bg-center w-full h-full">
+        <SmartLearningSection />
       </section>
     </>
   );
