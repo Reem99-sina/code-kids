@@ -82,5 +82,6 @@ export { default as Notification } from "./notification.svg?react";
 export { default as Cart } from "./cart.svg?react";
 export { default as Chat } from "./chat.svg?react";
 export { default as ParentHeader } from "./parent-header.svg?react";
-
-
+export { default as SleepyFaceIcon } from "./sleepy-face-icon.svg?react";
+export { default as FamilyIcon } from "./family-icon.svg?react";
+export { default as ShieldIcon } from "./shield-icon.svg?react";
