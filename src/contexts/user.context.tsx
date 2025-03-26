@@ -9,11 +9,11 @@ import {
 import React, { createContext } from "react";
 
 interface UserContextType {
-  user?: { user: IUser } | null;
+  user?: IUser | null;
   isLoadingUser: boolean;
   refetchUser: (
     options?: (RefetchOptions & RefetchQueryFilters) | undefined
-  ) => Promise<QueryObserverResult<{ user: IUser }, unknown>>;
+  ) => Promise<QueryObserverResult<IUser, unknown>>;
 }
 
 type Props = {

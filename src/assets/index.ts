@@ -83,4 +83,25 @@ export { default as Cart } from "./cart.svg?react";
 export { default as Chat } from "./chat.svg?react";
 export { default as ParentHeader } from "./parent-header.svg?react";
 
+export { default as Add } from "./add.svg?react";
+export { default as Tracks } from "./tracks.svg?react";
+export { default as ActiveCourse } from "./activeCourse.svg?react";
+export { default as Clock } from "./clock.svg?react";
+export { default as Reward } from "./reward.svg?react";
+export { default as Badges } from "./badges.svg?react";
+export { default as Star } from "./star.svg?react";
+export { default as Done } from "./done.svg?react";
+export { default as NoDone } from "./noDone.svg?react";
+export { default as AddChild } from "./add-child.svg?react";
+export { default as School } from "./school.svg?react";
+
+export { default as Earth } from "./earth.svg?react";
+export { default as Dinosaur } from "./dinosaur.svg?react";
+export { default as BottomBorder } from "./bottom-border.svg?react";
+export { default as ClockGray } from "./clock-gray.svg?react";
+
+export { default as Edit } from "./edit.svg?react";
+export { default as Image } from "./image.svg?react";
+export { default as Camera } from "./camera.svg?react";
+
 

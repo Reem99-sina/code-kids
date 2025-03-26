@@ -9,17 +9,20 @@ import {
   IUserLoginParentRequest,
   IUserRegisterRequest,
   IUserVerifyRequest,
+  ResendCodeRequest,
+  ResetNewPasswordRequest,
+  VerifyResendCodeRequest,
 } from "@/types/user.type";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 export const useUserQuery = ({ id }: { id?: number }) => {
   const { api } = useFetch();
 
-  return useAuthenticatedQuery<{ user: IUser }>({
+  return useAuthenticatedQuery<IUser>({
     queryKey: ["user"],
     queryFn: async () => {
-      const response: IResponse<{ user: IUser }> = await api.get("/user/" + id);
+      const response: IResponse<IUser> = await api.get("/user/" + id);
 
       return response.data;
     },
@@ -90,6 +93,7 @@ export const useVerifyEmailMutation = () => {
 
 export const useAddChildMutation = () => {
   const { api } = useFetch();
+  const queryClient = useQueryClient();
   // console.log(api,"api")
 
   return useMutation<
@@ -98,7 +102,12 @@ export const useAddChildMutation = () => {
     AddChildRequest
   >({
     mutationFn: (data) => {
-      return api.post("/auth/parent/child", data);
+      return api.post("/child", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["parent"],
+      });
     },
   });
 };
@@ -121,5 +130,73 @@ export const useLoginWithSocialMutation = (provider: string) => {
           ...Object.fromEntries(searchParams.entries()),
         },
       }),
+  });
+};
+
+export const useResendCodeMutation = () => {
+  const { api } = useFetch();
+
+  return useMutation<
+    IResponse<{
+      token: string;
+      user: IUser;
+    }>,
+    { message: string },
+    ResendCodeRequest
+  >({
+    mutationFn: (data) => {
+      return api.post("/auth/parent/forget-password", data);
+    },
+  });
+};
+
+export const useVerifyCodeReset = () => {
+  const { api } = useFetch();
+
+  return useMutation<
+    IResponse<{
+      token: string;
+      user: IUser;
+    }>,
+    { message: string },
+    VerifyResendCodeRequest
+  >({
+    mutationFn: (data) => {
+      return api.put("/auth/parent/verify-code", data);
+    },
+  });
+};
+
+export const useNewPassword = () => {
+  const { api } = useFetch();
+
+  return useMutation<
+    IResponse<{
+      token: string;
+      user: IUser;
+    }>,
+    { message: string },
+    ResetNewPasswordRequest
+  >({
+    mutationFn: (data) => {
+      return api.put("/auth/parent/reset-password", data);
+    },
+  });
+};
+
+export const useResendCode = () => {
+  const { api } = useFetch();
+
+  return useMutation<
+    IResponse<{
+      token: string;
+      user: IUser;
+    }>,
+    { message: string },
+    ResendCodeRequest
+  >({
+    mutationFn: (data) => {
+      return api.put("/auth/parent/resend-code", data);
+    },
   });
 };

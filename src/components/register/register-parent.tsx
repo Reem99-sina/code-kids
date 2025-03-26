@@ -3,7 +3,6 @@ import { Stepper } from "../common/stepper-component";
 import CommenSide from "./commen-side";
 import { Line } from "../common/line.component";
 import AccountParent from "./account-parent";
-
 import VerifyEmailComponent from "./verify-email";
 import AddChild from "./add-child";
 import AddChildSkill from "./add-child-skill";

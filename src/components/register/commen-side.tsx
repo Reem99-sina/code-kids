@@ -13,12 +13,16 @@ const CommenSide: FC<props> = ({ title, desc, className }) => {
     <div className="relative w-[50%] px-10 min-h-[625px]">
       <div
         className={clsx(
-          "pt-28 flex flex-col gap-3 max-w-[430px] text-justify",
+          "pt-14 flex flex-col gap-4 max-w-[430px] text-justify md:pt-28",
           className
         )}
       >
-        <h2 className="text-yellowOne font-black text-[3rem]">{title}</h2>
-        <p className="font-black text-[2rem]  text-white">{desc}</p>
+        <h2 className="text-yellowOne font-black md:text-[3rem] text-xl leading-[140%] tracking-tight">
+          {title}
+        </h2>
+        <p className="font-black md:text-[2rem] text-lg  text-white leading-[140%]">
+          {desc}
+        </p>
       </div>
       <div className=" absolute -left-8 bottom-0">
         <Child />

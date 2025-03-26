@@ -69,6 +69,20 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      container: {
+        padding: {
+          DEFAULT: "2rem",
+          sm: "2rem",
+          lg: "2rem",
+          xl: "4rem",
+          "2xl": "4rem",
+        },
+        screens: {
+          "@screen 2xl": {
+            min: "1264px",
+          },
+        },
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

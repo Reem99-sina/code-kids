@@ -56,58 +56,68 @@ export const avatars = [
 
 export const skills = [
   {
+    id: 1,
     title: "Logical Thinking",
     icon: Logical,
   },
   {
+    id: 2,
     title: "Problem Solving",
     icon: ProblemSolve,
   },
   {
+    id: 3,
     title: "Artistic Expression",
     icon: Art,
   },
   {
+    id: 4,
     title: "Basic Math Concepts",
     icon: Math,
   },
   {
+    id: 5,
     title: "Coding for Kids",
     icon: Code,
   },
   {
+    id: 6,
     title: "Presentation Skills",
     icon: Presentation,
   },
   {
+    id: 7,
     title: "Communication Skills",
     icon: Communication,
   },
   {
+    id: 8,
     title: "Basic Financial Literacy",
     icon: Finance,
   },
   {
+    id: 9,
     title: "Teamwork",
     icon: Teamwork,
   },
+  { id: 10, title: "Entrepreneurship", icon: Entrepreneurship },
   {
-    title: "Entrepreneurship",
-    icon: Entrepreneurship,
-  },
-  {
+    id: 11,
     title: "Emotional Intelligence",
     icon: Emotional,
   },
   {
+    id: 12,
     title: "Decision-Making",
     icon: Decision,
   },
   {
+    id: 13,
     title: "Critical Thinking",
     icon: Critical,
   },
   {
+    id: 14,
     title: "Responsibility & Independence",
     icon: Responsibility,
   },

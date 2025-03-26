@@ -28,6 +28,19 @@ export interface IUserLoginParentRequest {
   email: string;
   password: string;
 }
+export interface ResendCodeRequest {
+  email: string;
+}
+
+export interface VerifyResendCodeRequest {
+  email: string;
+  code:number
+}
+
+export interface ResetNewPasswordRequest {
+  password: string;
+  repeate_password:number
+}
 
 export interface IUserLoginChildRequest {
   username: string;
@@ -50,8 +63,10 @@ export interface IUserRequest {
 export interface AddChildRequest {
   name: string;
   age: number;
+  schoolName: string;
   avatarId: number;
-  skills: string[];
+  skills: number[];
+  image?:File
 }
 
 export interface AddChildResponse {
