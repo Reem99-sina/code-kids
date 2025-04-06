@@ -88,3 +88,4 @@ export { default as ShieldIcon } from "./shield-icon.svg?react";
 export { default as BrainIcon } from "./brain-icon.svg?react";
 export { default as ParentIcon } from "./parent-icon.svg?react";
 export { default as SafeIcon } from "./safe-icon.svg?react";
+export { default as AvaterIcon } from "./avatar.svg?react";
