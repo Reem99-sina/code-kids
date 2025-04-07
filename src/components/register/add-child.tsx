@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { TextInput } from "../common/form/text-input.component";
-import { ChevronLeft, ChevronRight, User } from "lucide-react";
+import { User } from "lucide-react";
 import Slider, { Settings } from "react-slick";
 import clsx from "clsx";
 
@@ -9,54 +9,14 @@ import { Controller, useFormContext } from "react-hook-form";
 import { AddChildRequest } from "@/types/user.type";
 import { avatars } from "@/lib/common-data";
 import ErrorInputComponent from "../common/form/error-input.component";
+import { NextArrow, PrevArrow } from "../common/slider-arrow";
+import { School } from "@/assets";
 
 interface props {
   onComplete: () => void;
 }
 
-interface CustomArrowProps {
-  className?: string; // CSS class applied by react-slick
-  style?: React.CSSProperties; // Inline style object for the arrow
-  onClick?: () => void; // Click event handler for navigation
-  currentSlide?: number; // Current active slide index (optional)
-  slideCount?: number; // Total number of slides (optional)
-}
-
-const ages = Array.from({ length: 7 }, (_, i) => i + 8); // Creates array [8,9,10,11,12,13,14]
-
-const PrevArrow = (props: CustomArrowProps) => {
-  const { className, onClick } = props;
-
-  return (
-    <div
-      className={clsx(className, "p-3 rounded-full !bg-white  cursor-pointer")}
-      onClick={onClick}
-    >
-      <div className="!p-3 !rounded-full !bg-white  cursor-pointer h-16 w-16 absolute right-0 top-0">
-        <div className="bg-greenOne  rounded-full  text-white h-10 w-10 flex items-center justify-center ">
-          <ChevronLeft className="text-xl " />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const NextArrow = (props: CustomArrowProps) => {
-  const { className, onClick } = props;
-
-  return (
-    <div
-      className={clsx(className, " rounded-full bg-white  cursor-pointer p-3")}
-      onClick={onClick}
-    >
-      <div className="!p-3 !rounded-full !bg-white  cursor-pointer h-16 w-16 absolute left-0 top-0 ">
-        <div className="bg-greenOne  rounded-full  text-white h-10 w-10 flex items-center justify-center ">
-          <ChevronRight className="text-xl " />
-        </div>
-      </div>
-    </div>
-  );
-};
+export const ages = Array.from({ length: 7 }, (_, i) => i + 8); // Creates array [8,9,10,11,12,13,14]
 
 const AddChild: FC<props> = ({ onComplete }) => {
   const {
@@ -120,6 +80,18 @@ const AddChild: FC<props> = ({ onComplete }) => {
           errorMessage={errors?.name?.message}
           rightIcon={<User className="text-grayOne" />}
         />
+        <TextInput
+          className="!rounded-full !py-4 !px-4 !pl-10"
+          label="School Name"
+          inputProps={{
+            placeholder: "School Name",
+            ...register("schoolName", {
+              required: { value: true, message: "this input required" },
+            }),
+          }}
+          errorMessage={errors?.name?.message}
+          rightIcon={<School className="text-grayOne" />}
+        />
         <div className="flex flex-col gap-2">
           <h3 className="text-headerBlue font-bold text-base">
             What`is Child’s Age
@@ -172,7 +144,7 @@ const AddChild: FC<props> = ({ onComplete }) => {
                 <Slider {...settings} className="max-w-full" {...field}>
                   {avatars?.map((ele) => {
                     const Icon = ele?.icon;
-                    
+
                     return (
                       <div
                         className={clsx(

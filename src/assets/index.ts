@@ -82,6 +82,28 @@ export { default as Notification } from "./notification.svg?react";
 export { default as Cart } from "./cart.svg?react";
 export { default as Chat } from "./chat.svg?react";
 export { default as ParentHeader } from "./parent-header.svg?react";
+
+export { default as Add } from "./add.svg?react";
+export { default as Tracks } from "./tracks.svg?react";
+export { default as ActiveCourse } from "./activeCourse.svg?react";
+export { default as Clock } from "./clock.svg?react";
+export { default as Reward } from "./reward.svg?react";
+export { default as Badges } from "./badges.svg?react";
+export { default as Star } from "./star.svg?react";
+export { default as Done } from "./done.svg?react";
+export { default as NoDone } from "./noDone.svg?react";
+export { default as AddChild } from "./add-child.svg?react";
+export { default as School } from "./school.svg?react";
+
+export { default as Earth } from "./earth.svg?react";
+export { default as Dinosaur } from "./dinosaur.svg?react";
+export { default as BottomBorder } from "./bottom-border.svg?react";
+export { default as ClockGray } from "./clock-gray.svg?react";
+
+export { default as Edit } from "./edit.svg?react";
+export { default as Image } from "./image.svg?react";
+export { default as Camera } from "./camera.svg?react";
+
 export { default as SleepyFaceIcon } from "./sleepy-face-icon.svg?react";
 export { default as FamilyIcon } from "./family-icon.svg?react";
 export { default as ShieldIcon } from "./shield-icon.svg?react";
@@ -89,3 +111,17 @@ export { default as BrainIcon } from "./brain-icon.svg?react";
 export { default as ParentIcon } from "./parent-icon.svg?react";
 export { default as SafeIcon } from "./safe-icon.svg?react";
 export { default as AvaterIcon } from "./avatar.svg?react";
+
+export { default as ChildWelcome } from "./child-welcome.svg?react";
+export { default as LineTriangular } from "./line-triangular.svg?react";
+export { default as Home } from "./home.svg?react";
+export { default as Courses } from "./courses.svg?react";
+export { default as Rewards } from "./rewards.svg?react";
+export { default as Chart } from "./chart.svg?react";
+export { default as RedArrow } from "./red-arrow.svg?react";
+export { default as RewardToProjcet } from "./rewardProject.svg?react";
+export { default as Course } from "./course.svg?react";
+
+
+
+

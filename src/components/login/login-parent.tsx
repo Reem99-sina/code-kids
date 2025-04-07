@@ -35,7 +35,7 @@ const LoginParent = () => {
         if (res.data) {
           authenticate(res.data);
           toast?.success(res.message);
-          navigate("/");
+          navigate("/dashboard");
         } else {
           toast?.error(res?.message);
         }
@@ -126,7 +126,7 @@ const LoginParent = () => {
             <Checkbox className="bg-yellowTwo text-black" />
             <p className="text-sm">Remember me</p>
           </div>
-          <p className="text-base">Forget my password?</p>
+          <Link to="/forget-password" className="text-base text-grayFour">Forget my password?</Link>
         </div>
         <Button
           className="rounded-full bg-yellowTwo !text-blackPurple mt-5"
@@ -139,7 +139,7 @@ const LoginParent = () => {
             Don`t have an account?
             <Link
               className="text-purpleFour font-bold mx-4 text-base"
-              to={"/register"}
+              to={"/register?type=parent"}
             >
               Sign up
             </Link>

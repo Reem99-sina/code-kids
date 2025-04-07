@@ -5,7 +5,7 @@ import { useUser } from "@/hooks/user.hooks";
 const Parentlinks = [
   {
     title: "Dashboard",
-    href: "/",
+    href: "/dashboard",
   },
   {
     title: "My Kids",
@@ -23,11 +23,11 @@ const Parentlinks = [
 
 const HeaderLinks: React.FC = () => {
   const { user } = useUser();
-  
+
   const links = React.useMemo(() => {
-    return user?.user?.userType == "parent"
+    return user?.userType == "parent"
       ? Parentlinks
-      : user?.user?.userType == "child"
+      : user?.userType == "child"
         ? []
         : [
             {
@@ -36,27 +36,27 @@ const HeaderLinks: React.FC = () => {
             },
             {
               title: "Courses",
-              href: "/",
+              href: "/courses",
             },
             {
               title: "Mentors",
-              href: "/",
+              href: "/mentors",
             },
             {
               title: "Projects",
-              href: "/",
+              href: "/projects",
             },
             {
               title: "Partners",
-              href: "/",
+              href: "/partners",
             },
             {
               title: "About us",
-              href: "/",
+              href: "/about-us",
             },
             {
               title: "Contact Us",
-              href: "/",
+              href: "/contact-us",
             },
           ];
   }, [user]);

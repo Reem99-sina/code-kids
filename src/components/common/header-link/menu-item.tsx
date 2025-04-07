@@ -22,7 +22,7 @@ export const LinkItemComponent = ({
       className={clsx(
         "mb-2 flex  items-center gap-x-3   rounded-es-lg rounded-ss-lg py-4 text-xl",
         isActive
-          ? "   font-black text-white"
+          ? "   font-black text-blueLightOne"
           : "cursor-pointer bg-transparent font-normal text-white hover:text-[#7B8494]"
       )}
     >

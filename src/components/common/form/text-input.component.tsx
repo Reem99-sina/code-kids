@@ -40,7 +40,7 @@ export const TextInput: FC<Props> = ({
       {label && (
         <label
           className={clsx(
-            "dark:text-text-dark mb-2  flex items-center gap-x-2 text-base font-black text-headerBlue capitalize",
+            "dark:text-text-dark mb-2  flex items-center gap-x-2 text-base font-bold text-headerBlue capitalize",
             errorMessage && "dark:text-error-dark text-red-600"
           )}
         >

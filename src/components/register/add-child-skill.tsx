@@ -9,7 +9,6 @@ import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/auth.hook";
 
-
 interface props {
   onComplete: (data: AddChildRequest) => void;
   result?: AddChildResponse;
@@ -21,10 +20,8 @@ const AddChildSkill: FC<props> = ({ onComplete, result }) => {
   const { authData } = useAuth();
   const { watch, setValue, handleSubmit } = useFormContext<AddChildRequest>();
   const skillsForm = watch("skills");
-  
- 
 
-  const toggleSkill = (skill: string) => {
+  const toggleSkill = (skill: number) => {
     const updatedSkills = skillsForm.includes(skill)
       ? skillsForm.filter((s) => s !== skill) // Remove if exists
       : [...skillsForm, skill]; // Add if not exists
@@ -38,7 +35,6 @@ const AddChildSkill: FC<props> = ({ onComplete, result }) => {
     },
     [authData]
   );
- 
 
   return (
     <div className="flex justify-start flex-col items-start gap-2 text-left py-5">
@@ -60,10 +56,10 @@ const AddChildSkill: FC<props> = ({ onComplete, result }) => {
             return (
               <div
                 key={ele?.title}
-                onClick={() => toggleSkill(ele?.title)}
+                onClick={() => toggleSkill(ele?.id)}
                 className={clsx(
                   "border border-grayTwo p-4 rounded-full flex items-center gap-2 bg-grayThree hover:border-blueTwo hover:bg-blueLightTwo cursor-pointer",
-                  skillsForm?.includes(ele?.title)
+                  skillsForm?.includes(ele?.id)
                     ? "!border-blueTwo !bg-blueLightTwo"
                     : ""
                 )}
@@ -84,7 +80,7 @@ const AddChildSkill: FC<props> = ({ onComplete, result }) => {
         ref={refModal}
         className="bg-transparent "
         classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
-        onClose={() => router("/login")}
+        onClose={() => router("/login?type=parent")}
       >
         <div className="bg-transparent rounded-t-3xl text-white">
           <div className="rounded-t-3xl  bg-pinkThree flex justify-center py-2">

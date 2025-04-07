@@ -7,17 +7,27 @@ import Register from "./pages/Register";
 import MainHeader from "./components/header/main-header";
 import Login from "./pages/Login";
 import GoogleCallbackHandler from "./pages/AuthGoogle";
+import Dashboard from "./pages/Dashboard";
+import AddChild from "./pages/AddChild";
+import ForgetPassword from "./pages/Forget-Password";
 import LandingPage from "./pages/LandingPage";
+import HomeChild from "./pages/HomeChild";
 
 function App() {
   return (
-    <div className="flex flex-col h-full w-full ">
+    <div className="flex flex-col h-full w-full bg-blackPurple">
       <Routes>
         <Route path="/" element={<MainHeader />}>
-          <Route path="/" element={<Home />} index />
+          <Route path="/" element={<LandingPage />} index />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/home" element={<LandingPage />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
+
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/add-child" element={<AddChild />} />
+          <Route path="/home-child" element={<HomeChild />} />
+
+          <Route path="/home" element={<Home />} />
         </Route>
         <Route path="/auth/google/login" element={<GoogleCallbackHandler />} />
       </Routes>

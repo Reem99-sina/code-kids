@@ -119,7 +119,7 @@ const AccountParent: FC<props> = ({ onComplete }) => {
           Already have an account
           <Link
             className="text-purpleFour font-bold mx-4 text-base"
-            to={"/login"}
+            to={"/login?type=parent"}
           >
             Login
           </Link>

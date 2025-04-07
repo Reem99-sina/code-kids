@@ -1,11 +1,13 @@
 import { Cart, Chat, Language, Logo, Notification } from "@/assets";
 import HeaderLinks from "@/components/common/header-link";
 import { Select } from "../common/select.component";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { useUser } from "@/hooks/user.hooks";
 import AvaterUser from "./avater-user";
 import { TextInput } from "../common/form/text-input.component";
 import { Search } from "lucide-react";
+import clsx from "clsx";
+import RewardBadgeStar from "../common/reward-badge-star";
 
 const options = [
   {
@@ -20,24 +22,38 @@ const options = [
 
 const MainHeader = () => {
   const { user } = useUser();
-
+  const { pathname } = useLocation();
 
   return (
     <>
-      <div className="flex items-center justify-center bg-[#0E0226] ">
-        <div className="container mx-auto py-3 flex items-center justify-between">
+      <div className={clsx("flex items-center justify-center bg-transparent ")}>
+        <div
+          className={clsx(
+            "container mx-auto py-3 flex items-center justify-between",
+            pathname == "/add-child" || pathname == "/home-child"
+              ? "absolute top-0 z-10"
+              : ""
+          )}
+        >
           <Logo />
-          {user?.user?.userType == "parent" && (
+
+          {user?.userType == "parent" && (
             <div className="lg:min-w-[273px] min-w-auto">
-            <TextInput
-              inputProps={{ placeholder: "Search online courses & teachers" }}
-              leftIcon={<Search className="bg-purpleSix text-white p-2 rounded-full"/>}
-              className="!rounded-full"
-            />
+              <TextInput
+                inputProps={{ placeholder: "Search online courses & teachers" }}
+                leftIcon={
+                  <Search className="bg-purpleSix text-white p-2 rounded-full" />
+                }
+                className="!rounded-full"
+              />
             </div>
           )}
           <HeaderLinks />
           <div className="flex items-center gap-5 text-base font-black">
+            {user?.userType == "child" && (
+              <RewardBadgeStar badges={4} stars={4} isHeader={true} />
+            )}
+
             <div className="flex items-center">
               <Language />
               <div className="">
@@ -53,7 +69,7 @@ const MainHeader = () => {
                   styleCustom={{
                     backgroundColor: "transparent",
                     border: "unset",
-                    color: "#AAAAAA",
+                    color: "#fff",
                     width: "110px",
                   }}
                   dropdownIndicator={{
@@ -64,15 +80,20 @@ const MainHeader = () => {
                 />
               </div>
             </div>
-            {user?.user?.userType == "parent" ? (
+
+            {user?.userType == "parent" ? (
               <div className="flex items-center gap-4">
                 <Notification />
                 <Cart />
                 <Chat />
                 <AvaterUser />
               </div>
-            ) : user?.user?.userType == "child" ? (
-              <AvaterUser />
+            ) : user?.userType == "child" ? (
+              <div className="flex items-center gap-6">
+                <Chat />
+                <Notification />
+                <AvaterUser />
+              </div>
             ) : (
               <>
                 <Link className="text-yellowOne" to={"/login"}>

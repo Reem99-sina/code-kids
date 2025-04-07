@@ -1,3 +1,4 @@
+import ContentFooter from "@/components/footer/ContentFooter";
 import { CoursesSection } from "@/components/landing-page/courses-section";
 import { DigitalLearning } from "@/components/landing-page/digital-learning-section";
 import { FutureLeadersSection } from "@/components/landing-page/future-leaders-section";
@@ -8,7 +9,8 @@ import { StartTheirJourney } from "@/components/landing-page/start-their-journey
 
 const LandingPage = () => {
   return (
-    <>
+    <div className="flex flex-col bg-white">
+      
       <section className="bg-[url('/welcome-section-background.png')] bg-no-repeat  bg-cover bg-bottom w-full h-full">
         <IntroductionSection />
       </section>
@@ -32,7 +34,8 @@ const LandingPage = () => {
           <StartTheirJourney />
         </div>
       </section>
-    </>
+      <ContentFooter/>
+    </div>
   );
 };
 

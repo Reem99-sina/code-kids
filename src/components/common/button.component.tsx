@@ -9,6 +9,7 @@ interface Props {
   type?: "button" | "submit";
   isLoading?: boolean;
   startIcon?: JSX.Element;
+  endIcon?:JSX.Element
 }
 
 export const Button: FC<Props> = ({
@@ -19,6 +20,7 @@ export const Button: FC<Props> = ({
   type = "button",
   isLoading,
   startIcon,
+  endIcon
 }) => {
   return (
     <button
@@ -55,6 +57,7 @@ export const Button: FC<Props> = ({
       ) : (
         text
       )}
+      {endIcon && endIcon}
     </button>
   );
 };
