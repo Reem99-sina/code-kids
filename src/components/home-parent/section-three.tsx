@@ -1,9 +1,12 @@
 import Slider, { Settings } from "react-slick";
 import { NextArrow, PrevArrow } from "../common/slider-arrow";
 import RecommededCourse from "./recommeded-course";
-import { useParentQuery } from "@/services/parent-service";
+import {
 
-const courses = [
+  useParentQuery,
+} from "@/services/parent-service";
+
+export const courses = [
   {
     title: "Teen Skills & Chill Homeroom",
     ratting: 4.8,
@@ -44,7 +47,6 @@ const courses = [
 
 const SectionThree = () => {
   const { data } = useParentQuery();
-
   const settings: Settings = {
     dots: false,
     infinite: true,
@@ -60,7 +62,6 @@ const SectionThree = () => {
         breakpoint: 1024, // Screens <= 1024px (e.g., tablets)
         settings: {
           slidesToShow: 3,
-          
         },
       },
       {
@@ -85,7 +86,10 @@ const SectionThree = () => {
         <div className="flex flex-col gap-20 mb-5">
           {data ? (
             data?.map((ele) => (
-              <div className=" flex justify-start container mx-auto flex-col gap-7  z-10" key={ele?.id}>
+              <div
+                className=" flex justify-start container mx-auto flex-col gap-7  z-10"
+                key={ele?.id}
+              >
                 <div className="flex items-center justify-between font-bold">
                   <h2 className="text-4xl  text-start">
                     Recommended for {ele?.fullname}
@@ -96,7 +100,9 @@ const SectionThree = () => {
                 </div>
                 <div className="flex gap-4 max-w-full justify-start">
                   <Slider {...settings} className="max-w-full">
-                    {courses?.map((ele) => <RecommededCourse key={ele?.title} {...ele} />)}
+                    {courses?.map((elem) => (
+                      <RecommededCourse key={elem?.title} {...elem} />
+                    ))}
                   </Slider>
                 </div>
               </div>
@@ -104,16 +110,16 @@ const SectionThree = () => {
           ) : (
             <div className=" flex justify-start container mx-auto flex-col gap-7  z-10">
               <div className="flex items-center justify-between font-bold">
-                <h2 className="text-4xl  text-start">
-                  Recommended for Assma
-                </h2>
+                <h2 className="text-4xl  text-start">Recommended for Assma</h2>
                 <p className="text-[#626262] text-2xl cursor-pointer">
                   See all
                 </p>
               </div>
               <div className="flex gap-4 max-w-full justify-start">
                 <Slider {...settings} className="max-w-full">
-                  {courses?.map((ele) => <RecommededCourse key={ele?.title}  {...ele} />)}
+                  {courses?.map((ele) => (
+                    <RecommededCourse key={ele?.title} {...ele} />
+                  ))}
                 </Slider>
               </div>
             </div>
@@ -126,7 +132,9 @@ const SectionThree = () => {
             </div>
             <div className="flex gap-4 max-w-full justify-start">
               <Slider {...settings} className="max-w-full">
-                {courses?.map((ele) => <RecommededCourse key={ele?.title}  {...ele} />)}
+                {courses?.map((ele) => (
+                  <RecommededCourse key={ele?.title} {...ele} />
+                ))}
               </Slider>
             </div>
           </div>

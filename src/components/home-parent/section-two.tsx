@@ -1,6 +1,6 @@
 import { AddChild } from "@/assets";
 import ChildrenCard from "./children-card";
-import { useParentQuery } from "@/services/parent-service";
+import { useGetChildParent } from "@/services/parent-service";
 import { useNavigate } from "react-router-dom";
 
 const children = [
@@ -22,7 +22,8 @@ const children = [
 
 const SectionTwo = () => {
   const route = useNavigate();
-  const { data } = useParentQuery();
+  const { data } = useGetChildParent();
+
 
   return (
     <div className="bg-white xl:min-h-[450px]  pt-14">
@@ -32,12 +33,16 @@ const SectionTwo = () => {
           {data && data?.length > 0
             ? data?.map((ele) => (
                 <ChildrenCard
-                  key={ele?.id}
-                  name={ele?.fullname||""}
+                  key={ele?.fullName}
+                  name={ele?.fullName||""}
                   age={ele?.age||0}
-                  numCompleteCourses={3}
-                  numCompletetracks={4}
+                  numCompleteCourses={ele?.completedCourses}
+                  numCompletetracks={ele?.completedTracks}
                   avatar_id={ele?.avatarId}
+                  courses={ele?.activeCourses}
+                  activeDays={ele?.activeDays}
+                  lastActivity={ele?.lastActivity}
+                  rewards={ele?.rewards}
                 />
               ))
             : children?.map((ele) => (

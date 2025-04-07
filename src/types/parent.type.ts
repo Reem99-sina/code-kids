@@ -21,8 +21,27 @@ export interface ResponseChildParentAdd {
   username?: string;
 }
 
-export interface TypeoFSkillsResponse{
-  name:string,
-  id:number,
-  image:string
+export interface TypeoFSkillsResponse {
+  name: string;
+  id: number;
+  image: string;
+}
+export interface ActiveCoursesInterface {
+  name: string;
+  progress: number;
+  difficulty: string;
+}
+export interface GetChildByParent {
+  fullName: string;
+  age: number;
+  avatarId: number;
+  completedTracks: number;
+  completedCourses: number;
+  activeCourses: ActiveCoursesInterface[];
+  lastActivity: string;
+  rewards: {
+    stars: number;
+    badges: number;
+  };
+  activeDays: string[];
 }

@@ -45,8 +45,14 @@ const AddChild = () => {
         </div>
         <Dinosaur className="absolute bottom-0 left-0" />
       </div>
-      {addChild||edit ? (
-        <AddForm onClose={() => setAddChild(false)}edit={edit} />
+      {addChild || edit ? (
+        <AddForm
+          onClose={() => {
+            setAddChild(false);
+            setEdit(undefined);
+          }}
+          edit={edit}
+        />
       ) : (
         <div className=" flex flex-col gap-7 py-10 container mx-auto">
           {data && data?.length > 0
@@ -59,14 +65,14 @@ const AddChild = () => {
                     avatarId: ele?.avatarId,
                     ...ele,
                   }}
-                  onEdit={()=>setEdit(ele)}
+                  onEdit={() => setEdit(ele)}
                 />
               ))
             : children?.map((ele) => (
                 <ChildCard
                   key={ele?.name}
                   child={{ fullname: ele?.name, age: ele?.age }}
-                  onEdit={()=>setEdit(ele)}
+                  onEdit={() => setEdit(ele)}
                 />
               ))}
           <div>

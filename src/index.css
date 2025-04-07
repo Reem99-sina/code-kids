@@ -158,7 +158,6 @@ button:focus-visible {
 }
 .slick-slider .slick-track{
   display:flex;
-  align-items: flex-end;
 }
 
 .slick-next:before {
@@ -167,4 +166,11 @@ button:focus-visible {
 
 .slick-prev:before {
   content: '';
+}
+
+.border-gradient {  
+  border-width: 2px; /* or any width you want */  
+  border-style: solid; /* set border style */  
+  border-image: linear-gradient(to right, #F49C32, #F15121) 1;
+  border-radius: 15px;
 }

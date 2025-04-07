@@ -12,7 +12,11 @@ import { useAuth } from "@/hooks/auth.hook";
 import { IUserLoginChildRequest } from "@/types/user.type";
 import toast from "react-hot-toast";
 
-const LoginChildren = ({goToParent}:{goToParent:(value:string)=>void}) => {
+const LoginChildren = ({
+  goToParent,
+}: {
+  goToParent: (value: string) => void;
+}) => {
   const refModal = useRef<ModalRef>(null);
 
   const [isLoading, setLoading] = useState(false);
@@ -109,8 +113,7 @@ const LoginChildren = ({goToParent}:{goToParent:(value:string)=>void}) => {
         </div>
         <p className="text-grayFour text-base font-normal text-start mt-4">
           Forget my password?
-          <Link to="" className="text-grayFour" >
-           
+          <Link to="" className="text-grayFour">
             Ask your Parent
           </Link>
         </p>
@@ -122,7 +125,11 @@ const LoginChildren = ({goToParent}:{goToParent:(value:string)=>void}) => {
         />
         <p className="text-grayFour text-base font-normal text-center mt-4">
           Forget my password?
-          <Link to="" className="text-purpleFour" onClick={()=>goToParent("parent")}>
+          <Link
+            to=""
+            className="text-purpleFour"
+            onClick={() => goToParent("parent")}
+          >
             {" "}
             Ask your Parent
           </Link>
@@ -132,7 +139,7 @@ const LoginChildren = ({goToParent}:{goToParent:(value:string)=>void}) => {
         ref={refModal}
         className="bg-transparent "
         classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
-        onClose={() => navigate("/")}
+        onClose={() => navigate("/home-child")}
       >
         <div className="bg-transparent rounded-t-3xl text-white">
           <div className="rounded-t-3xl  bg-pinkThree flex justify-center py-2">

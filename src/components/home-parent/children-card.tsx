@@ -5,6 +5,7 @@ import {
   Badges,
   Clock,
   Done,
+  NoDone,
   Reward,
   Star,
   Tracks,
@@ -13,6 +14,7 @@ import { Line } from "../common/line.component";
 import { Button } from "../common/button.component";
 import { FC, useMemo } from "react";
 import { avatars } from "@/lib/common-data";
+import { ActiveCoursesInterface } from "@/types/parent.type";
 
 const dates = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 interface props {
@@ -20,8 +22,14 @@ interface props {
   age: number;
   numCompletetracks: number;
   numCompleteCourses: number;
-  courses?: [];
+  courses?: ActiveCoursesInterface[];
   avatar_id?: number;
+  lastActivity?: string;
+  rewards?: {
+    stars: number;
+    badges: number;
+  };
+  activeDays?: string[];
 }
 const ChildrenCard: FC<props> = ({
   name,
@@ -29,9 +37,12 @@ const ChildrenCard: FC<props> = ({
   numCompletetracks,
   numCompleteCourses,
   avatar_id,
+  courses,
+  lastActivity,
+  rewards,
+  activeDays,
 }) => {
   const AvatarChild = useMemo(() => {
-    
     return avatars?.find((ele) => ele?.id == avatar_id)?.icon;
   }, [avatar_id]);
 
@@ -72,12 +83,20 @@ const ChildrenCard: FC<props> = ({
         <p>Active Courses:</p>
       </div>
       <ul className="pt-3 text-xs font-black text-[#545454] text-start list-disc ms-4 flex flex-col gap-2">
-        <li>Coding Basics (60%) – Medium</li>
-        <li>Coding Basics (60%) – Medium</li>
+        {courses?.map((ele) => (
+          <li key={ele?.name}>
+            {ele?.name} ({ele?.progress}) – {ele?.difficulty}
+          </li>
+        ))}
+
+        {courses?.length == 0 && <li>Coding Basics (60%) – Medium</li>}
       </ul>
       <div className="text-sm text-[#5F5F5F] flex items-center gap-2 pt-5">
         <Clock />
-        <p>Last Activity: Completed a lesson 1 day ago</p>
+        <p>
+          Last Activity:{" "}
+          {lastActivity ? lastActivity : "Completed a lesson 1 day ago"}
+        </p>
       </div>
       <div className="flex items-center gap-2">
         <div className="text-sm text-[#5F5F5F] flex items-center gap-2 pt-4">
@@ -86,18 +105,22 @@ const ChildrenCard: FC<props> = ({
         </div>
         <div className="text-sm text-[#5F5F5F] flex items-center gap-2 pt-4">
           <Badges />
-          <p className="font-bold">4 Badges</p>
+          <p className="font-bold">
+            {rewards?.badges ? rewards?.badges : 4} Badges
+          </p>
         </div>
         <div className="text-sm text-[#5F5F5F] flex items-center gap-2 pt-4">
           <Star />
-          <p className="font-bold">4 Stars</p>
+          <p className="font-bold">
+            {rewards?.stars ? rewards?.stars : 4} Stars
+          </p>
         </div>
       </div>
       <div className="flex items-center gap-4 mt-4">
         {dates?.map((ele) => (
           <div className="flex flex-col text-[#8E8E8E]" key={ele}>
             <p>{ele}</p>
-            <Done />
+            {activeDays?.includes(ele) ? <Done className="fill-red-600"/> : <NoDone />}
           </div>
         ))}
       </div>

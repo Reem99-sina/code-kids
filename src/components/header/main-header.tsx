@@ -7,6 +7,7 @@ import AvaterUser from "./avater-user";
 import { TextInput } from "../common/form/text-input.component";
 import { Search } from "lucide-react";
 import clsx from "clsx";
+import RewardBadgeStar from "../common/reward-badge-star";
 
 const options = [
   {
@@ -23,17 +24,19 @@ const MainHeader = () => {
   const { user } = useUser();
   const { pathname } = useLocation();
 
-
   return (
     <>
       <div className={clsx("flex items-center justify-center bg-transparent ")}>
         <div
           className={clsx(
             "container mx-auto py-3 flex items-center justify-between",
-            pathname == "/add-child" ? "absolute top-0 z-10" : ""
+            pathname == "/add-child" || pathname == "/home-child"
+              ? "absolute top-0 z-10"
+              : ""
           )}
         >
           <Logo />
+
           {user?.userType == "parent" && (
             <div className="lg:min-w-[273px] min-w-auto">
               <TextInput
@@ -47,6 +50,10 @@ const MainHeader = () => {
           )}
           <HeaderLinks />
           <div className="flex items-center gap-5 text-base font-black">
+            {user?.userType == "child" && (
+              <RewardBadgeStar badges={4} stars={4} isHeader={true} />
+            )}
+
             <div className="flex items-center">
               <Language />
               <div className="">
@@ -62,7 +69,7 @@ const MainHeader = () => {
                   styleCustom={{
                     backgroundColor: "transparent",
                     border: "unset",
-                    color: "#AAAAAA",
+                    color: "#fff",
                     width: "110px",
                   }}
                   dropdownIndicator={{
@@ -73,6 +80,7 @@ const MainHeader = () => {
                 />
               </div>
             </div>
+
             {user?.userType == "parent" ? (
               <div className="flex items-center gap-4">
                 <Notification />
@@ -81,7 +89,11 @@ const MainHeader = () => {
                 <AvaterUser />
               </div>
             ) : user?.userType == "child" ? (
-              <AvaterUser />
+              <div className="flex items-center gap-6">
+                <Chat />
+                <Notification />
+                <AvaterUser />
+              </div>
             ) : (
               <>
                 <Link className="text-yellowOne" to={"/login"}>

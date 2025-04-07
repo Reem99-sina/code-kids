@@ -23,7 +23,7 @@ const Parentlinks = [
 
 const HeaderLinks: React.FC = () => {
   const { user } = useUser();
-  
+
   const links = React.useMemo(() => {
     return user?.userType == "parent"
       ? Parentlinks
@@ -36,27 +36,27 @@ const HeaderLinks: React.FC = () => {
             },
             {
               title: "Courses",
-              href: "/",
+              href: "/courses",
             },
             {
               title: "Mentors",
-              href: "/",
+              href: "/mentors",
             },
             {
               title: "Projects",
-              href: "/",
+              href: "/projects",
             },
             {
               title: "Partners",
-              href: "/",
+              href: "/partners",
             },
             {
               title: "About us",
-              href: "/",
+              href: "/about-us",
             },
             {
               title: "Contact Us",
-              href: "/",
+              href: "/contact-us",
             },
           ];
   }, [user]);

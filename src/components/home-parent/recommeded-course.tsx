@@ -17,12 +17,13 @@ const RecommededCourse = ({
   cost,
   ages,
   min,
-  prev_cost,
+  prev_cost
 }: props) => {
+ 
   return (
-    <div className="rounded-3xl mx-4 my-2 bg-white hover:bg-hoverCard  hover:shadow-[0px_0px_6px_0px_#FF0084] hover:border-[1px_solid_#FF1D92] ">
+    <div className=" min-w-[280px] rounded-3xl mx-4 my-2 bg-white hover:bg-hoverCard  hover:shadow-[0px_0px_6px_0px_#FF0084] hover:border-[1px_solid_#FF1D92] ">
       <img src="/course.png" className="w-full h-[211px]" />
-      <div className="py-6 px-4 flex flex-col gap-4  items-start justify-start min-w-[312px]">
+      <div className="py-6 px-4 flex flex-col gap-4  items-start justify-start">
         <h2 className="text-2xl font-bold text-start">{title}</h2>
         <div className="flex gap-1 items-center">
           <Star />

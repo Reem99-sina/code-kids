@@ -25,7 +25,7 @@ const defaultData = [
     ],
   },
 ];
-const defaultDataExplore = [
+export const defaultDataExplore = [
   {
     title: "Discover What Your Child Loves",
     desc: "Is your child more into coding, drawing, stories, or solving problems?",

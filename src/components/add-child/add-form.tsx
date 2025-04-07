@@ -14,7 +14,10 @@ import { useRef, useState } from "react";
 import { useAddChildMutation } from "@/services/profile-service";
 import toast from "react-hot-toast";
 import { ResponseChildParentAdd } from "@/types/parent.type";
-import { useSkillsQuery } from "@/services/parent-service";
+import {
+  useEditChildByParent,
+  useSkillsQuery,
+} from "@/services/parent-service";
 
 const settings: Settings = {
   dots: false,
@@ -63,7 +66,10 @@ const AddForm = ({
   const refFile = useRef<HTMLInputElement>(null);
   const { data } = useSkillsQuery();
   const { mutateAsync } = useAddChildMutation();
-
+  const { mutateAsync: mutateAsyncEdit } = useEditChildByParent({
+    id: edit?.id,
+  });
+ 
   const {
     register,
     control,
@@ -75,14 +81,17 @@ const AddForm = ({
     defaultValues: edit
       ? {
           ...edit,
-          skills: [],
+          skills: data
+            ?.filter((ele) =>
+              edit?.skills?.map((elem) => elem?.name)?.includes(ele?.name)
+            )
+            ?.map((eleme) => eleme?.id),
           name: edit?.fullname,
         }
       : {
           skills: [],
         },
   });
-
   const skillsForm = watch("skills");
   const image = watch("image");
 
@@ -108,6 +117,26 @@ const AddForm = ({
       })
       .finally(() => {
         setLoading(false);
+        onClose();
+      });
+  };
+
+  const onEdit: SubmitHandler<AddChildRequest> = async (data) => {
+    setLoading(true);
+    await mutateAsyncEdit(data)
+      .then((res) => {
+        if (res.data) {
+          toast.success(res.message);
+        } else {
+          toast.error(res.message);
+        }
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
+        onClose();
       });
   };
 
@@ -122,7 +151,9 @@ const AddForm = ({
             <ChevronLeft className="text-4xl font-black" />
           </div>
           <div className="flex flex-col items-start justify-start gap-3">
-            <h3 className="text-3xl font-bold">Add Child Profile</h3>
+            <h3 className="text-3xl font-bold">
+              {edit ? "Edit" : "Add"} Child Profile
+            </h3>
             <p className="text-base text-[#3A3A3A]">
               For your child’s safety, we need to make sure you're their parent.
             </p>
@@ -307,8 +338,8 @@ const AddForm = ({
         <div className="flex w-full justify-end">
           <Button
             className="!rounded-full !px-11 !py-3 !w-auto !text-sm"
-            text="Add my Child"
-            onClick={handleSubmit(onSubmit)}
+            text={edit ? "Edit" + " my Child" : "Add" + " my Child"}
+            onClick={edit ? handleSubmit(onEdit) : handleSubmit(onSubmit)}
             isLoading={isloading}
           />
         </div>

@@ -104,4 +104,24 @@ export { default as Edit } from "./edit.svg?react";
 export { default as Image } from "./image.svg?react";
 export { default as Camera } from "./camera.svg?react";
 
+export { default as SleepyFaceIcon } from "./sleepy-face-icon.svg?react";
+export { default as FamilyIcon } from "./family-icon.svg?react";
+export { default as ShieldIcon } from "./shield-icon.svg?react";
+export { default as BrainIcon } from "./brain-icon.svg?react";
+export { default as ParentIcon } from "./parent-icon.svg?react";
+export { default as SafeIcon } from "./safe-icon.svg?react";
+export { default as AvaterIcon } from "./avatar.svg?react";
+
+export { default as ChildWelcome } from "./child-welcome.svg?react";
+export { default as LineTriangular } from "./line-triangular.svg?react";
+export { default as Home } from "./home.svg?react";
+export { default as Courses } from "./courses.svg?react";
+export { default as Rewards } from "./rewards.svg?react";
+export { default as Chart } from "./chart.svg?react";
+export { default as RedArrow } from "./red-arrow.svg?react";
+export { default as RewardToProjcet } from "./rewardProject.svg?react";
+export { default as Course } from "./course.svg?react";
+
+
+
 
