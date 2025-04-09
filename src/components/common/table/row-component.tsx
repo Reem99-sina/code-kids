@@ -27,7 +27,7 @@ export const Row = <T,>({ item, columns, index, href }: Props<T>) => {
         <td
           key={column.title}
           className={clsx(
-            "border-b  border-solid border-divider p-3 font-normal text-head",
+            "border  border-solid border-pinkOne  font-normal text-head ",
             isOdd ? "bg-[#F8F8F9]" : "bg-white"
           )}
         >

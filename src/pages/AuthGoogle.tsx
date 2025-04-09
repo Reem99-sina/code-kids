@@ -2,13 +2,15 @@ import React, { useEffect } from "react";
 
 import { useAuth } from "@/hooks/auth.hook";
 import { useLoginWithSocialMutation } from "@/services/profile-service";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate,
+  //  useParams, useSearchParams
+   } from "react-router-dom";
 import { Spinner } from "@/components/common/spinner.component";
 
 const GoogleCallbackHandler: React.FC = () => {
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const router = useNavigate();
-  const provider = useParams();
+  // const provider = useParams();
   const { authenticate } = useAuth();
 
   const { mutateAsync: loginWithSocial } = useLoginWithSocialMutation();

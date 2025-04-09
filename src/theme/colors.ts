@@ -14,6 +14,7 @@ export const colors = {
   purpleLightThree:"#F8F3FF",
   purpleLightFour:"#E8D7FF",
   purpleFunf:"#D406FF",
+  purpleEight:"#9B59B6",
 
   pinkOne: "#FF1D92",
   pinkOneTransparent: "#FFEBFD",
@@ -49,4 +50,8 @@ export const colors = {
   brownColor: "#923A13",
   notActiveStep: "#EFF0F6",
   hoverCard: "#C5FFF8",
+  orangeTwo:"#FF6B6B",
+  blueGreenCustom:"#4ECDC4",
+  yellowFunf:"#FFD93D",
+  orangeLight:"#FFA500"
 };

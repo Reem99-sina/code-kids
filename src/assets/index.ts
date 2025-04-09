@@ -130,3 +130,10 @@ export { default as TrackStar } from "./track-star.svg?react";
 export { default as TrackStarTwo } from "./track-star-two.svg?react";
 export { default as TrackStarThree } from "./track-star-three.svg?react";
 export { default as ArrowRotate } from "./arrow-rotate.svg?react";
+
+export { default as Lamp } from "./lampe.svg?react";
+export { default as And } from "./and.svg?react";
+export { default as AndFalse } from "./and-false.svg?react";
+
+export { default as Or } from "./or.svg?react";
+

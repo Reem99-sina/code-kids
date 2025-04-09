@@ -8,7 +8,7 @@ export const generateBinary = ({
   const maxDecimal = Math.pow(2, length) - 1;
   const randomDecimal = Math.floor(DecNumber * (maxDecimal + 1));
   const binaryString = randomDecimal.toString(2).padStart(length, "0");
-  
+
   return binaryString;
 };
 
@@ -58,3 +58,26 @@ export const checkIfUserAddRightNumber = ({
     user_number.carry == check_number.carry
   );
 };
+
+export  const dataAndItems = [
+    {
+      input_1: 0,
+      input_2: 0,
+      output: 0,
+    },
+    {
+      input_1: 0,
+      input_2: 1,
+      output: 0,
+    },
+    {
+      input_1: 1,
+      input_2: 0,
+      output: 0,
+    },
+    {
+      input_1: 1,
+      input_2: 1,
+      output: 1,
+    },
+  ];

@@ -66,7 +66,7 @@ const LoginParent = () => {
           <div
             onClick={() => {
               window.location.href =
-                window.location.origin + "/auth/google/login";
+                "http://34.226.217.99:8080/auth/google";
             }}
             className="cursor-pointer rounded-full w-full py-2 flex justify-center items-center gap-4 border-2  border-[#EFF0F6] my-3"
           >

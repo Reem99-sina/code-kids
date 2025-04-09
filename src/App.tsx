@@ -32,7 +32,7 @@ function App() {
           <Route path="/game" element={<Game />} />
 
         </Route>
-        <Route path="/auth/google/login" element={<GoogleCallbackHandler />} />
+        <Route path="/auth/google/callback" element={<GoogleCallbackHandler />} />
       </Routes>
     </div>
   );
