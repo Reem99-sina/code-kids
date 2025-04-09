@@ -14,10 +14,10 @@ const GoogleCallbackHandler: React.FC = () => {
   const { mutateAsync: loginWithSocial } = useLoginWithSocialMutation();
 
   useEffect(() => {
-    if (!searchParams) return;
+    // if (!searchParams) return;
 
     fetchUserCredentials();
-  }, [searchParams, provider]);
+  }, []);
 
   const fetchUserCredentials = async () => {
     try {
