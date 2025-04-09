@@ -77,7 +77,7 @@ export { default as Math } from "./math.svg?react";
 export { default as Decision } from "./decision.svg?react";
 
 export { default as Logo } from "./Logo.svg?react";
-// export { default as Language } from "./Lang.svg?react";
+export { default as Language } from "./lang.svg?react";
 export { default as Notification } from "./notification.svg?react";
 export { default as Cart } from "./cart.svg?react";
 export { default as Chat } from "./chat.svg?react";
