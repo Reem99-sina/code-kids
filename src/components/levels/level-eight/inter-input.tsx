@@ -8,7 +8,8 @@ interface props {
   nameOfForm: string;
 }
 const InterInput = ({ title, level, nameOfForm }: props) => {
-  const { setValue } = useFormContext();
+  const { setValue,watch } = useFormContext();
+  const name=watch(nameOfForm)
 
   return (
     <div className="flex items-center gap-4  justify-center ">
@@ -24,7 +25,7 @@ const InterInput = ({ title, level, nameOfForm }: props) => {
           }}
           length={level}
           placeholder="-"
-          
+          value={name?.split("")?.reverse()?.join("")}
           onChange={(value) =>
             setValue(nameOfForm, value.split("").reverse().join(""))
           }
