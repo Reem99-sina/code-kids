@@ -78,7 +78,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
               title="Insulator"
               icons={[
                 { icon: <BatteryIconB />, label: "Battery" },
-                { icon: <Light />, label: "Light" },
+                { icon: <LightOff />, label: "Light" },
               ]}
               buttonText={!insulatorPressed ? "Power" : "Power on"}
               onButtonClick={() => setInsulatorPressed((prev) => !prev)}
