@@ -1,21 +1,13 @@
-export enum UserType {
-  Hospital = "hospital",
-  Patient = "patient",
-  Doctor = "doctor",
-  Relative = "relative",
-}
-
 export interface IUser {
-  name: string;
-  id: number;
-  mobile: string;
-  idNumber: string;
-  userType: UserType;
   createdAt: string;
+  email: string;
+  id: number;
+  status: "pending" | "active";
   updatedAt: string;
-  birthDate: string;
-  fabricClientId: string;
-  fabricOrg: string;
+  username: string;
+  skills?: string[];
+  userType?: "parent" | "child";
+  avatarId?: null | string | number;
 }
 
 // export interface IUserResponse {
@@ -27,9 +19,36 @@ export interface IUser {
 //   };
 // }
 export interface IUserRegisterRequest {
-  name: string;
-  idNumber: string;
-  mobile: string;
+  fullname: string;
+  email: string;
+  password: string;
+  repeate_password: string;
+}
+export interface IUserLoginParentRequest {
+  email: string;
+  password: string;
+}
+export interface ResendCodeRequest {
+  email: string;
+}
+
+export interface VerifyResendCodeRequest {
+  email: string;
+  code:number
+}
+
+export interface ResetNewPasswordRequest {
+  password: string;
+  repeate_password:number
+}
+
+export interface IUserLoginChildRequest {
+  username: string;
+  password: string;
+}
+export interface IUserVerifyRequest {
+  email: string;
+  code: number;
 }
 export interface IUserRequest {
   idNumber: string;
@@ -41,3 +60,18 @@ export interface IUserRequest {
 //   password: string;
 //   repeatPassword: string;
 // }
+export interface AddChildRequest {
+  name: string;
+  age: number;
+  schoolName: string;
+  avatarId: number;
+  skills: number[];
+  image?:File
+}
+
+export interface AddChildResponse {
+  username: string;
+  password: string;
+  age: number;
+  skills: string[];
+}

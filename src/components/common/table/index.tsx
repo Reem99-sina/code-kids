@@ -23,7 +23,7 @@ export const Table = <T,>({
   isLoading,
 }: Props<T>) => {
   return (
-    <div className='relative w-full table-auto overflow-auto rounded-md'>
+    <div className='relative w-full table-auto overflow-auto '>
       <table className={clsx(' w-full border-collapse text-xs text-[#58595B]')}>
         <thead>
           <HeadRow columns={columns} />

@@ -2,6 +2,8 @@ import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import { LevelFive } from "@/components/levels/level-five/level-five";
 import { LevelFour } from "@/components/levels/level-four/level-four";
+import ContentFooter from "@/components/footer/ContentFooter";
+import LevelEight from "@/components/levels/level-eight/level-eight";
 import { LevelOne } from "@/components/levels/Level-one/level-one";
 import { LevelSix } from "@/components/levels/level-six/level-six";
 import LevelThree from "@/components/levels/Level-three/level-three";
@@ -94,12 +96,17 @@ const Home = () => {
     {
       name: "level 8",
       view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(9)} />,
+      component: (
+        <LevelEight
+          onComplete={() => setSelectedLevel(9)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
     },
     {
       name: "level 9",
       view: <LevelCart title="Machine Code" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(10)} />,
+      component: <LevelTwo onComplete={() => setSelectedLevel(0)} />,
     },
     {
       name: "level 10",
@@ -109,47 +116,52 @@ const Home = () => {
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center  min-h-screen w-full bg-[url('/home-background.png')] bg-[length:100%_100%] bg-no-repeat bg-center">
-      <div className=" flex w-[90%] min-h-[600px] flex-col ">
-        {selectedLevel === 0 && (
-          <div className="flex justify-start flex-col items-center px-6 w-full">
-            <div className="w-full items-center flex justify-between">
-              <p className="text-[31px] font-bold text-[#FFFFFF]">
-                Arena of Champions
-              </p>
+    <>
+      <div className="flex flex-col justify-center items-center min-h-screen w-full bg-[url('/home-background.png')] bg-[length:100%_100%] bg-no-repeat bg-center">
+        <div className=" flex w-[90%] min-h-[600px] flex-col ">
+          {selectedLevel === 0 && (
+            <div className="flex justify-start flex-col items-center px-6 w-full">
+              <div className="w-full items-center flex justify-between">
+                <p className="text-[31px] font-bold text-[#FFFFFF]">
+                  Arena of Champions
+                </p>
 
-              <div>
-                <LanguageButton />
+                <div>
+                  <LanguageButton />
+                </div>
+              </div>
+              <div className="w-full justify-start flex-col text-start flex">
+                <p className="font-bold text-2xl text-[#FFFFFF]">
+                  Coding for Kids
+                </p>
+                <p className="font-normal text-xl text-[#FFFFFF]">
+                  Come learn and explore how to make your dreams come true
+                </p>
               </div>
             </div>
-            <div className="w-full justify-start flex-col text-start flex">
-              <p className="font-bold text-2xl text-[#FFFFFF]">
-                Coding for Kids
-              </p>
-              <p className="font-normal text-xl text-[#FFFFFF]">
-                Come learn and explore how to make your dreams come true
-              </p>
-            </div>
-          </div>
-        )}
-        <div className="p-6 w-full flex">
-          {selectedLevel === 0 ? (
-            <div className="flex flex-wrap gap-4 w-full min-w-full">
-              {levels.map((level, index) => (
-                <div
-                  key={index + 1}
-                  onClick={() => setSelectedLevel(index + 1)}
-                >
-                  {level.view}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="w-full">{levels[selectedLevel - 1]?.component}</div>
           )}
+          <div className="p-6 w-full flex">
+            {selectedLevel === 0 ? (
+              <div className="flex flex-wrap gap-4 w-full min-w-full">
+                {levels.map((level, index) => (
+                  <div
+                    key={index + 1}
+                    onClick={() => setSelectedLevel(index + 1)}
+                  >
+                    {level.view}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="w-full">
+                {levels[selectedLevel - 1]?.component}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      <ContentFooter />
+    </>
   );
 };
 

@@ -2,6 +2,7 @@ import {
   ArrowLeftIcon,
   Battery,
   BatteryIcon,
+  HelpIcon,
   HomeIcon,
   LightIcon,
   Radio,
@@ -151,6 +152,9 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete }) => {
             onClick={onComplete}
           />
         </div>
+      </div>
+      <div className="absolute  bottom-0 right-0">
+        <HelpIcon />
       </div>
     </div>
   );
