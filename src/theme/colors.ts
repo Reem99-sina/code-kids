@@ -13,6 +13,7 @@ export const colors = {
   purpleLightTwo:"#F6EFFF",
   purpleLightThree:"#F8F3FF",
   purpleLightFour:"#E8D7FF",
+  purpleFunf:"#D406FF",
 
   pinkOne: "#FF1D92",
   pinkOneTransparent: "#FFEBFD",
@@ -20,6 +21,9 @@ export const colors = {
   pinkThree: "#FF1DCD",
   lightPink: "#FFF8F8",
   shadowPink: "#FF0084",
+  pinkLightTwo:'#FDEFFF',
+  pinkFour:"#FF00B8",
+  pinkLightThree:"#FBE7FF",
 
   yellowOne: "#EFBB00",
   yellowTwo: "#FCD90D",

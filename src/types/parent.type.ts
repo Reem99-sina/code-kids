@@ -45,3 +45,18 @@ export interface GetChildByParent {
   };
   activeDays: string[];
 }
+
+export interface RecommendedCoursesResponse {
+  id: number;
+  trackId: number;
+  name: string;
+  description: string;
+  totalLessons: number;
+  skillLevel: string;
+  suggestedNextTrackId: number;
+  totalParticipants: number;
+  totalBadges: number;
+  totalStars: number;
+  createdAt:string;
+  updatedAt:string;
+}

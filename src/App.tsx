@@ -12,6 +12,7 @@ import AddChild from "./pages/AddChild";
 import ForgetPassword from "./pages/Forget-Password";
 import LandingPage from "./pages/LandingPage";
 import HomeChild from "./pages/HomeChild";
+import Game from "./pages/Game";
 
 function App() {
   return (
@@ -28,6 +29,8 @@ function App() {
           <Route path="/home-child" element={<HomeChild />} />
 
           <Route path="/home" element={<Home />} />
+          <Route path="/game" element={<Game />} />
+
         </Route>
         <Route path="/auth/google/login" element={<GoogleCallbackHandler />} />
       </Routes>

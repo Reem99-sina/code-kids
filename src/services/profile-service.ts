@@ -112,7 +112,7 @@ export const useAddChildMutation = () => {
   });
 };
 
-export const useLoginWithSocialMutation = (provider: string) => {
+export const useLoginWithSocialMutation = () => {
   const { api } = useFetch();
   const searchParams = useSearchParams();
 
@@ -125,7 +125,7 @@ export const useLoginWithSocialMutation = (provider: string) => {
     void
   >({
     mutationFn: () =>
-      api.get(`/auth/${provider}/callback`, {
+      api.get(`/auth/google`, {
         params: {
           ...Object.fromEntries(searchParams.entries()),
         },

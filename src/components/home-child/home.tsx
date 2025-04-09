@@ -5,7 +5,6 @@ import Project from "./project";
 import Task from "./task";
 import { ExploreCard } from "../home-parent/feed-card";
 import { defaultDataExplore } from "../home-parent/section-four";
-import ContentFooter from "../footer/ContentFooter";
 
 const settingsFeed: Settings = {
   dots: false,
@@ -49,7 +48,10 @@ const HomeChildPart = () => {
             </div>
             <div className="flex items-center gap-4 flex-wrap ">
               {courses?.slice(0, 3)?.map((ele) => (
-                <div className=" bg-[url('/cart.png')] bg-no-repeat bg-cover w-[355px]"key={ele?.title}>
+                <div
+                  className=" bg-[url('/cart.png')] bg-no-repeat bg-cover w-[355px]"
+                  key={ele?.title}
+                >
                   <div className="pt-[10rem] px-[2rem] pb-[4rem]">
                     <Card key={ele?.title} {...ele} />
                   </div>
@@ -101,20 +103,6 @@ const HomeChildPart = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div className=" bg-white  min-h-max relative">
-        <div className="bg-[url('/browser.png')] bg-cover bg-no-repeat min-h-[527px] flex flex-col items-center justify-center gap-4">
-          <div className="container mx-auto  md:max-w-[841px] max-w-full">
-            <h3 className="text-4xl font-black text-[#001D1D]">
-              🌟 We’re proud of you, our future hero! Every lesson you take
-              brings you closer to your dreams. Keep learning, keep growing —
-              the future is yours to create! 💫
-            </h3>
-          </div>
-        </div>
-      </div>
-      <div>
-        <ContentFooter />
       </div>
     </>
   );

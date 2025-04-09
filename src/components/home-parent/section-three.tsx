@@ -2,7 +2,7 @@ import Slider, { Settings } from "react-slick";
 import { NextArrow, PrevArrow } from "../common/slider-arrow";
 import RecommededCourse from "./recommeded-course";
 import {
-
+  // useGetRecommededCourses,
   useParentQuery,
 } from "@/services/parent-service";
 
@@ -45,39 +45,41 @@ export const courses = [
   },
 ];
 
+const settings: Settings = {
+  dots: false,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 4,
+  slidesToScroll: 1,
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+  centerMode: true,
+  centerPadding: "0px",
+  responsive: [
+    {
+      breakpoint: 1024, // Screens <= 1024px (e.g., tablets)
+      settings: {
+        slidesToShow: 3,
+      },
+    },
+    {
+      breakpoint: 768, // Screens <= 768px (e.g., mobile landscape)
+      settings: {
+        slidesToShow: 1,
+      },
+    },
+    {
+      breakpoint: 480, // Screens <= 480px (e.g., mobile portrait)
+      settings: {
+        slidesToShow: 1,
+      },
+    },
+  ],
+};
+
 const SectionThree = () => {
   const { data } = useParentQuery();
-  const settings: Settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    centerMode: true,
-    centerPadding: "0px",
-    responsive: [
-      {
-        breakpoint: 1024, // Screens <= 1024px (e.g., tablets)
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 768, // Screens <= 768px (e.g., mobile landscape)
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-      {
-        breakpoint: 480, // Screens <= 480px (e.g., mobile portrait)
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
+  // const {}=useGetRecommededCourses({id:1})
 
   return (
     <div className="bg-[url('/section-three.png')] bg-contain bg-no-repeat w-full h-auto  lg:-mt-40  bg-white  text-black">
@@ -98,13 +100,14 @@ const SectionThree = () => {
                     See all
                   </p>
                 </div>
-                <div className="flex gap-4 max-w-full justify-start">
+                {/* <div className="flex gap-4 max-w-full justify-start">
                   <Slider {...settings} className="max-w-full">
                     {courses?.map((elem) => (
                       <RecommededCourse key={elem?.title} {...elem} />
                     ))}
                   </Slider>
-                </div>
+                </div> */}
+                <RecommededCourses />
               </div>
             ))
           ) : (
@@ -148,3 +151,17 @@ const SectionThree = () => {
 };
 
 export default SectionThree;
+
+const RecommededCourses = () => {
+  // const { data } = useGetRecommededCourses({ id: id });
+
+  return (
+    <div className="flex gap-4 max-w-full justify-start">
+      <Slider {...settings} className="max-w-full">
+        {courses?.map((elem) => (
+          <RecommededCourse key={elem?.title} {...elem} />
+        ))}
+      </Slider>
+    </div>
+  );
+};
