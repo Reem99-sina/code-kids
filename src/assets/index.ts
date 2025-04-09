@@ -77,7 +77,7 @@ export { default as Math } from "./math.svg?react";
 export { default as Decision } from "./decision.svg?react";
 
 export { default as Logo } from "./Logo.svg?react";
-export { default as Language } from "./Lang.svg?react";
+export { default as Language } from "./lang.svg?react";
 export { default as Notification } from "./notification.svg?react";
 export { default as Cart } from "./cart.svg?react";
 export { default as Chat } from "./chat.svg?react";
@@ -121,7 +121,19 @@ export { default as Chart } from "./chart.svg?react";
 export { default as RedArrow } from "./red-arrow.svg?react";
 export { default as RewardToProjcet } from "./rewardProject.svg?react";
 export { default as Course } from "./course.svg?react";
+export { default as Pilot } from "./pilot.svg?react";
+export { default as Captain } from "./captain.svg?react";
+export { default as AppearIcon } from "./appear-icon.svg?react";
+export { default as ArrowRightDots } from "./arrow-right-dots.svg?react";
+export { default as Idea } from "./idea.svg?react";
+export { default as TrackStar } from "./track-star.svg?react";
+export { default as TrackStarTwo } from "./track-star-two.svg?react";
+export { default as TrackStarThree } from "./track-star-three.svg?react";
+export { default as ArrowRotate } from "./arrow-rotate.svg?react";
 
+export { default as Lamp } from "./lampe.svg?react";
+export { default as And } from "./and.svg?react";
+export { default as AndFalse } from "./and-false.svg?react";
 
-
+export { default as Or } from "./or.svg?react";
 

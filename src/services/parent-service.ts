@@ -2,6 +2,7 @@ import { useFetch } from "@/hooks/fetch.hooks";
 import { IResponse } from "@/types/common.type";
 import {
   GetChildByParent,
+  RecommendedCoursesResponse,
   ResponseChildParentAdd,
   TypeoFSkillsResponse,
 } from "@/types/parent.type";
@@ -92,12 +93,11 @@ export const useEditChildByParent = ({ id }: { id?: number }) => {
 export const useGetRecommededCourses = ({ id }: { id?: number }) => {
   const { api } = useFetch();
 
-  return useQuery<TypeoFSkillsResponse[]>({
+  return useQuery<RecommendedCoursesResponse[]>({
     queryKey: ["recommended_courses", id],
     queryFn: async () => {
-      const response: IResponse<TypeoFSkillsResponse[]> = await api.get(
-        "/course/recommended"
-        
+      const response: IResponse<RecommendedCoursesResponse[]> = await api.get(
+        "/course/recommended/" + id
       );
 
       return response.data;

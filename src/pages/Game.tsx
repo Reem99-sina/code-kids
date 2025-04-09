@@ -1,13 +1,12 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import ContentFooter from "@/components/footer/ContentFooter";
-import LevelEight from "@/components/levels/level-eight/level-eight";
-import { LevelOne } from "@/components/levels/Level-one/level-one";
-import LevelThree from "@/components/levels/Level-three/level-three";
-import { LevelTwo } from "@/components/levels/Level-two/level-two";
+import LevelOne from "@/components/games/level-one/level-one";
+import MainComponent from "@/components/games/main-component";
+import { dataAndItems } from "@/utils/binary.util";
 import { useState } from "react";
 
-const Home = () => {
+const Game = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
 
   const levels = [
@@ -15,87 +14,34 @@ const Home = () => {
       name: "level 1",
       view: (
         <LevelCart
-          title="Hexadecimal to binary"
+          title="Simple AND Gate"
           description="Well done keep going 💪😍"
           levelActive
           progressNumber={0}
         />
       ),
       component: (
-        <LevelOne
-          onComplete={() => setSelectedLevel(2)}
-          goHome={() => setSelectedLevel(0)}
-        />
+        <MainComponent
+          title="Level 1: Simple AND Gate"
+          desc="Connect tow inputs to an AND gate and light up the lamp"
+          operation="and"
+          data={dataAndItems}
+        >
+          <LevelOne/>
+        </MainComponent>
       ),
     },
     {
       name: "level 2",
       view: (
         <LevelCart
-          title="Binary Addition"
+          title="Simple OR Gate"
           description="Come on, build your skills 💪"
           levelActive
           progressNumber={0}
         />
       ),
-      component: (
-        <LevelTwo
-          // onComplete={() => setSelectedLevel(3)}
-          onComplete={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 3",
-      view: <LevelCart title="Binary Subtraction" progressNumber={0} lock />,
-      component: (
-        <LevelThree
-          onComplete={() => setSelectedLevel(4)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 4",
-      view: <LevelCart title="Binary Multiplication" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(5)} />,
-    },
-    {
-      name: "level 5",
-      view: <LevelCart title="Binary Division" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(6)} />,
-    },
-    {
-      name: "level 6",
-      view: <LevelCart title="Advanced Binary" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(7)} />,
-    },
-    {
-      name: "level 7",
-      view: <LevelCart title="Boolean Logic" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(8)} />,
-    },
-    {
-      name: "level 8",
-      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
-      component: (
-        <LevelEight
-          onComplete={() => setSelectedLevel(9)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 9",
-      view: <LevelCart title="Machine Code" progressNumber={0} lock />,
-      component: (
-        <LevelTwo onComplete={() => setSelectedLevel(0)} />
-      ),
-    },
-    {
-      name: "level 10",
-      view: <LevelCart title="Final Challenge" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(0)} />,
+      component: <></>,
     },
   ];
 
@@ -149,4 +95,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Game;
