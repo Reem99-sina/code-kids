@@ -1,6 +1,9 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
+import { LevelFive } from "@/components/levels/level-five/level-five";
+import { LevelFour } from "@/components/levels/level-four/level-four";
 import { LevelOne } from "@/components/levels/Level-one/level-one";
+import { LevelSix } from "@/components/levels/level-six/level-six";
 import LevelThree from "@/components/levels/Level-three/level-three";
 import { LevelTwo } from "@/components/levels/Level-two/level-two";
 import { useState } from "react";
@@ -21,7 +24,7 @@ const Home = () => {
       ),
       component: (
         <LevelOne
-          onComplete={() => setSelectedLevel(2)}
+          onComplete={() => setSelectedLevel(3)}
           goHome={() => setSelectedLevel(0)}
         />
       ),
@@ -56,22 +59,37 @@ const Home = () => {
     {
       name: "level 4",
       view: <LevelCart title="Binary Multiplication" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(5)} />,
+      component: (
+        <LevelFour
+          goHome={() => setSelectedLevel(0)}
+          onComplete={() => setSelectedLevel(5)}
+        />
+      ),
     },
     {
       name: "level 5",
       view: <LevelCart title="Binary Division" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(6)} />,
+      component: (
+        <LevelFive
+          goHome={() => setSelectedLevel(0)}
+          onComplete={() => setSelectedLevel(6)}
+        />
+      ),
     },
     {
       name: "level 6",
       view: <LevelCart title="Advanced Binary" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(7)} />,
+      component: (
+        <LevelSix
+          onComplete={() => setSelectedLevel(7)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
     },
     {
       name: "level 7",
       view: <LevelCart title="Boolean Logic" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(8)} />,
+      component: <LevelTwo onComplete={() => setSelectedLevel(0)} />,
     },
     {
       name: "level 8",
@@ -91,7 +109,7 @@ const Home = () => {
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen w-full bg-[url('/home-background.png')] bg-[length:100%_100%] bg-no-repeat bg-center">
+    <div className="flex flex-col justify-center items-center  min-h-screen w-full bg-[url('/home-background.png')] bg-[length:100%_100%] bg-no-repeat bg-center">
       <div className=" flex w-[90%] min-h-[600px] flex-col ">
         {selectedLevel === 0 && (
           <div className="flex justify-start flex-col items-center px-6 w-full">
