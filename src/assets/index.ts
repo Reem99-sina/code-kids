@@ -26,6 +26,7 @@ export { default as Battery } from "./battery.svg?react";
 export { default as LightIcon } from "./light.svg?react";
 export { default as Radio } from "./radio.svg?react";
 export { default as ArrowLeftIcon } from "./ArrowLeft.svg?react";
+export { default as RocketIcon } from "./rocket-icon.svg?react";
 export { default as Child } from "./child.svg?react";
 
 export { default as ChildRegister } from "./child-register.svg?react";
@@ -136,4 +137,3 @@ export { default as And } from "./and.svg?react";
 export { default as AndFalse } from "./and-false.svg?react";
 
 export { default as Or } from "./or.svg?react";
-

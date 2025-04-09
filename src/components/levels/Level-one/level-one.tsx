@@ -78,7 +78,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
               title="Insulator"
               icons={[
                 { icon: <BatteryIconB />, label: "Battery" },
-                { icon: <Light />, label: "Light" },
+                { icon: <LightOff />, label: "Light" },
               ]}
               buttonText={!insulatorPressed ? "Power" : "Power on"}
               onButtonClick={() => setInsulatorPressed((prev) => !prev)}
@@ -95,10 +95,15 @@ export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
             <Button
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
+              onClick={() => modalRef.current?.open()}
             />
           </div>
           <Modal ref={modalRef}>
-            <LevelComplete onNextLevel={onComplete} onGoHome={goHome} />
+            <LevelComplete
+              level="1"
+              onNextLevel={onComplete}
+              onGoHome={goHome}
+            />
           </Modal>
         </div>
         <div className="absolute  bottom-8 right-0">

@@ -47,7 +47,7 @@ const helpTools = [
   },
 ];
 
-const LevelThree: React.FC<LevelThreeProps> = ({ goHome }) => {
+const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete }) => {
   const [appear, setAppear] = useState(false);
   const [progress, setProgress] = useState(1);
   const [componentDrag, setComponentDrag] = useState<DragComProps[]>([]);
@@ -149,6 +149,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome }) => {
           <Button
             text="Check Answer"
             className="!max-w-[220px] !rounded-[50px]"
+            onClick={onComplete}
           />
         </div>
       </div>

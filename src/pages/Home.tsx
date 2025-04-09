@@ -1,8 +1,11 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
+import { LevelFive } from "@/components/levels/level-five/level-five";
+import { LevelFour } from "@/components/levels/level-four/level-four";
 import ContentFooter from "@/components/footer/ContentFooter";
 import LevelEight from "@/components/levels/level-eight/level-eight";
 import { LevelOne } from "@/components/levels/Level-one/level-one";
+import { LevelSix } from "@/components/levels/level-six/level-six";
 import LevelThree from "@/components/levels/Level-three/level-three";
 import { LevelTwo } from "@/components/levels/Level-two/level-two";
 import { useState } from "react";
@@ -23,7 +26,7 @@ const Home = () => {
       ),
       component: (
         <LevelOne
-          onComplete={() => setSelectedLevel(2)}
+          onComplete={() => setSelectedLevel(3)}
           goHome={() => setSelectedLevel(0)}
         />
       ),
@@ -58,22 +61,37 @@ const Home = () => {
     {
       name: "level 4",
       view: <LevelCart title="Binary Multiplication" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(5)} />,
+      component: (
+        <LevelFour
+          goHome={() => setSelectedLevel(0)}
+          onComplete={() => setSelectedLevel(5)}
+        />
+      ),
     },
     {
       name: "level 5",
       view: <LevelCart title="Binary Division" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(6)} />,
+      component: (
+        <LevelFive
+          goHome={() => setSelectedLevel(0)}
+          onComplete={() => setSelectedLevel(6)}
+        />
+      ),
     },
     {
       name: "level 6",
       view: <LevelCart title="Advanced Binary" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(7)} />,
+      component: (
+        <LevelSix
+          onComplete={() => setSelectedLevel(7)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
     },
     {
       name: "level 7",
       view: <LevelCart title="Boolean Logic" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(8)} />,
+      component: <LevelTwo onComplete={() => setSelectedLevel(0)} />,
     },
     {
       name: "level 8",
@@ -88,9 +106,7 @@ const Home = () => {
     {
       name: "level 9",
       view: <LevelCart title="Machine Code" progressNumber={0} lock />,
-      component: (
-        <LevelTwo onComplete={() => setSelectedLevel(0)} />
-      ),
+      component: <LevelTwo onComplete={() => setSelectedLevel(0)} />,
     },
     {
       name: "level 10",
