@@ -53,5 +53,7 @@ export const colors = {
   orangeTwo:"#FF6B6B",
   blueGreenCustom:"#4ECDC4",
   yellowFunf:"#FFD93D",
-  orangeLight:"#FFA500"
+  orangeLight:"#FFA500",
+  greenTwo:"#008000",
+  redTwo:"#FF0000"
 };

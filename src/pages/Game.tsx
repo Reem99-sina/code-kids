@@ -3,7 +3,7 @@ import { LevelCart } from "@/components/cards/level-cart";
 import ContentFooter from "@/components/footer/ContentFooter";
 import LevelOne from "@/components/games/level-one/level-one";
 import MainComponent from "@/components/games/main-component";
-import { dataAndItems } from "@/utils/binary.util";
+import { dataAndItems } from "@/utils/logic.util";
 import { useState } from "react";
 
 const Game = () => {

@@ -1,3 +1,9 @@
+export enum OperationStatus {
+  AND = "and",
+  OR = "or",
+  NOT = "not",
+
+}
 export const generateBinary = ({
   length,
   DecNumber,
@@ -59,25 +65,3 @@ export const checkIfUserAddRightNumber = ({
   );
 };
 
-export  const dataAndItems = [
-    {
-      input_1: 0,
-      input_2: 0,
-      output: 0,
-    },
-    {
-      input_1: 0,
-      input_2: 1,
-      output: 0,
-    },
-    {
-      input_1: 1,
-      input_2: 0,
-      output: 0,
-    },
-    {
-      input_1: 1,
-      input_2: 1,
-      output: 1,
-    },
-  ];

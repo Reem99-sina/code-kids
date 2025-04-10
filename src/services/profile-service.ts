@@ -125,7 +125,7 @@ export const useLoginWithSocialMutation = () => {
     void
   >({
     mutationFn: () =>
-      api.get(`/auth/google`, {
+      api.get(`/auth/google/callback`, {
         params: {
           ...Object.fromEntries(searchParams.entries()),
         },
