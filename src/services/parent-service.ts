@@ -124,6 +124,7 @@ export const useAddImageChildByParent = () => {
       if (data?.image) {
         formDate.append("image", data?.image);
       }
+      
       return api.put("/child/profile-image/" + data?.id, formDate);
     },
     onSuccess: () => {

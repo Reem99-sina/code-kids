@@ -136,10 +136,13 @@ export { default as ArrowRotate } from "./arrow-rotate.svg?react";
 export { default as And } from "./and.svg?react";
 export { default as AndOff } from "./and-off.svg?react";
 
-export { default as Or } from "./or.svg?react";
+export { default as OrOff } from "./or-off.svg?react";
+export { default as OrOn } from "./or-on.svg?react";
+
 export { default as LampOff } from "./lamp-off.svg?react";
 export { default as LampOn } from "./lamp-on.svg?react";
 
 export { default as Nand } from "./nand-on.svg?react";
 export { default as NandOff } from "./nand-off.svg?react";
 export { default as NottIcon } from "./NOT-icon.svg?react";
+export { default as NotOntIcon } from "./not-on.svg?react";

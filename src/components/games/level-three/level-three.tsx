@@ -1,22 +1,23 @@
 import { Button } from "@/components/common/button.component";
-import { componentInputProps, eachElement } from "@/utils/logic.util";
-import { useRef, useState } from "react";
+import {
+  BoxInterface,
+  componentInputProps,
+  eachElement,
+} from "@/utils/logic.util";
+import { FunctionComponent, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
+import { Modal, ModalRef } from "@/components/common/modal.component";
+import { LevelComplete } from "@/components/levels/LevelComplete";
+import { LampOff, LampOn } from "@/assets";
 
-interface box {
-  Icon:
-    | React.FunctionComponent<React.SVGProps<SVGSVGElement>>
-    | React.FunctionComponent<componentInputProps>;
-  id: number;
-  title: string;
-}
 export interface dotInfo {
   color: string;
   direction: string;
   id: number;
   x: number;
   y: number;
+  side?:string
 }
 
 interface mouseMove {
@@ -27,15 +28,21 @@ interface LineDirection {
   from: dotInfo;
   to: dotInfo;
 }
+interface LevelThreeProps {
+  onComplete: () => void;
+  goHome: () => void;
+}
 
-const LevelThree = () => {
+const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const rect = constraintsRef?.current?.getBoundingClientRect();
+  const [binary, setBinary] = useState({ input_1: 0 });
   const [visible, setVisible] = useState<number | undefined>();
-  const [boxes, setBoxes] = useState<box[]>([]);
+  const [boxes, setBoxes] = useState<BoxInterface[]>([]);
   const [lines, setLines] = useState<(LineDirection | undefined)[]>([]);
   const [startDot, setStartDot] = useState<dotInfo | null>(null);
   const [mousePos, setMousePos] = useState<mouseMove | null>(null);
+  const modalRef = useRef<ModalRef>(null);
 
   const handleDotClick = ({
     dot,
@@ -85,11 +92,14 @@ const LevelThree = () => {
       (line) => line?.from.id === notGateId && line?.to.id === lampId
     );
 
-    if (inputsToNot.length > 0 && !notToLamp) {
-      alert("✅ Correct connection!");
+    if (inputsToNot.length > 0 && notToLamp) {
+      modalRef.current?.open();
     } else {
       alert("❌ Incorrect logic, try again.");
     }
+  };
+  const output = ({ input_1 }: { input_1: number }) => {
+    return input_1 == 1 ? 0 : 1;
   };
 
   return (
@@ -104,6 +114,7 @@ const LevelThree = () => {
         >
           {boxes?.map((ele, index) => {
             const Icon = ele?.Icon;
+            const Reverse = ele?.Reverse;
 
             return (
               <motion.div
@@ -123,7 +134,12 @@ const LevelThree = () => {
                       direction_dots_true={[
                         {
                           direction: "center",
-                          color: "red",
+                          color:
+                            output({
+                              input_1: binary["input_1"],
+                            }) == 1
+                              ? "green"
+                              : "red",
                           id: index + 1,
                           side: "left",
                         },
@@ -133,7 +149,11 @@ const LevelThree = () => {
                   ) : ele?.title === "input" ? (
                     <IconDots
                       direction_dots_true={[
-                        { direction: "center", color: "red", id: index + 1 },
+                        {
+                          direction: "center",
+                          color: binary["input_1"] == 1 ? "green" : "red",
+                          id: index + 1,
+                        },
                       ]}
                       onClick={handleDotClick}
                     />
@@ -142,8 +162,19 @@ const LevelThree = () => {
                       direction_dots_true={[
                         {
                           direction: "center",
-                          color: "red",
+
                           id: index + 1,
+                          side: "left",
+                          color: binary["input_1"] == 1 ? "green" : "red",
+                        },
+                        {
+                          direction: "center",
+                          color:
+                            output({ input_1: binary["input_1"] }) == 1
+                              ? "green"
+                              : "red",
+                          id: index + 1,
+                          side: "right",
                         },
                       ]}
                       onClick={handleDotClick}
@@ -158,7 +189,41 @@ const LevelThree = () => {
                       onClick={handleDotClick}
                     />
                   )}
-                  <Icon />
+                  {ele?.title == "input" ? (
+                    (() => {
+                      const Component =
+                        Icon as FunctionComponent<componentInputProps>;
+                      const id = "input_1";
+                      
+                      return (
+                        <Component
+                          value={binary[id]}
+                          onChange={(value) =>
+                            setBinary((prev) => ({ ...prev, [id]: value }))
+                          }
+                          key={index}
+                        />
+                      );
+                    })()
+                  ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
+                    output({
+                      input_1: binary["input_1"],
+                    }) == 1 ? (
+                      <LampOn />
+                    ) : (
+                      <LampOff />
+                    )
+                  ) : output({
+                      input_1: binary["input_1"],
+                    }) == 1 ? (
+                    Reverse ? (
+                      <Reverse />
+                    ) : (
+                      <></>
+                    )
+                  ) : (
+                    <Icon />
+                  )}
                 </div>
 
                 {visible == index && (
@@ -188,7 +253,16 @@ const LevelThree = () => {
                 initial={{ x2: line?.from.x, y2: line?.from.y }}
                 animate={{ x2: line?.to.x, y2: line?.to.y }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                stroke="blue"
+                stroke={
+                  (!line?.from?.side || !line?.to?.side) &&
+                  binary["input_1"] == 1
+                    ? "green"
+                    : line?.from?.side &&
+                        line?.to?.side &&
+                        output({ input_1: binary["input_1"] }) == 1
+                      ? "green"
+                      : "red"
+                }
                 strokeWidth="2"
               />
             ))}
@@ -226,7 +300,7 @@ const LevelThree = () => {
           text="Create INPUT"
           className="bg-purpleEight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[4] }]);
+            setBoxes((prev) => [...prev, { ...eachElement[3] }]);
           }}
         />
         <Button
@@ -235,6 +309,9 @@ const LevelThree = () => {
           onClick={validateConnections}
         />
       </div>
+      <Modal ref={modalRef}>
+        <LevelComplete level="3" onNextLevel={onComplete} onGoHome={goHome} />
+      </Modal>
     </>
   );
 };

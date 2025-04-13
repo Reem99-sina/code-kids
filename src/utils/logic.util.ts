@@ -5,8 +5,10 @@ import {
   LampOn,
   Nand,
   NandOff,
-  Or,
+  NotOntIcon,
   NottIcon,
+  OrOff,
+  OrOn,
 } from "@/assets";
 
 import InputBinaryComponent from "@/components/games/input-binary-component";
@@ -35,6 +37,42 @@ export const dataAndItems = [
   },
 ];
 
+export const dataOrItems = [
+  {
+    input_1: 0,
+    input_2: 0,
+    output: 0,
+  },
+  {
+    input_1: 0,
+    input_2: 1,
+    output: 1,
+  },
+  {
+    input_1: 1,
+    input_2: 0,
+    output: 1,
+  },
+  {
+    input_1: 1,
+    input_2: 1,
+    output: 1,
+  },
+];
+
+export const dataNotItems = [
+  {
+    input_1: 0,
+
+    output: 1,
+  },
+  {
+    input_1: 1,
+
+    output: 0,
+  },
+];
+
 export const dataNandItems = [
   {
     input_1: 0,
@@ -58,7 +96,6 @@ export const dataNandItems = [
   },
 ];
 
-
 export const eachElement = [
   {
     id: 1,
@@ -69,8 +106,8 @@ export const eachElement = [
   {
     id: 2,
     title: "or",
-    Icon: Or,
-    Reverse: Or,
+    Icon: OrOff,
+    Reverse: OrOn,
   },
   {
     id: 3,
@@ -93,6 +130,7 @@ export const eachElement = [
     id: 6,
     title: "not",
     Icon: NottIcon,
+    Reverse:NotOntIcon
   },
 ];
 
@@ -115,6 +153,7 @@ export interface dotInfo {
   id: number;
   x: number;
   y: number;
+  side?:string
 }
 export interface LineDirection {
   from: dotInfo;

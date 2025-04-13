@@ -194,6 +194,7 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                       const Component =
                         Icon as FunctionComponent<componentInputProps>;
                       const id = index + 1 == 1 ? "input_1" : "input_2";
+                      
                       return (
                         <Component
                           value={binary[id]}

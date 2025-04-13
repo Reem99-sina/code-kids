@@ -1,6 +1,12 @@
 import { Button } from "@/components/common/button.component";
-import { BoxInterface, dotInfo, eachElement, LineDirection, mouseMove } from "@/utils/logic.util";
-import { FunctionComponent,  useRef, useState } from "react";
+import {
+  BoxInterface,
+  dotInfo,
+  eachElement,
+  LineDirection,
+  mouseMove,
+} from "@/utils/logic.util";
+import { FunctionComponent, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
 import { LampOff, LampOn } from "@/assets";
@@ -12,7 +18,6 @@ interface componentInputProps {
   value?: number;
   onChange?: (value: number) => void;
 }
-
 
 interface LevelFiveProps {
   onComplete: () => void;
@@ -192,6 +197,7 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                       const Component =
                         Icon as FunctionComponent<componentInputProps>;
                       const id = index + 1 == 1 ? "input_1" : "input_2";
+                      
                       return (
                         <Component
                           value={binary[id]}

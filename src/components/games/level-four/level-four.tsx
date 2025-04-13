@@ -17,6 +17,7 @@ export interface dotInfo {
   id: number;
   x: number;
   y: number;
+  side?: string;
 }
 
 interface mouseMove {
@@ -27,14 +28,15 @@ interface LineDirection {
   from: dotInfo;
   to: dotInfo;
 }
-interface LevelTwoProps {
+interface LevelForProps {
   onComplete: () => void;
   goHome: () => void;
 }
 
-const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
+const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [binary, setBinary] = useState({ input_1: 0, input_2: 0 });
+
   const rect = constraintsRef?.current?.getBoundingClientRect();
   const [visible, setVisible] = useState<number | undefined>();
   const [boxes, setBoxes] = useState<BoxInterface[]>([]);
@@ -42,6 +44,8 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
   const [startDot, setStartDot] = useState<dotInfo | null>(null);
   const [mousePos, setMousePos] = useState<mouseMove | null>(null);
   const modalRef = useRef<ModalRef>(null);
+
+  const generateUniqueId = () => Date.now() + Math.floor(Math.random() * 1000);
 
   const handleDotClick = ({
     dot,
@@ -73,28 +77,30 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
   const validateConnections = () => {
     const connections = [...lines];
 
-    const orGate = boxes.find((box) => box.title === "or");
+    const andGate = boxes.find((box) => box.title === "and");
+    const notGate = boxes.find((box) => box.title === "not");
     const lamp = boxes.find((box) => box.title === "lamp-off");
 
-    if (!orGate || !lamp) {
-      alert("Missing OR gate or Lamp.");
+    if (!andGate || !notGate || !lamp) {
+      alert("Missing one of the gates or lamp.");
 
       return;
     }
 
-    const orGateId = boxes.indexOf(orGate) + 1;
-    const lampId = boxes.indexOf(lamp) + 1;
-
-    const inputsToOr = connections.filter((line) => line?.to.id === orGateId);
-
-    const orToLamp = connections.find(
-      (line) => line?.from.id === orGateId && line?.to.id === lampId
+    const inputsToAND = connections.filter(
+      (line) => line?.to.id === andGate.id
+    );
+    const andToNot = connections.find(
+      (line) => line?.from.id === andGate.id && line?.to.id === notGate.id
+    );
+    const notToLamp = connections.find(
+      (line) => line?.from.id === notGate.id && line?.to.id === lamp.id
     );
 
-    if (inputsToOr.length > 0 && !orToLamp) {
+    if (inputsToAND.length >= 2 && andToNot && notToLamp) {
       modalRef.current?.open();
     } else {
-      alert("❌ Incorrect logic, try again.");
+      alert("❌ Try again. Make sure the NAND sequence is correct.");
     }
   };
 
@@ -105,10 +111,23 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
     input_1: number;
     input_2: number;
   }) => {
-    return input_1 == 1 || input_2 == 1 || (input_1 == 1 && input_2 == 1)
-      ? 1
-      : 0;
+    return (input_1 == 0 && input_2 == 0) || input_1 != input_2 ? 1 : 0;
   };
+
+  const outputAnd = ({
+    input_1,
+    input_2,
+  }: {
+    input_1: number;
+    input_2: number;
+  }) => {
+    return input_1 == 1 && input_2 == 1 ? 1 : 0;
+  };
+
+  const outputNot = ({ input_1 }: { input_1: number }) => {
+    return input_1 == 1 ? 0 : 1;
+  };
+
 
   return (
     <>
@@ -134,24 +153,10 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                   event?.preventDefault();
                   setVisible(index);
                 }}
-                key={index}
+                key={ele.id}
               >
                 <div className="relative">
-                  {ele?.title == "input" ? (
-                    <IconDots
-                      direction_dots_true={[
-                        {
-                          direction: "center",
-                          color:
-                            binary[index + 1 == 1 ? "input_1" : "input_2"] == 1
-                              ? "green"
-                              : "red",
-                          id: index + 1,
-                        },
-                      ]}
-                      onClick={handleDotClick}
-                    />
-                  ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
+                  {ele.title === "lamp-off" ? (
                     <IconDots
                       direction_dots_true={[
                         {
@@ -163,8 +168,54 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                             }) == 1
                               ? "green"
                               : "red",
-                          id: index + 3,
+                          id: ele.id,
                           side: "left",
+                        },
+                      ]}
+                      onClick={handleDotClick}
+                    />
+                  ) : ele.title === "input" ? (
+                    <IconDots
+                      direction_dots_true={[
+                        {
+                          direction: "center",
+                          color:
+                            binary[index + 1 == 1 ? "input_1" : "input_2"] == 1
+                              ? "green"
+                              : "red",
+                          id: ele.id,
+                        },
+                      ]}
+                      onClick={handleDotClick}
+                    />
+                  ) : ele.title === "not" ? (
+                    <IconDots
+                      direction_dots_true={[
+                        {
+                          direction: "center",
+                          color:
+                            outputAnd({
+                              input_1: binary["input_1"],
+                              input_2: binary["input_2"],
+                            }) == 1
+                              ? "green"
+                              : "red",
+                          id: ele.id,
+                          side: "left",
+                        },
+                        {
+                          direction: "center",
+                          color:
+                            outputNot({
+                              input_1: outputAnd({
+                                input_1: binary["input_1"],
+                                input_2: binary["input_2"],
+                              }),
+                            }) == 1
+                              ? "green"
+                              : "red",
+                          id: ele.id,
+                          side: "right",
                         },
                       ]}
                       onClick={handleDotClick}
@@ -175,22 +226,23 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "top",
                           color: binary["input_2"] == 1 ? "green" : "red",
-                          id: index + 1,
+                          id: ele.id,
                         },
                         {
                           direction: "bottom",
                           color: binary["input_1"] == 1 ? "green" : "red",
-                          id: index + 2,
+                          id: ele.id,
                         },
                         {
                           direction: "center",
-                          color: output({
-                            input_1: binary["input_1"],
-                            input_2: binary["input_2"],
-                          })
-                            ? "green"
-                            : "red",
-                          id: index + 3,
+                          color:
+                            outputAnd({
+                              input_1: binary["input_1"],
+                              input_2: binary["input_2"],
+                            }) == 1
+                              ? "green"
+                              : "red",
+                          id: ele.id,
                         },
                       ]}
                       onClick={handleDotClick}
@@ -221,14 +273,33 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                     ) : (
                       <LampOff />
                     )
-                  ) : output({
+                  ) : ele?.title == "not" ? (
+                    outputNot({
+                      input_1: outputAnd({
+                        input_1: binary["input_1"],
+                        input_2: binary["input_2"],
+                      }),
+                    }) == 1 ? (
+                      Reverse ? (
+                        <Reverse />
+                      ) : (
+                        <Icon />
+                      )
+                    ) : (
+                      <Icon />
+                    )
+                  ) : ele?.title == "and" ? (
+                    outputAnd({
                       input_1: binary["input_1"],
                       input_2: binary["input_2"],
                     }) == 1 ? (
-                    Reverse ? (
-                      <Reverse />
+                      Reverse ? (
+                        <Reverse />
+                      ) : (
+                        <Icon />
+                      )
                     ) : (
-                      <></>
+                      <Icon />
                     )
                   ) : (
                     <Icon />
@@ -242,7 +313,7 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                       className="!text-xs !bg-white !border !border-gray-300 !whitespace-nowrap !p-1"
                       onClick={() => {
                         setBoxes((prev) =>
-                          prev ? prev.filter((_, ind) => ind != index) : []
+                          prev ? prev.filter((_, ind) => ind !== index) : []
                         );
                         setVisible(undefined);
                       }}
@@ -273,12 +344,20 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                       ? binary["input_2"] == 1
                         ? "green"
                         : "red"
-                      : output({
+                      : (!line?.from?.side || !line?.to?.side) &&
+                          outputAnd({
                             input_1: binary["input_1"],
                             input_2: binary["input_2"],
                           }) == 1
                         ? "green"
-                        : "red"
+                        : line?.from?.side &&
+                            line?.to?.side &&
+                            output({
+                              input_1: binary["input_1"],
+                              input_2: binary["input_2"],
+                            }) == 1
+                          ? "green"
+                          : "red"
                 }
                 strokeWidth="2"
               />
@@ -300,35 +379,44 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
 
       <div className="flex items-center gap-3 flex-wrap mt-4">
         <Button
-          text="Create OR Gate"
+          text="Create AND Gate"
           className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[0] }]);
-          }}
-        />
-        <Button
-          text="Create QR Gate"
-          className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[1] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[0], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create NOT Gate"
-          className="bg-yellowFunf whitespace-nowrap !w-auto"
+          className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
+          onClick={() => {
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[5], id: generateUniqueId() },
+            ]);
+          }}
         />
+
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[2] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[2], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create INPUT"
           className="bg-purpleEight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[3] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[3], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
@@ -338,10 +426,10 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
         />
       </div>
       <Modal ref={modalRef}>
-        <LevelComplete level="2" onNextLevel={onComplete} onGoHome={goHome} />
+        <LevelComplete level="4" onNextLevel={onComplete} onGoHome={goHome} />
       </Modal>
     </>
   );
 };
 
-export default LevelTwo;
+export default LevelFour;
