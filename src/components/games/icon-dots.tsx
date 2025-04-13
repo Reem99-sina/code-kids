@@ -5,11 +5,12 @@ import { dotInfo } from "./level-one/level-one";
 
 interface DirectionDots {
   direction: "top" | "bottom" | "center";
-  leftOrRight?: "left" | "right";
   color: "green" | "red";
   id: number;
+  side?: "left" | "right";
 }
-interface props {
+
+interface Props {
   event: React.MouseEvent<HTMLDivElement>;
   dot: dotInfo;
 }
@@ -19,65 +20,51 @@ const IconDots = ({
   onClick,
 }: {
   direction_dots_true: DirectionDots[];
-  onClick: ({ event, dot }: props) => void;
+  onClick: ({ event, dot }: Props) => void;
 }) => {
-  const rightDots = useMemo(() => {
-    return direction_dots_true?.filter((ele) => ele?.direction == "center");
-  }, [direction_dots_true]);
+  const positionedDots = useMemo(() => {
+    return direction_dots_true.map((dot) => {
+      const isLeft = dot.side === "left";
+      const isCenter = dot.direction === "center";
+      const isBottom = dot.direction === "bottom";
 
-  const leftDots = useMemo(() => {
-    return direction_dots_true?.filter(
-      (ele) => ele?.direction == "top" || ele?.direction == "bottom"
-    );
+      const positionClasses = clsx(
+        "absolute w-4 h-4 rounded-full",
+        dot.color === "green" ? "bg-greenTwo" : "bg-redTwo",
+        {
+          "-left-5 top-6": isCenter && isLeft,
+          "-right-5 top-6": isCenter && !isLeft,
+          "-left-5": !isCenter && !isBottom && !isLeft,
+          "-left-5 bottom-0": !isCenter && isBottom && !isLeft,
+        }
+      );
+
+      return {
+        ...dot,
+        positionClasses,
+      };
+    });
   }, [direction_dots_true]);
 
   return (
-    <div className="">
-      {leftDots?.map((ele) => (
+    <div>
+      {positionedDots.map((dot) => (
         <motion.div
-          className={clsx(
-            "absolute w-4 h-4 rounded-full -left-5",
-            ele?.color == "green" ? "bg-greenTwo" : "bg-redTwo",
-            ele?.direction == "bottom" ? "bottom-0" : ""
-          )}
-          key={ele?.id}
+          key={dot.id}
+          className={dot.positionClasses}
           onClick={(event) =>
             onClick({
-              event: event,
+              event,
               dot: {
-                ...ele,
-                x: event?.clientX,
-                y: event?.clientY,
-              
+                ...dot,
+                x: event.clientX,
+                y: event.clientY,
               },
             })
           }
           whileHover={{ scale: 1.3 }}
           whileTap={{ scale: 0.9 }}
-        ></motion.div>
-      ))}
-      {rightDots?.map((ele) => (
-        <motion.div
-          className={clsx(
-            "absolute w-4 h-4 rounded-full  top-6",
-            ele?.color == "green" ? "bg-greenTwo" : "bg-redTwo",
-            ele?.leftOrRight == "left" ? "-left-5" : "-right-5"
-          )}
-          key={ele?.id}
-          onClick={(event) =>
-            onClick({
-              event: event,
-              dot: {
-                ...ele,
-                x: event?.clientX,
-                y: event?.clientY,
-              
-              },
-            })
-          }
-          whileHover={{ scale: 1.3 }}
-          whileTap={{ scale: 0.9 }}
-        ></motion.div>
+        />
       ))}
     </div>
   );

@@ -3,7 +3,7 @@ import { eachElement } from "@/utils/logic.util";
 import { FunctionComponent, SVGProps, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
-import { LampOff, LampOn, Nand } from "@/assets";
+import { LampOff, LampOn } from "@/assets";
 
 interface componentInputProps {
   value?: number;
@@ -135,7 +135,7 @@ const LevelFive = () => {
                               ? "green"
                               : "red",
                           id: index + 3,
-                          leftOrRight: "left",
+                          side: "left",
                         },
                       ]}
                       onClick={handleDotClick}

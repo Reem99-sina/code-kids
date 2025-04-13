@@ -3,6 +3,8 @@ import { LevelCart } from "@/components/cards/level-cart";
 import ContentFooter from "@/components/footer/ContentFooter";
 import LevelFive from "@/components/games/level-five/level-five";
 import LevelOne from "@/components/games/level-one/level-one";
+import LevelThree from "@/components/games/level-three/level-three";
+import LevelTwo from "@/components/games/level-two/levels-two";
 import MainComponent from "@/components/games/main-component";
 import { dataAndItems, dataNandItems } from "@/utils/logic.util";
 import { useState } from "react";
@@ -28,7 +30,10 @@ const Game = () => {
           operation="and"
           data={dataAndItems}
         >
-          <LevelOne />
+          <LevelOne
+            onComplete={() => setSelectedLevel(2)}
+            goHome={() => setSelectedLevel(0)}
+          />
         </MainComponent>
       ),
     },
@@ -42,7 +47,40 @@ const Game = () => {
           progressNumber={0}
         />
       ),
-      component: <></>,
+      component: (
+        <MainComponent
+          title="Level 2: OR Gate Challenge"
+          desc="Use an OR gate to light up the lamp with either input."
+          operation="and"
+          data={dataAndItems}
+        >
+          <LevelTwo
+            onComplete={() => setSelectedLevel(3)}
+            goHome={() => setSelectedLevel(0)}
+          />
+        </MainComponent>
+      ),
+    },
+    {
+      name: "level 2",
+      view: (
+        <LevelCart
+          title="Simple OR Gate"
+          description="Come on, build your skills 💪"
+          levelActive
+          progressNumber={0}
+        />
+      ),
+      component: (
+        <MainComponent
+          title="Level 3: NOT Gate Illumination"
+          desc="Connect a NOT gate to light up the lamp when the inputs is off."
+          operation="and"
+          data={dataAndItems}
+        >
+          <LevelThree />
+        </MainComponent>
+      ),
     },
     {
       name: "level 5",

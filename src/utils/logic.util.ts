@@ -78,3 +78,8 @@ export const eachElement = [
     Reverse:Nand
   },
 ];
+
+export interface  componentInputProps {
+  value?: number;
+  onChange?: (value: number) => void;
+}

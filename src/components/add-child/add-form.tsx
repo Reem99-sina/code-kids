@@ -15,6 +15,7 @@ import { useAddChildMutation } from "@/services/profile-service";
 import toast from "react-hot-toast";
 import { ResponseChildParentAdd } from "@/types/parent.type";
 import {
+  useAddImageChildByParent,
   useEditChildByParent,
   useSkillsQuery,
 } from "@/services/parent-service";
@@ -66,10 +67,11 @@ const AddForm = ({
   const refFile = useRef<HTMLInputElement>(null);
   const { data } = useSkillsQuery();
   const { mutateAsync } = useAddChildMutation();
+  const { mutateAsync: mutatAsyncAddImage } = useAddImageChildByParent();
   const { mutateAsync: mutateAsyncEdit } = useEditChildByParent({
     id: edit?.id,
   });
- 
+
   const {
     register,
     control,
@@ -105,9 +107,19 @@ const AddForm = ({
   const onSubmit: SubmitHandler<AddChildRequest> = async (data) => {
     setLoading(true);
     await mutateAsync(data)
-      .then((res) => {
+      .then(async (res) => {
         if (res.data) {
           toast.success(res.message);
+          if (image) {
+            await mutatAsyncAddImage({
+              id: res?.data?.id,
+              image: data?.image,
+            }).then((ele) => {
+              if (ele.data) {
+                toast.success(ele.message);
+              }
+            });
+          }
         } else {
           toast.error(res.message);
         }
