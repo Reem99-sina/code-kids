@@ -1,4 +1,4 @@
-import {  AndOff, LampOff, LampOn, Or } from "@/assets";
+import { AndOff, LampOff, LampOn, NottIcon, Or } from "@/assets";
 import InputBinaryComponent from "@/components/games/input-binary-component";
 
 export const dataAndItems = [
@@ -50,5 +50,9 @@ export const eachElement = [
     title: "input",
     Icon: InputBinaryComponent,
   },
-  
+  {
+    id: 6,
+    title: "not",
+    Icon: NottIcon,
+  },
 ];

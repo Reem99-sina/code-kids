@@ -27,11 +27,12 @@ interface LineDirection {
   from: dotInfo;
   to: dotInfo;
 }
-interface LevelOneProps {
+interface LevelTwoProps {
   onComplete: () => void;
   goHome: () => void;
 }
-const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
+
+const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const rect = constraintsRef?.current?.getBoundingClientRect();
   const [visible, setVisible] = useState<number | undefined>();
@@ -71,25 +72,25 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
   const validateConnections = () => {
     const connections = [...lines];
 
-    const andGate = boxes.find((box) => box.title === "and");
+    const orGate = boxes.find((box) => box.title === "or");
     const lamp = boxes.find((box) => box.title === "lamp-off");
 
-    if (!andGate || !lamp) {
-      alert("Missing AND gate or Lamp.");
+    if (!orGate || !lamp) {
+      alert("Missing OR gate or Lamp.");
 
       return;
     }
 
-    const andGateId = boxes.indexOf(andGate) + 1;
+    const orGateId = boxes.indexOf(orGate) + 1;
     const lampId = boxes.indexOf(lamp) + 1;
 
-    const inputsToAnd = connections.filter((line) => line?.to.id === andGateId);
+    const inputsToOr = connections.filter((line) => line?.to.id === orGateId);
 
-    const andToLamp = connections.find(
-      (line) => line?.from.id === andGateId && line?.to.id === lampId
+    const orToLamp = connections.find(
+      (line) => line?.from.id === orGateId && line?.to.id === lampId
     );
 
-    if (inputsToAnd.length === 1 && !andToLamp) {
+    if (inputsToOr.length > 0 && !orToLamp) {
       modalRef.current?.open();
     } else {
       alert("❌ Incorrect logic, try again.");
@@ -173,7 +174,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           })}
 
           <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
-            {/* Final lines */}
             {lines?.map((line, index) => (
               <motion.line
                 key={index}
@@ -187,7 +187,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
               />
             ))}
 
-            {/* Live drawing line */}
             {startDot && mousePos && (
               <motion.line
                 x1={startDot.x}
@@ -204,7 +203,7 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
 
       <div className="flex items-center gap-3 flex-wrap mt-4">
         <Button
-          text="Create AND Gate"
+          text="Create OR Gate"
           className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
           onClick={() => {
             setBoxes((prev) => [...prev, { ...eachElement[0] }]);
@@ -242,10 +241,10 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
         />
       </div>
       <Modal ref={modalRef}>
-        <LevelComplete level="1" onNextLevel={onComplete} onGoHome={goHome} />
+        <LevelComplete level="2" onNextLevel={onComplete} onGoHome={goHome} />
       </Modal>
     </>
   );
 };
 
-export default LevelOne;
+export default LevelTwo;

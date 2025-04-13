@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const InputBinaryComponent = () => {
   const [binary, setBinary] = useState(0);
-  
+
   return (
     <div
       className={clsx(

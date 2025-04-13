@@ -3,8 +3,6 @@ import { eachElement } from "@/utils/logic.util";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
-import { Modal, ModalRef } from "@/components/common/modal.component";
-import { LevelComplete } from "@/components/levels/LevelComplete";
 
 interface box {
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
@@ -27,11 +25,8 @@ interface LineDirection {
   from: dotInfo;
   to: dotInfo;
 }
-interface LevelOneProps {
-  onComplete: () => void;
-  goHome: () => void;
-}
-const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
+
+const LevelThree = () => {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const rect = constraintsRef?.current?.getBoundingClientRect();
   const [visible, setVisible] = useState<number | undefined>();
@@ -39,7 +34,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
   const [lines, setLines] = useState<(LineDirection | undefined)[]>([]);
   const [startDot, setStartDot] = useState<dotInfo | null>(null);
   const [mousePos, setMousePos] = useState<mouseMove | null>(null);
-  const modalRef = useRef<ModalRef>(null);
 
   const handleDotClick = ({
     dot,
@@ -71,26 +65,26 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
   const validateConnections = () => {
     const connections = [...lines];
 
-    const andGate = boxes.find((box) => box.title === "and");
+    const notGate = boxes.find((box) => box.title === "not");
     const lamp = boxes.find((box) => box.title === "lamp-off");
 
-    if (!andGate || !lamp) {
-      alert("Missing AND gate or Lamp.");
+    if (!notGate || !lamp) {
+      alert("Missing NOT gate or Lamp.");
 
       return;
     }
 
-    const andGateId = boxes.indexOf(andGate) + 1;
+    const notGateId = boxes.indexOf(notGate) + 1;
     const lampId = boxes.indexOf(lamp) + 1;
 
-    const inputsToAnd = connections.filter((line) => line?.to.id === andGateId);
+    const inputsToNot = connections.filter((line) => line?.to.id === notGateId);
 
-    const andToLamp = connections.find(
-      (line) => line?.from.id === andGateId && line?.to.id === lampId
+    const notToLamp = connections.find(
+      (line) => line?.from.id === notGateId && line?.to.id === lampId
     );
 
-    if (inputsToAnd.length === 1 && !andToLamp) {
-      modalRef.current?.open();
+    if (inputsToNot.length > 0 && !notToLamp) {
+      alert("✅ Correct connection!");
     } else {
       alert("❌ Incorrect logic, try again.");
     }
@@ -141,6 +135,17 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                       ]}
                       onClick={handleDotClick}
                     />
+                  ) : ele?.title === "not" ? (
+                    <IconDots
+                      direction_dots_true={[
+                        {
+                          direction: "center",
+                          color: "red",
+                          id: index + 1,
+                        },
+                      ]}
+                      onClick={handleDotClick}
+                    />
                   ) : (
                     <IconDots
                       direction_dots_true={[
@@ -173,7 +178,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           })}
 
           <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
-            {/* Final lines */}
             {lines?.map((line, index) => (
               <motion.line
                 key={index}
@@ -187,7 +191,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
               />
             ))}
 
-            {/* Live drawing line */}
             {startDot && mousePos && (
               <motion.line
                 x1={startDot.x}
@@ -204,22 +207,11 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
 
       <div className="flex items-center gap-3 flex-wrap mt-4">
         <Button
-          text="Create AND Gate"
-          className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[0] }]);
-          }}
-        />
-        <Button
-          text="Create QR Gate"
+          text="Create NOT Gate"
           className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[1] }]);
+            setBoxes((prev) => [...prev, { ...eachElement[5] }]);
           }}
-        />
-        <Button
-          text="Create NOT Gate"
-          className="bg-yellowFunf whitespace-nowrap !w-auto"
         />
         <Button
           text="Create LAMP"
@@ -241,11 +233,8 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           onClick={validateConnections}
         />
       </div>
-      <Modal ref={modalRef}>
-        <LevelComplete level="1" onNextLevel={onComplete} onGoHome={goHome} />
-      </Modal>
     </>
   );
 };
 
-export default LevelOne;
+export default LevelThree;

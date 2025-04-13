@@ -139,3 +139,4 @@ export { default as AndOff } from "./and-off.svg?react";
 export { default as Or } from "./or.svg?react";
 export { default as LampOff } from "./lamp-off.svg?react";
 export { default as LampOn } from "./lamp-on.svg?react";
+export { default as NottIcon } from "./NOT-icon.svg?react";
