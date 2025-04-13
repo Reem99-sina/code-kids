@@ -11,12 +11,14 @@ interface box {
   id: number;
   title: string;
 }
+
 export interface dotInfo {
   color: string;
   direction: string;
   id: number;
   x: number;
   y: number;
+  side?: string;
 }
 
 interface mouseMove {
@@ -27,12 +29,12 @@ interface LineDirection {
   from: dotInfo;
   to: dotInfo;
 }
-interface LevelThreeProps {
+interface LevelForProps {
   onComplete: () => void;
   goHome: () => void;
 }
 
-const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
+const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const rect = constraintsRef?.current?.getBoundingClientRect();
   const [visible, setVisible] = useState<number | undefined>();
@@ -41,6 +43,8 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
   const [startDot, setStartDot] = useState<dotInfo | null>(null);
   const [mousePos, setMousePos] = useState<mouseMove | null>(null);
   const modalRef = useRef<ModalRef>(null);
+
+  const generateUniqueId = () => Date.now() + Math.floor(Math.random() * 1000);
 
   const handleDotClick = ({
     dot,
@@ -72,28 +76,30 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
   const validateConnections = () => {
     const connections = [...lines];
 
+    const andGate = boxes.find((box) => box.title === "and");
     const notGate = boxes.find((box) => box.title === "not");
     const lamp = boxes.find((box) => box.title === "lamp-off");
 
-    if (!notGate || !lamp) {
-      alert("Missing NOT gate or Lamp.");
+    if (!andGate || !notGate || !lamp) {
+      alert("Missing one of the gates or lamp.");
 
       return;
     }
 
-    const notGateId = boxes.indexOf(notGate) + 1;
-    const lampId = boxes.indexOf(lamp) + 1;
-
-    const inputsToNot = connections.filter((line) => line?.to.id === notGateId);
-
+    const inputsToAND = connections.filter(
+      (line) => line?.to.id === andGate.id
+    );
+    const andToNot = connections.find(
+      (line) => line?.from.id === andGate.id && line?.to.id === notGate.id
+    );
     const notToLamp = connections.find(
-      (line) => line?.from.id === notGateId && line?.to.id === lampId
+      (line) => line?.from.id === notGate.id && line?.to.id === lamp.id
     );
 
-    if (inputsToNot.length > 0 && notToLamp) {
+    if (inputsToAND.length >= 2 && andToNot && notToLamp) {
       modalRef.current?.open();
     } else {
-      alert("❌ Incorrect logic, try again.");
+      alert("❌ Try again. Make sure the NAND sequence is correct.");
     }
   };
 
@@ -120,41 +126,41 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
                   event?.preventDefault();
                   setVisible(index);
                 }}
-                key={index}
+                key={ele.id}
               >
                 <div className="relative">
-                  {ele?.title === "lamp-off" ? (
+                  {ele.title === "lamp-off" ? (
                     <IconDots
                       direction_dots_true={[
                         {
                           direction: "center",
                           color: "red",
-                          id: index + 1,
+                          id: ele.id,
                           side: "left",
                         },
                       ]}
                       onClick={handleDotClick}
                     />
-                  ) : ele?.title === "input" ? (
+                  ) : ele.title === "input" ? (
                     <IconDots
                       direction_dots_true={[
-                        { direction: "center", color: "red", id: index + 1 },
+                        { direction: "center", color: "red", id: ele.id },
                       ]}
                       onClick={handleDotClick}
                     />
-                  ) : ele?.title === "not" ? (
+                  ) : ele.title === "not" ? (
                     <IconDots
                       direction_dots_true={[
                         {
                           direction: "center",
                           color: "red",
-                          id: index + 1,
+                          id: ele.id,
                           side: "left",
                         },
                         {
                           direction: "center",
                           color: "red",
-                          id: index + 1,
+                          id: ele.id,
                           side: "right",
                         },
                       ]}
@@ -163,9 +169,9 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
                   ) : (
                     <IconDots
                       direction_dots_true={[
-                        { direction: "top", color: "red", id: index + 1 },
-                        { direction: "bottom", color: "red", id: index + 2 },
-                        { direction: "center", color: "red", id: index + 3 },
+                        { direction: "top", color: "red", id: ele.id },
+                        { direction: "bottom", color: "red", id: ele.id },
+                        { direction: "center", color: "red", id: ele.id },
                       ]}
                       onClick={handleDotClick}
                     />
@@ -180,7 +186,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
                       className="!text-xs !bg-white !border !border-gray-300 !whitespace-nowrap !p-1"
                       onClick={() => {
                         setBoxes((prev) =>
-                          prev ? prev.filter((_, ind) => ind != index) : []
+                          prev ? prev.filter((_, ind) => ind !== index) : []
                         );
                         setVisible(undefined);
                       }}
@@ -221,24 +227,44 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
 
       <div className="flex items-center gap-3 flex-wrap mt-4">
         <Button
+          text="Create AND Gate"
+          className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
+          onClick={() => {
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[0], id: generateUniqueId() },
+            ]);
+          }}
+        />
+        <Button
           text="Create NOT Gate"
           className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[5] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[5], id: generateUniqueId() },
+            ]);
           }}
         />
+
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[2] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[2], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create INPUT"
           className="bg-purpleEight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[4] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[4], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
@@ -248,10 +274,10 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
         />
       </div>
       <Modal ref={modalRef}>
-        <LevelComplete level="3" onNextLevel={onComplete} onGoHome={goHome} />
+        <LevelComplete level="4" onNextLevel={onComplete} onGoHome={goHome} />
       </Modal>
     </>
   );
 };
 
-export default LevelThree;
+export default LevelFour;

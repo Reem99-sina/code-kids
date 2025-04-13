@@ -1,6 +1,7 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import ContentFooter from "@/components/footer/ContentFooter";
+import LevelFour from "@/components/games/level-four/level-four";
 import LevelOne from "@/components/games/level-one/level-one";
 import LevelThree from "@/components/games/level-three/level-three";
 import LevelTwo from "@/components/games/level-two/levels-two";
@@ -61,7 +62,7 @@ const Game = () => {
       ),
     },
     {
-      name: "level 2",
+      name: "level 3",
       view: (
         <LevelCart
           title="Simple OR Gate"
@@ -77,7 +78,34 @@ const Game = () => {
           operation="and"
           data={dataAndItems}
         >
-          <LevelThree />
+          <LevelThree
+            onComplete={() => setSelectedLevel(4)}
+            goHome={() => setSelectedLevel(0)}
+          />
+        </MainComponent>
+      ),
+    },
+    {
+      name: "level 4",
+      view: (
+        <LevelCart
+          title="Simple OR Gate"
+          description="Come on, build your skills 💪"
+          levelActive
+          progressNumber={0}
+        />
+      ),
+      component: (
+        <MainComponent
+          title="Level 4: NAND Gate Creation"
+          desc="Create a NAND gate using AND and NOT gates, then light up the lamp."
+          operation="and"
+          data={dataAndItems}
+        >
+          <LevelFour
+            onComplete={() => setSelectedLevel(4)}
+            goHome={() => setSelectedLevel(0)}
+          />
         </MainComponent>
       ),
     },
