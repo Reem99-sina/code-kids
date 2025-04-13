@@ -3,6 +3,7 @@ import { LevelCart } from "@/components/cards/level-cart";
 import ContentFooter from "@/components/footer/ContentFooter";
 import LevelFive from "@/components/games/level-five/level-five";
 import LevelOne from "@/components/games/level-one/level-one";
+import LevelSix from "@/components/games/level-six/level-six";
 import LevelThree from "@/components/games/level-three/level-three";
 import LevelTwo from "@/components/games/level-two/levels-two";
 import MainComponent from "@/components/games/main-component";
@@ -93,14 +94,45 @@ const Game = () => {
         />
       ),
       component: (
-        <MainComponent
-          title="Level 5: NAND Gate Usage"
-          desc="Use the NAND gate to light up the lamp."
-          operation="and"
-          data={dataNandItems}
-        >
-          <LevelFive />
-        </MainComponent>
+        <div className="pt-10">
+          <MainComponent
+            title="Level 5: NAND Gate Usage"
+            desc="Use the NAND gate to light up the lamp."
+            operation="and"
+            data={dataNandItems}
+          >
+            <LevelFive
+              onComplete={() => setSelectedLevel(6)}
+              goHome={() => setSelectedLevel(0)}
+            />
+          </MainComponent>
+        </div>
+      ),
+    },
+    {
+      name: "level 6",
+      view: (
+        <LevelCart
+          title=" NAND to AND Coversation"
+          description="Create an AND gate using only NAND gates."
+          levelActive
+          progressNumber={0}
+        />
+      ),
+      component: (
+        <div className="pt-10">
+          <MainComponent
+            title="Level 6: NAND to AND Coversation"
+            desc="Create an AND gate using only NAND gates."
+            operation="and"
+            data={dataAndItems}
+          >
+            <LevelSix
+              onComplete={() => setSelectedLevel(6)}
+              goHome={() => setSelectedLevel(0)}
+            />
+          </MainComponent>
+        </div>
       ),
     },
   ];

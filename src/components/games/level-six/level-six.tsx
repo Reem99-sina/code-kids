@@ -1,6 +1,13 @@
 import { Button } from "@/components/common/button.component";
-import { BoxInterface, dotInfo, eachElement, LineDirection, mouseMove } from "@/utils/logic.util";
-import { FunctionComponent,  useRef, useState } from "react";
+import {
+  BoxInterface,
+  componentInputProps,
+  dotInfo,
+  eachElement,
+  LineDirection,
+  mouseMove,
+} from "@/utils/logic.util";
+import { FunctionComponent, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
 import { LampOff, LampOn } from "@/assets";
@@ -8,18 +15,12 @@ import { Modal, ModalRef } from "@/components/common/modal.component";
 import { LevelComplete } from "@/components/levels/LevelComplete";
 import toast from "react-hot-toast";
 
-interface componentInputProps {
-  value?: number;
-  onChange?: (value: number) => void;
-}
-
-
 interface LevelFiveProps {
   onComplete: () => void;
   goHome: () => void;
 }
 
-const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
+const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
   const modalRef = useRef<ModalRef>(null);
   const [binary, setBinary] = useState({ input_1: 0, input_2: 0 });
   const constraintsRef = useRef<HTMLDivElement>(null);
@@ -102,6 +103,7 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
 
   return (
     <>
+      {" "}
       <div
         className="relative w-full  bg-gray-100"
         onMouseMove={handleMouseMove}
@@ -325,7 +327,7 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
           text="Create NAND Gate"
           className="bg-purpleNine whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[4] }]);
+            setBoxes((prev) => [...prev, { ...eachElement[4], }]);
           }}
         />
         <Button
@@ -341,4 +343,4 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
   );
 };
 
-export default LevelFive;
+export default LevelSix;

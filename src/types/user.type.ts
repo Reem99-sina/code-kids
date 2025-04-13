@@ -78,4 +78,5 @@ export interface AddChildResponse {
   password: string;
   age: number;
   skills: string[];
+  id:number
 }

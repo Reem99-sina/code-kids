@@ -142,3 +142,4 @@ export { default as LampOn } from "./lamp-on.svg?react";
 
 export { default as Nand } from "./nand-on.svg?react";
 export { default as NandOff } from "./nand-off.svg?react";
+export { default as NottIcon } from "./NOT-icon.svg?react";

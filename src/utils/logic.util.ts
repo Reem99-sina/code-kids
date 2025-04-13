@@ -1,5 +1,16 @@
-import {  And, AndOff, LampOff, LampOn, Nand, NandOff, Or } from "@/assets";
+import {
+  And,
+  AndOff,
+  LampOff,
+  LampOn,
+  Nand,
+  NandOff,
+  Or,
+  NottIcon,
+} from "@/assets";
+
 import InputBinaryComponent from "@/components/games/input-binary-component";
+import { FunctionComponent, SVGProps } from "react";
 
 export const dataAndItems = [
   {
@@ -47,25 +58,26 @@ export const dataNandItems = [
   },
 ];
 
+
 export const eachElement = [
   {
     id: 1,
     title: "and",
     Icon: AndOff,
-    Reverse:And
+    Reverse: And,
   },
   {
     id: 2,
     title: "or",
     Icon: Or,
-    Reverse:Or
+    Reverse: Or,
   },
   {
     id: 3,
     title: "lamp-off",
     Icon: LampOff,
-    Reverse:LampOn
-  }, 
+    Reverse: LampOn,
+  },
   {
     id: 4,
     title: "input",
@@ -73,13 +85,43 @@ export const eachElement = [
   },
   {
     id: 5,
-    title: "nane",
+    title: "nand",
     Icon: NandOff,
-    Reverse:Nand
+    Reverse: Nand,
+  },
+  {
+    id: 6,
+    title: "not",
+    Icon: NottIcon,
   },
 ];
 
-export interface  componentInputProps {
+export interface componentInputProps {
   value?: number;
   onChange?: (value: number) => void;
+}
+
+export interface BoxInterface {
+  Icon:
+    | FunctionComponent<SVGProps<SVGSVGElement>>
+    | FunctionComponent<componentInputProps>;
+  id: number;
+  title: string;
+  Reverse?: FunctionComponent<SVGProps<SVGSVGElement>>;
+}
+export interface dotInfo {
+  color: string;
+  direction: string;
+  id: number;
+  x: number;
+  y: number;
+}
+export interface LineDirection {
+  from: dotInfo;
+  to: dotInfo;
+}
+
+export interface mouseMove {
+  x: number;
+  y: number;
 }

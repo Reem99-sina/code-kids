@@ -287,7 +287,7 @@ const AddForm = ({
                   control={control}
                   rules={{
                     required: {
-                      value: true,
+                      value:true,
                       message: "the avatar is required",
                     },
                   }}
