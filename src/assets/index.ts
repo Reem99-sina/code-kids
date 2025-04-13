@@ -139,3 +139,6 @@ export { default as AndOff } from "./and-off.svg?react";
 export { default as Or } from "./or.svg?react";
 export { default as LampOff } from "./lamp-off.svg?react";
 export { default as LampOn } from "./lamp-on.svg?react";
+
+export { default as Nand } from "./nand-on.svg?react";
+export { default as NandOff } from "./nand-off.svg?react";

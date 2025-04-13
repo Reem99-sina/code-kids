@@ -1,20 +1,28 @@
 import clsx from "clsx";
-import { useState } from "react";
 
-const InputBinaryComponent = () => {
-  const [binary, setBinary] = useState(0);
-  
+const InputBinaryComponent = ({
+  value,
+  onChange,
+}: {
+  value?: number;
+  onChange?: (value: number) => void;
+}) => {
+
+
   return (
     <div
+    
       className={clsx(
-        binary == 0 ? "bg-redTwo" : "bg-greenTwo",
+        value == 0 ? "bg-redTwo" : "bg-greenTwo",
         "text-white px-3 py-2 rounded-md"
       )}
       onClick={() => {
-        setBinary((prev) => (prev == 0 ? 1 : 0));
+        if (onChange) {
+          onChange(value == 0 ? 1 : 0);
+        }
       }}
     >
-      {binary}
+      {value}
     </div>
   );
 };

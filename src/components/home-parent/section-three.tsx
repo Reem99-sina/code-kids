@@ -2,6 +2,7 @@ import Slider, { Settings } from "react-slick";
 import { NextArrow, PrevArrow } from "../common/slider-arrow";
 import RecommededCourse from "./recommeded-course";
 import {
+  useGetRecommededCourses,
   // useGetRecommededCourses,
   useParentQuery,
 } from "@/services/parent-service";
@@ -107,7 +108,7 @@ const SectionThree = () => {
                     ))}
                   </Slider>
                 </div> */}
-                <RecommededCourses />
+                <RecommededCourses id={ele?.id} />
               </div>
             ))
           ) : (
@@ -152,8 +153,9 @@ const SectionThree = () => {
 
 export default SectionThree;
 
-const RecommededCourses = () => {
-  // const { data } = useGetRecommededCourses({ id: id });
+const RecommededCourses = ({id}:{id?:number}) => {
+  const { data } = useGetRecommededCourses({ id: id });
+  console.log(data,"data")
 
   return (
     <div className="flex gap-4 max-w-full justify-start">

@@ -1,9 +1,10 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import ContentFooter from "@/components/footer/ContentFooter";
+import LevelFive from "@/components/games/level-five/level-five";
 import LevelOne from "@/components/games/level-one/level-one";
 import MainComponent from "@/components/games/main-component";
-import { dataAndItems } from "@/utils/logic.util";
+import { dataAndItems, dataNandItems } from "@/utils/logic.util";
 import { useState } from "react";
 
 const Game = () => {
@@ -27,7 +28,7 @@ const Game = () => {
           operation="and"
           data={dataAndItems}
         >
-          <LevelOne/>
+          <LevelOne />
         </MainComponent>
       ),
     },
@@ -42,6 +43,27 @@ const Game = () => {
         />
       ),
       component: <></>,
+    },
+    {
+      name: "level 5",
+      view: (
+        <LevelCart
+          title=" NAND Gate Usage"
+          description="Come on, build your skills 💪"
+          levelActive
+          progressNumber={0}
+        />
+      ),
+      component: (
+        <MainComponent
+          title="Level 5: NAND Gate Usage"
+          desc="Use the NAND gate to light up the lamp."
+          operation="and"
+          data={dataNandItems}
+        >
+          <LevelFive />
+        </MainComponent>
+      ),
     },
   ];
 

@@ -1,16 +1,17 @@
 import clsx from "clsx";
-import {  useMemo } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { dotInfo } from "./level-one/level-one";
 
 interface DirectionDots {
   direction: "top" | "bottom" | "center";
+  leftOrRight?: "left" | "right";
   color: "green" | "red";
   id: number;
 }
-interface props{
-    event: React.MouseEvent<HTMLDivElement>;
-    dot: dotInfo;
+interface props {
+  event: React.MouseEvent<HTMLDivElement>;
+  dot: dotInfo;
 }
 
 const IconDots = ({
@@ -47,7 +48,7 @@ const IconDots = ({
                 ...ele,
                 x: event?.clientX,
                 y: event?.clientY,
-                id: 1,
+              
               },
             })
           }
@@ -58,8 +59,9 @@ const IconDots = ({
       {rightDots?.map((ele) => (
         <motion.div
           className={clsx(
-            "absolute w-4 h-4 rounded-full -right-5 top-6",
-            ele?.color == "green" ? "bg-greenTwo" : "bg-redTwo"
+            "absolute w-4 h-4 rounded-full  top-6",
+            ele?.color == "green" ? "bg-greenTwo" : "bg-redTwo",
+            ele?.leftOrRight == "left" ? "-left-5" : "-right-5"
           )}
           key={ele?.id}
           onClick={(event) =>
@@ -69,7 +71,7 @@ const IconDots = ({
                 ...ele,
                 x: event?.clientX,
                 y: event?.clientY,
-                id: 2,
+              
               },
             })
           }
