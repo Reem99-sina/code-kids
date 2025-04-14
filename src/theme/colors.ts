@@ -16,6 +16,7 @@ export const colors = {
   purpleFunf:"#D406FF",
   purpleEight:"#9B59B6",
   purpleNine:"#6C5CE7",
+  purpleTen:"#F4BEFF",
 
   pinkOne: "#FF1D92",
   pinkOneTransparent: "#FFEBFD",

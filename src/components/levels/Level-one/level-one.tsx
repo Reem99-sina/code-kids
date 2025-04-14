@@ -1,4 +1,4 @@
-import { BatteryIconB, HelpIcon, HomeIcon, Light, LightOff } from "@/assets";
+import { BatteryIconB,  HomeIcon, Light, LightOff } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
 import { TransmitCard } from "@/components/common/transmit-card";
@@ -106,9 +106,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
             />
           </Modal>
         </div>
-        <div className="absolute  bottom-8 right-0">
-          <HelpIcon />
-        </div>
+       
       </div>
     </>
   );

@@ -4,7 +4,7 @@ import {
   componentInputProps,
   eachElement,
 } from "@/utils/logic.util";
-import { FunctionComponent, useRef, useState } from "react";
+import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
 import { Modal, ModalRef } from "@/components/common/modal.component";
@@ -35,7 +35,10 @@ interface LevelForProps {
 
 const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
-  const [binary, setBinary] = useState({ input_1: 0, input_2: 0 });
+  const [binary, setBinary] = useState<{ input_1: number; input_2: number }>({
+    input_1: 0,
+    input_2: 0,
+  });
 
   const rect = constraintsRef?.current?.getBoundingClientRect();
   const [visible, setVisible] = useState<number | undefined>();
@@ -104,6 +107,10 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
     }
   };
 
+  const hasInput = useMemo(() => {
+    return boxes.filter((ele) => ele?.title == "input");
+  }, [boxes]);
+
   const output = ({
     input_1,
     input_2,
@@ -127,7 +134,6 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
   const outputNot = ({ input_1 }: { input_1: number }) => {
     return input_1 == 1 ? 0 : 1;
   };
-
 
   return (
     <>
@@ -180,7 +186,9 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "center",
                           color:
-                            binary[index + 1 == 1 ? "input_1" : "input_2"] == 1
+                            binary[
+                              `input_${ele?.index}` as keyof typeof binary
+                            ] == 1
                               ? "green"
                               : "red",
                           id: ele.id,
@@ -225,12 +233,12 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                       direction_dots_true={[
                         {
                           direction: "top",
-                          color: binary["input_2"] == 1 ? "green" : "red",
+                          color: binary["input_1"] == 1 ? "green" : "red",
                           id: ele.id,
                         },
                         {
                           direction: "bottom",
-                          color: binary["input_1"] == 1 ? "green" : "red",
+                          color: binary["input_2"] == 1 ? "green" : "red",
                           id: ele.id,
                         },
                         {
@@ -252,8 +260,10 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                     (() => {
                       const Component =
                         Icon as FunctionComponent<componentInputProps>;
-                      const id = index + 1 == 1 ? "input_1" : "input_2";
+                      // const id = hasInput.length==1? "input_1" : "input_2";
+                      const id = `input_${ele?.index}` as keyof typeof binary;
                      
+
                       return (
                         <Component
                           value={binary[id]}
@@ -336,12 +346,12 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                 stroke={
                   line?.from?.direction == "bottom" ||
                   line?.to?.direction == "bottom"
-                    ? binary["input_1"] == 1
+                    ? binary["input_2"] == 1
                       ? "green"
                       : "red"
                     : line?.from?.direction == "top" ||
                         line?.to?.direction == "top"
-                      ? binary["input_2"] == 1
+                      ? binary["input_1"] == 1
                         ? "green"
                         : "red"
                       : (!line?.from?.side || !line?.to?.side) &&
@@ -415,7 +425,11 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
           onClick={() => {
             setBoxes((prev) => [
               ...prev,
-              { ...eachElement[3], id: generateUniqueId() },
+              {
+                ...eachElement[3],
+                id: generateUniqueId(),
+                index: hasInput?.length == 1 ? 2 : 1,
+              },
             ]);
           }}
         />

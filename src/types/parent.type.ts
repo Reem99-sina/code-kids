@@ -47,16 +47,13 @@ export interface GetChildByParent {
 }
 
 export interface RecommendedCoursesResponse {
-  id: number;
-  trackId: number;
-  name: string;
-  description: string;
-  totalLessons: number;
-  skillLevel: string;
-  suggestedNextTrackId: number;
-  totalParticipants: number;
-  totalBadges: number;
-  totalStars: number;
-  createdAt:string;
-  updatedAt:string;
+  ageRange?: { min: number; max: number };
+  description?: string;
+  id?: number;
+  name?: string;
+  originalPrice?: string;
+  period?: number;
+  price?: number;
+  rate?: null | number;
+  totalRatings?: number;
 }

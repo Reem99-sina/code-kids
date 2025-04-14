@@ -3,8 +3,9 @@ import {
   BoxInterface,
   componentInputProps,
   eachElement,
+  generateUniqueId,
 } from "@/utils/logic.util";
-import { FunctionComponent, useRef, useState } from "react";
+import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
 import { Modal, ModalRef } from "@/components/common/modal.component";
@@ -71,6 +72,10 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
     });
   };
 
+  const hasInput = useMemo(() => {
+      return boxes.filter((ele) => ele?.title == "input");
+    }, [boxes]);
+
   const validateConnections = () => {
     const connections = [...lines];
 
@@ -83,21 +88,19 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
       return;
     }
 
-    const notGateId = boxes.indexOf(notGate) + 1;
-    const lampId = boxes.indexOf(lamp) + 1;
 
-    const inputsToNot = connections.filter((line) => line?.to.id === notGateId);
+    const inputsToNot = connections.filter((line) => line?.to.id === notGate?.id);
 
     const notToLamp = connections.find(
-      (line) => line?.from.id === notGateId && line?.to.id === lampId
+      (line) => line?.from.id === notGate?.id && line?.to.id === lamp?.id
     );
-
-    if (inputsToNot.length > 0 && notToLamp) {
+    if (inputsToNot.length >= 1 && notToLamp) {
       modalRef.current?.open();
     } else {
       alert("❌ Incorrect logic, try again.");
     }
   };
+
   const output = ({ input_1 }: { input_1: number }) => {
     return input_1 == 1 ? 0 : 1;
   };
@@ -140,7 +143,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
                             }) == 1
                               ? "green"
                               : "red",
-                          id: index + 1,
+                          id: ele?.id,
                           side: "left",
                         },
                       ]}
@@ -152,7 +155,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "center",
                           color: binary["input_1"] == 1 ? "green" : "red",
-                          id: index + 1,
+                          id: ele?.id,
                         },
                       ]}
                       onClick={handleDotClick}
@@ -163,7 +166,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "center",
 
-                          id: index + 1,
+                          id: ele?.id,
                           side: "left",
                           color: binary["input_1"] == 1 ? "green" : "red",
                         },
@@ -173,7 +176,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
                             output({ input_1: binary["input_1"] }) == 1
                               ? "green"
                               : "red",
-                          id: index + 1,
+                          id: ele?.id,
                           side: "right",
                         },
                       ]}
@@ -182,7 +185,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
                   ) : (
                     <IconDots
                       direction_dots_true={[
-                        { direction: "top", color: "red", id: index + 1 },
+                        { direction: "top", color: "red", id: ele?.id },
                         { direction: "bottom", color: "red", id: index + 2 },
                         { direction: "center", color: "red", id: index + 3 },
                       ]}
@@ -286,21 +289,24 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
           text="Create NOT Gate"
           className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[5] }]);
+            setBoxes((prev) => [...prev, { ...eachElement[5],id: generateUniqueId() }]);
           }}
         />
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[2] }]);
+            setBoxes((prev) => [...prev, { ...eachElement[2],id: generateUniqueId() }]);
           }}
         />
         <Button
           text="Create INPUT"
           className="bg-purpleEight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[3] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[3], index: hasInput?.length == 1 ? 2 : 1 ,id: generateUniqueId()},
+            ]);
           }}
         />
         <Button

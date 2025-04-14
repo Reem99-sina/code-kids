@@ -3,8 +3,9 @@ import {
   BoxInterface,
   componentInputProps,
   eachElement,
+  generateUniqueId,
 } from "@/utils/logic.util";
-import { FunctionComponent, useRef, useState } from "react";
+import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
 import { Modal, ModalRef } from "@/components/common/modal.component";
@@ -82,16 +83,15 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
       return;
     }
 
-    const orGateId = boxes.indexOf(orGate) + 1;
-    const lampId = boxes.indexOf(lamp) + 1;
+   
 
-    const inputsToOr = connections.filter((line) => line?.to.id === orGateId);
+    const inputsToOr = connections.filter((line) => line?.to.id === orGate?.id);
 
     const orToLamp = connections.find(
-      (line) => line?.from.id === orGateId && line?.to.id === lampId
+      (line) => line?.from.id === orGate?.id && line?.to.id === lamp?.id
     );
 
-    if (inputsToOr.length > 0 && !orToLamp) {
+    if (inputsToOr.length > 1 && orToLamp) {
       modalRef.current?.open();
     } else {
       alert("❌ Incorrect logic, try again.");
@@ -109,6 +109,10 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
       ? 1
       : 0;
   };
+
+  const hasInput = useMemo(() => {
+    return boxes.filter((ele) => ele?.title == "input");
+  }, [boxes]);
 
   return (
     <>
@@ -143,10 +147,12 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "center",
                           color:
-                            binary[index + 1 == 1 ? "input_1" : "input_2"] == 1
+                            binary[
+                              `input_${ele?.index}` as keyof typeof binary
+                            ] == 1
                               ? "green"
                               : "red",
-                          id: index + 1,
+                          id: ele?.id,
                         },
                       ]}
                       onClick={handleDotClick}
@@ -163,7 +169,7 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                             }) == 1
                               ? "green"
                               : "red",
-                          id: index + 3,
+                          id: ele?.id,
                           side: "left",
                         },
                       ]}
@@ -175,12 +181,12 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "top",
                           color: binary["input_2"] == 1 ? "green" : "red",
-                          id: index + 1,
+                          id: ele?.id,
                         },
                         {
                           direction: "bottom",
                           color: binary["input_1"] == 1 ? "green" : "red",
-                          id: index + 2,
+                          id: ele?.id,
                         },
                         {
                           direction: "center",
@@ -190,7 +196,7 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                           })
                             ? "green"
                             : "red",
-                          id: index + 3,
+                          id: ele?.id,
                         },
                       ]}
                       onClick={handleDotClick}
@@ -200,8 +206,8 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                     (() => {
                       const Component =
                         Icon as FunctionComponent<componentInputProps>;
-                      const id = index + 1 == 1 ? "input_1" : "input_2";
-                     
+                      const id = `input_${ele?.index}` as keyof typeof binary;
+
                       return (
                         <Component
                           value={binary[id]}
@@ -300,35 +306,57 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
 
       <div className="flex items-center gap-3 flex-wrap mt-4">
         <Button
-          text="Create OR Gate"
+          text="Create AND Gate"
           className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[0] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[0], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create QR Gate"
           className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[1] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[1], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create NOT Gate"
           className="bg-yellowFunf whitespace-nowrap !w-auto"
+          onClick={() => {
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[5], id: generateUniqueId() },
+            ]);
+          }}
         />
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[2] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[2], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create INPUT"
           className="bg-purpleEight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[3] }]);
+            setBoxes((prev) => [
+              ...prev,
+              {
+                ...eachElement[3],
+                index: hasInput?.length == 1 ? 2 : 1,
+                id: generateUniqueId(),
+              },
+            ]);
           }}
         />
         <Button

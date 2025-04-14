@@ -97,7 +97,7 @@ const Game = () => {
         name: "level 4",
         view: (
           <LevelCart
-            title="Simple OR Gate"
+            title="Simple NAND Gate"
             description="Come on, build your skills 💪"
             levelActive
             progressNumber={0}

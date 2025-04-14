@@ -18,6 +18,19 @@ export const generateBinary = ({
   return binaryString;
 };
 
+export const generateRandomDec = ({
+  length,
+  DecNumber,
+}: {
+  length: number;
+  DecNumber: number;
+}) => {
+  const maxDecimal = Math.pow(2, length) - 1;
+  const randomDecimal = Math.floor(DecNumber * (maxDecimal + 1));
+  const binaryString = randomDecimal.toString(2).padStart(length, "0");
+
+  return {randomDecimal,binaryString};
+};
 export const sumBinaryNumber = ({
   first_num,
   second_num,

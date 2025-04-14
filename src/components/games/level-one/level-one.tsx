@@ -3,14 +3,14 @@ import {
   BoxInterface,
   componentInputProps,
   eachElement,
+  generateUniqueId,
 } from "@/utils/logic.util";
-import { FunctionComponent, useRef, useState } from "react";
+import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import { LevelComplete } from "@/components/levels/LevelComplete";
 import { LampOff, LampOn } from "@/assets";
-
 
 export interface dotInfo {
   color: string;
@@ -82,16 +82,14 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
       return;
     }
 
-    const andGateId = boxes.indexOf(andGate) + 1;
-    const lampId = boxes.indexOf(lamp) + 1;
 
-    const inputsToAnd = connections.filter((line) => line?.to.id === andGateId);
+    const inputsToAnd = connections.filter((line) => line?.to.id === andGate?.id);
 
     const andToLamp = connections.find(
-      (line) => line?.from.id === andGateId && line?.to.id === lampId
+      (line) => line?.from.id === andGate?.id && line?.to.id === lamp?.id
     );
 
-    if (inputsToAnd.length === 1 && !andToLamp) {
+    if (inputsToAnd.length > 1 && andToLamp) {
       modalRef.current?.open();
     } else {
       alert("❌ Incorrect logic, try again.");
@@ -107,6 +105,10 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
   }) => {
     return input_1 == 1 && input_2 == 1 ? 1 : 0;
   };
+
+  const hasInput = useMemo(() => {
+    return boxes.filter((ele) => ele?.title == "input");
+  }, [boxes]);
 
   return (
     <>
@@ -132,7 +134,7 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                   event?.preventDefault();
                   setVisible(index);
                 }}
-                key={index}
+                key={ele?.id}
               >
                 <div className="relative">
                   {ele?.title == "input" ? (
@@ -141,10 +143,12 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "center",
                           color:
-                            binary[index + 1 == 1 ? "input_1" : "input_2"] == 1
+                            binary[
+                              `input_${ele?.index}` as keyof typeof binary
+                            ] == 1
                               ? "green"
                               : "red",
-                          id: index + 1,
+                          id: ele?.id,
                         },
                       ]}
                       onClick={handleDotClick}
@@ -161,7 +165,7 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                             }) == 1
                               ? "green"
                               : "red",
-                          id: index + 3,
+                          id: ele?.id,
                           side: "left",
                         },
                       ]}
@@ -173,12 +177,12 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "top",
                           color: binary["input_2"] == 1 ? "green" : "red",
-                          id: index + 1,
+                          id: ele?.id,
                         },
                         {
                           direction: "bottom",
                           color: binary["input_1"] == 1 ? "green" : "red",
-                          id: index + 2,
+                          id: ele?.id,
                         },
                         {
                           direction: "center",
@@ -188,7 +192,7 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                           })
                             ? "green"
                             : "red",
-                          id: index + 3,
+                          id: ele?.id,
                         },
                       ]}
                       onClick={handleDotClick}
@@ -199,15 +203,15 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                     (() => {
                       const Component =
                         Icon as FunctionComponent<componentInputProps>;
-                      const id = index + 1 == 1 ? "input_1" : "input_2";
-                      
+                      const id = `input_${ele?.index}` as keyof typeof binary;
+
                       return (
                         <Component
                           value={binary[id]}
                           onChange={(value) =>
                             setBinary((prev) => ({ ...prev, [id]: value }))
                           }
-                          key={index}
+                          key={ele?.id}
                         />
                       );
                     })()
@@ -304,32 +308,38 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           text="Create AND Gate"
           className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[0] }]);
+            setBoxes((prev) => [...prev, { ...eachElement[0],id: generateUniqueId() }]);
           }}
         />
         <Button
           text="Create QR Gate"
           className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[1] }]);
+            setBoxes((prev) => [...prev, { ...eachElement[1],id: generateUniqueId() }]);
           }}
         />
         <Button
           text="Create NOT Gate"
           className="bg-yellowFunf whitespace-nowrap !w-auto"
+          onClick={() => {
+            setBoxes((prev) => [...prev, { ...eachElement[5],id: generateUniqueId() }]);
+          }}
         />
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[2] }]);
+            setBoxes((prev) => [...prev, { ...eachElement[2],id: generateUniqueId() }]);
           }}
         />
         <Button
           text="Create INPUT"
           className="bg-purpleEight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[3] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[3], index: hasInput?.length == 1 ? 2 : 1 ,id: generateUniqueId()},
+            ]);
           }}
         />
         <Button

@@ -3,10 +3,11 @@ import {
   BoxInterface,
   dotInfo,
   eachElement,
+  generateUniqueId,
   LineDirection,
   mouseMove,
 } from "@/utils/logic.util";
-import { FunctionComponent, useRef, useState } from "react";
+import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
 import { LampOff, LampOn } from "@/assets";
@@ -62,6 +63,10 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
     });
   };
 
+  const hasInput = useMemo(() => {
+    return boxes.filter((ele) => ele?.title == "input");
+  }, [boxes]);
+
   const output = ({
     input_1,
     input_2,
@@ -77,28 +82,23 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
 
     const nandGate = boxes.find((box) => box.title === "nand");
     const lamp = boxes.find((box) => box.title === "lamp-off");
-    const result = output({
-      input_1: binary["input_1"],
-      input_2: binary["input_2"],
-    });
-    if (!nandGate || !lamp || result == 0) {
+   
+    if (!nandGate || !lamp ) {
       toast.error("Missing NAND gate or Lamp.");
 
       return;
     }
 
-    const nandGateId = boxes.indexOf(nandGate) + 1;
-    const lampId = boxes.indexOf(lamp) + 1;
 
     const inputsToAnd = connections.filter(
-      (line) => line?.to.id === nandGateId
+      (line) => line?.to.id === nandGate?.id
     );
 
     const andToLamp = connections.find(
-      (line) => line?.from.id === nandGateId && line?.to.id === lampId
+      (line) => line?.from.id === nandGate?.id && line?.to.id === lamp?.id
     );
 
-    if (inputsToAnd.length === 1 && !andToLamp) {
+    if (inputsToAnd.length >= 1 && andToLamp) {
       modalRef.current?.open();
     } else {
       toast.error("❌ Incorrect logic, try again.");
@@ -138,10 +138,12 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "center",
                           color:
-                            binary[index + 1 == 1 ? "input_1" : "input_2"] == 1
+                            binary[
+                              `input_${ele?.index}` as keyof typeof binary
+                            ] == 1
                               ? "green"
                               : "red",
-                          id: index + 1,
+                          id: ele?.id,
                         },
                       ]}
                       onClick={handleDotClick}
@@ -158,7 +160,7 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                             }) == 1
                               ? "green"
                               : "red",
-                          id: index + 3,
+                          id: ele?.id,
                           side: "left",
                         },
                       ]}
@@ -170,12 +172,12 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "top",
                           color: binary["input_2"] == 1 ? "green" : "red",
-                          id: index + 1,
+                          id: ele?.id,
                         },
                         {
                           direction: "bottom",
                           color: binary["input_1"] == 1 ? "green" : "red",
-                          id: index + 2,
+                          id: ele?.id,
                         },
                         {
                           direction: "center",
@@ -185,7 +187,7 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                           })
                             ? "green"
                             : "red",
-                          id: index + 3,
+                          id: ele?.id,
                         },
                       ]}
                       onClick={handleDotClick}
@@ -196,8 +198,8 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                     (() => {
                       const Component =
                         Icon as FunctionComponent<componentInputProps>;
-                      const id = index + 1 == 1 ? "input_1" : "input_2";
-                      
+                        const id = `input_${ele?.index}` as keyof typeof binary;
+
                       return (
                         <Component
                           value={binary[id]}
@@ -299,39 +301,64 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
           text="Create AND Gate"
           className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[0] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[0], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create QR Gate"
           className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[1] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[1], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create NOT Gate"
           className="bg-yellowFunf  whitespace-nowrap !w-auto"
+          onClick={() => {
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[5], id: generateUniqueId() },
+            ]);
+          }}
         />
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[2] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[2], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create INPUT"
           className="bg-purpleEight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[3] }]);
+            setBoxes((prev) => [
+              ...prev,
+              {
+                ...eachElement[3],
+                id: generateUniqueId(),
+                index: hasInput?.length == 1 ? 2 : 1,
+              },
+            ]);
           }}
         />
         <Button
           text="Create NAND Gate"
           className="bg-purpleNine whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[4] }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[4], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button

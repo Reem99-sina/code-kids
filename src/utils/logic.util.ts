@@ -14,6 +14,8 @@ import {
 import InputBinaryComponent from "@/components/games/input-binary-component";
 import { FunctionComponent, SVGProps } from "react";
 
+export  const generateUniqueId = () => Date.now() + Math.floor(Math.random() * 1000);
+
 export const dataAndItems = [
   {
     input_1: 0,
@@ -146,6 +148,8 @@ export interface BoxInterface {
   id: number;
   title: string;
   Reverse?: FunctionComponent<SVGProps<SVGSVGElement>>;
+  index?:number,
+  repeat?:number
 }
 export interface dotInfo {
   color: string;
@@ -154,6 +158,7 @@ export interface dotInfo {
   x: number;
   y: number;
   side?:string
+  input?:string
 }
 export interface LineDirection {
   from: dotInfo;
