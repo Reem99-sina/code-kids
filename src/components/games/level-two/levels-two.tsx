@@ -28,11 +28,12 @@ interface LineDirection {
   from: dotInfo;
   to: dotInfo;
 }
-interface LevelOneProps {
+interface LevelTwoProps {
   onComplete: () => void;
   goHome: () => void;
 }
-const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
+
+const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [binary, setBinary] = useState({ input_1: 0, input_2: 0 });
   const rect = constraintsRef?.current?.getBoundingClientRect();
@@ -73,23 +74,24 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
   const validateConnections = () => {
     const connections = [...lines];
 
-    const andGate = boxes.find((box) => box.title === "and");
+    const orGate = boxes.find((box) => box.title === "or");
     const lamp = boxes.find((box) => box.title === "lamp-off");
 
-    if (!andGate || !lamp) {
-      alert("Missing AND gate or Lamp.");
+    if (!orGate || !lamp) {
+      alert("Missing OR gate or Lamp.");
 
       return;
     }
 
+   
 
-    const inputsToAnd = connections.filter((line) => line?.to.id === andGate?.id);
+    const inputsToOr = connections.filter((line) => line?.to.id === orGate?.id);
 
-    const andToLamp = connections.find(
-      (line) => line?.from.id === andGate?.id && line?.to.id === lamp?.id
+    const orToLamp = connections.find(
+      (line) => line?.from.id === orGate?.id && line?.to.id === lamp?.id
     );
 
-    if (inputsToAnd.length > 1 && andToLamp) {
+    if (inputsToOr.length > 1 && orToLamp) {
       modalRef.current?.open();
     } else {
       alert("❌ Incorrect logic, try again.");
@@ -103,7 +105,9 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
     input_1: number;
     input_2: number;
   }) => {
-    return input_1 == 1 && input_2 == 1 ? 1 : 0;
+    return input_1 == 1 || input_2 == 1 || (input_1 == 1 && input_2 == 1)
+      ? 1
+      : 0;
   };
 
   const hasInput = useMemo(() => {
@@ -134,7 +138,7 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                   event?.preventDefault();
                   setVisible(index);
                 }}
-                key={ele?.id}
+                key={index}
               >
                 <div className="relative">
                   {ele?.title == "input" ? (
@@ -198,7 +202,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                       onClick={handleDotClick}
                     />
                   )}
-
                   {ele?.title == "input" ? (
                     (() => {
                       const Component =
@@ -211,7 +214,7 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                           onChange={(value) =>
                             setBinary((prev) => ({ ...prev, [id]: value }))
                           }
-                          key={ele?.id}
+                          key={index}
                         />
                       );
                     })()
@@ -257,7 +260,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           })}
 
           <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
-            {/* Final lines */}
             {lines?.map((line, index) => (
               <motion.line
                 key={index}
@@ -288,7 +290,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
               />
             ))}
 
-            {/* Live drawing line */}
             {startDot && mousePos && (
               <motion.line
                 x1={startDot.x}
@@ -308,28 +309,40 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           text="Create AND Gate"
           className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[0],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[0], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create QR Gate"
           className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[1],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[1], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create NOT Gate"
           className="bg-yellowFunf whitespace-nowrap !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[5],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[5], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[2],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[2], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
@@ -338,7 +351,11 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           onClick={() => {
             setBoxes((prev) => [
               ...prev,
-              { ...eachElement[3], index: hasInput?.length == 1 ? 2 : 1 ,id: generateUniqueId()},
+              {
+                ...eachElement[3],
+                index: hasInput?.length == 1 ? 2 : 1,
+                id: generateUniqueId(),
+              },
             ]);
           }}
         />
@@ -349,10 +366,10 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
         />
       </div>
       <Modal ref={modalRef}>
-        <LevelComplete level="1" onNextLevel={onComplete} onGoHome={goHome} />
+        <LevelComplete level="2" onNextLevel={onComplete} onGoHome={goHome} />
       </Modal>
     </>
   );
 };
 
-export default LevelOne;
+export default LevelTwo;

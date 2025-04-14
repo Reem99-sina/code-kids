@@ -6,7 +6,11 @@ import {
   ResponseChildParentAdd,
   TypeoFSkillsResponse,
 } from "@/types/parent.type";
-import { AddChildRequest, AddChildResponse } from "@/types/user.type";
+import {
+  AddChildRequest,
+  AddChildResponse,
+  AddImageChildRequest,
+} from "@/types/user.type";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -101,6 +105,32 @@ export const useGetRecommededCourses = ({ id }: { id?: number }) => {
       );
 
       return response.data;
+    },
+  });
+};
+
+export const useAddImageChildByParent = () => {
+  const { api } = useFetch();
+  const queryClient = useQueryClient();
+  // console.log(api,"api")
+
+  return useMutation<
+    IResponse<AddChildResponse & { id: number }>,
+    { message: string },
+    AddImageChildRequest
+  >({
+    mutationFn: (data) => {
+      const formDate = new FormData();
+      if (data?.image) {
+        formDate.append("image", data?.image);
+      }
+      
+      return api.put("/child/profile-image/" + data?.id, formDate);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["parent"],
+      });
     },
   });
 };

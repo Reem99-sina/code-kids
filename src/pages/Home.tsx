@@ -1,4 +1,4 @@
-import { LanguageButton } from "@/assets";
+import { HelpIcon, LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import { LevelFive } from "@/components/levels/level-five/level-five";
 import { LevelFour } from "@/components/levels/level-four/level-four";
@@ -9,9 +9,12 @@ import { LevelSix } from "@/components/levels/level-six/level-six";
 import LevelThree from "@/components/levels/Level-three/level-three";
 import { LevelTwo } from "@/components/levels/Level-two/level-two";
 import { useState } from "react";
+import LevelSeven from "@/components/levels/level-seven/level-seven";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
+  const router = useNavigate();
 
   const levels = [
     {
@@ -43,8 +46,8 @@ const Home = () => {
       ),
       component: (
         <LevelTwo
-          // onComplete={() => setSelectedLevel(3)}
-          onComplete={() => setSelectedLevel(0)}
+          onComplete={() => setSelectedLevel(3)}
+          goHome={() => setSelectedLevel(0)}
         />
       ),
     },
@@ -91,27 +94,22 @@ const Home = () => {
     {
       name: "level 7",
       view: <LevelCart title="Boolean Logic" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(0)} />,
+      component: (
+        <LevelSeven
+          onComplete={() => setSelectedLevel(8)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
     },
     {
       name: "level 8",
       view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
       component: (
         <LevelEight
-          onComplete={() => setSelectedLevel(9)}
+          onComplete={() => router("/game")}
           goHome={() => setSelectedLevel(0)}
         />
       ),
-    },
-    {
-      name: "level 9",
-      view: <LevelCart title="Machine Code" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(0)} />,
-    },
-    {
-      name: "level 10",
-      view: <LevelCart title="Final Challenge" progressNumber={0} lock />,
-      component: <LevelTwo onComplete={() => setSelectedLevel(0)} />,
     },
   ];
 
@@ -157,6 +155,9 @@ const Home = () => {
                 {levels[selectedLevel - 1]?.component}
               </div>
             )}
+          </div>
+          <div className="absolute  -bottom-[10rem] right-2">
+            <HelpIcon />
           </div>
         </div>
       </div>

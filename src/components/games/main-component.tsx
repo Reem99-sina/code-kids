@@ -3,7 +3,6 @@ import { Line } from "../common/line.component";
 import { Table } from "../common/table";
 import clsx from "clsx";
 
-
 const MainComponent = ({
   title,
   desc,
@@ -16,14 +15,24 @@ const MainComponent = ({
   operation: "and" | "or" | "nand" | "not";
   children: React.ReactNode;
 }) => {
+  const CheckIfInput2 = useMemo(() => {
+    return data?.find((ele) => ele?.input_2);
+  }, [data]);
+  
   const columns: {
     title?: string;
     accessor: string;
-  }[] = [
-    { title: "Input 1", accessor: "input_1" },
-    { title: "Input 2", accessor: "input_2" },
-    { title: "Output", accessor: "output" },
-  ];
+  }[] = CheckIfInput2
+    ? [
+        { title: "Input 1", accessor: "input_1" },
+        { title: "Input 2", accessor: "input_2" },
+        { title: "Output", accessor: "output" },
+      ]
+    : [
+        { title: "Input 1", accessor: "input_1" },
+
+        { title: "Output", accessor: "output" },
+      ];
   const items = useMemo(() => {
     return data?.map((ele) => ({
       input_1: <div className="font-bold text-black p-3">{ele?.input_1}</div>,
@@ -57,7 +66,7 @@ const MainComponent = ({
           <Table columns={columns} items={items} />
         </div>
         <div className=" w-full bg-white rounded-lg py-5 text-black flex flex-col gap-4 mt-6 relative pt-8 px-6 h-full">
-         {children}
+          {children}
         </div>
       </div>
     </div>

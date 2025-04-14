@@ -18,6 +18,7 @@ export interface dotInfo {
   id: number;
   x: number;
   y: number;
+  side?:string
 }
 
 interface mouseMove {
@@ -28,14 +29,15 @@ interface LineDirection {
   from: dotInfo;
   to: dotInfo;
 }
-interface LevelOneProps {
+interface LevelThreeProps {
   onComplete: () => void;
   goHome: () => void;
 }
-const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
+
+const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
-  const [binary, setBinary] = useState({ input_1: 0, input_2: 0 });
   const rect = constraintsRef?.current?.getBoundingClientRect();
+  const [binary, setBinary] = useState({ input_1: 0 });
   const [visible, setVisible] = useState<number | undefined>();
   const [boxes, setBoxes] = useState<BoxInterface[]>([]);
   const [lines, setLines] = useState<(LineDirection | undefined)[]>([]);
@@ -70,45 +72,38 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
     });
   };
 
+  const hasInput = useMemo(() => {
+      return boxes.filter((ele) => ele?.title == "input");
+    }, [boxes]);
+
   const validateConnections = () => {
     const connections = [...lines];
 
-    const andGate = boxes.find((box) => box.title === "and");
+    const notGate = boxes.find((box) => box.title === "not");
     const lamp = boxes.find((box) => box.title === "lamp-off");
 
-    if (!andGate || !lamp) {
-      alert("Missing AND gate or Lamp.");
+    if (!notGate || !lamp) {
+      alert("Missing NOT gate or Lamp.");
 
       return;
     }
 
 
-    const inputsToAnd = connections.filter((line) => line?.to.id === andGate?.id);
+    const inputsToNot = connections.filter((line) => line?.to.id === notGate?.id);
 
-    const andToLamp = connections.find(
-      (line) => line?.from.id === andGate?.id && line?.to.id === lamp?.id
+    const notToLamp = connections.find(
+      (line) => line?.from.id === notGate?.id && line?.to.id === lamp?.id
     );
-
-    if (inputsToAnd.length > 1 && andToLamp) {
+    if (inputsToNot.length >= 1 && notToLamp) {
       modalRef.current?.open();
     } else {
       alert("❌ Incorrect logic, try again.");
     }
   };
 
-  const output = ({
-    input_1,
-    input_2,
-  }: {
-    input_1: number;
-    input_2: number;
-  }) => {
-    return input_1 == 1 && input_2 == 1 ? 1 : 0;
+  const output = ({ input_1 }: { input_1: number }) => {
+    return input_1 == 1 ? 0 : 1;
   };
-
-  const hasInput = useMemo(() => {
-    return boxes.filter((ele) => ele?.title == "input");
-  }, [boxes]);
 
   return (
     <>
@@ -134,26 +129,10 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                   event?.preventDefault();
                   setVisible(index);
                 }}
-                key={ele?.id}
+                key={index}
               >
                 <div className="relative">
-                  {ele?.title == "input" ? (
-                    <IconDots
-                      direction_dots_true={[
-                        {
-                          direction: "center",
-                          color:
-                            binary[
-                              `input_${ele?.index}` as keyof typeof binary
-                            ] == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                      ]}
-                      onClick={handleDotClick}
-                    />
-                  ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
+                  {ele?.title === "lamp-off" ? (
                     <IconDots
                       direction_dots_true={[
                         {
@@ -161,7 +140,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                           color:
                             output({
                               input_1: binary["input_1"],
-                              input_2: binary["input_2"],
                             }) == 1
                               ? "green"
                               : "red",
@@ -171,54 +149,68 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                       ]}
                       onClick={handleDotClick}
                     />
-                  ) : (
+                  ) : ele?.title === "input" ? (
                     <IconDots
                       direction_dots_true={[
                         {
-                          direction: "top",
-                          color: binary["input_2"] == 1 ? "green" : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "bottom",
-                          color: binary["input_1"] == 1 ? "green" : "red",
-                          id: ele?.id,
-                        },
-                        {
                           direction: "center",
-                          color: output({
-                            input_1: binary["input_1"],
-                            input_2: binary["input_2"],
-                          })
-                            ? "green"
-                            : "red",
+                          color: binary["input_1"] == 1 ? "green" : "red",
                           id: ele?.id,
                         },
                       ]}
                       onClick={handleDotClick}
                     />
-                  )}
+                  ) : ele?.title === "not" ? (
+                    <IconDots
+                      direction_dots_true={[
+                        {
+                          direction: "center",
 
+                          id: ele?.id,
+                          side: "left",
+                          color: binary["input_1"] == 1 ? "green" : "red",
+                        },
+                        {
+                          direction: "center",
+                          color:
+                            output({ input_1: binary["input_1"] }) == 1
+                              ? "green"
+                              : "red",
+                          id: ele?.id,
+                          side: "right",
+                        },
+                      ]}
+                      onClick={handleDotClick}
+                    />
+                  ) : (
+                    <IconDots
+                      direction_dots_true={[
+                        { direction: "top", color: "red", id: ele?.id },
+                        { direction: "bottom", color: "red", id: index + 2 },
+                        { direction: "center", color: "red", id: index + 3 },
+                      ]}
+                      onClick={handleDotClick}
+                    />
+                  )}
                   {ele?.title == "input" ? (
                     (() => {
                       const Component =
                         Icon as FunctionComponent<componentInputProps>;
-                      const id = `input_${ele?.index}` as keyof typeof binary;
-
+                      const id = "input_1";
+                      
                       return (
                         <Component
                           value={binary[id]}
                           onChange={(value) =>
                             setBinary((prev) => ({ ...prev, [id]: value }))
                           }
-                          key={ele?.id}
+                          key={index}
                         />
                       );
                     })()
                   ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
                     output({
                       input_1: binary["input_1"],
-                      input_2: binary["input_2"],
                     }) == 1 ? (
                       <LampOn />
                     ) : (
@@ -226,7 +218,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                     )
                   ) : output({
                       input_1: binary["input_1"],
-                      input_2: binary["input_2"],
                     }) == 1 ? (
                     Reverse ? (
                       <Reverse />
@@ -257,7 +248,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           })}
 
           <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
-            {/* Final lines */}
             {lines?.map((line, index) => (
               <motion.line
                 key={index}
@@ -267,28 +257,19 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                 animate={{ x2: line?.to.x, y2: line?.to.y }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 stroke={
-                  line?.from?.direction == "bottom" ||
-                  line?.to?.direction == "bottom"
-                    ? binary["input_1"] == 1
+                  (!line?.from?.side || !line?.to?.side) &&
+                  binary["input_1"] == 1
+                    ? "green"
+                    : line?.from?.side &&
+                        line?.to?.side &&
+                        output({ input_1: binary["input_1"] }) == 1
                       ? "green"
                       : "red"
-                    : line?.from?.direction == "top" ||
-                        line?.to?.direction == "top"
-                      ? binary["input_2"] == 1
-                        ? "green"
-                        : "red"
-                      : output({
-                            input_1: binary["input_1"],
-                            input_2: binary["input_2"],
-                          }) == 1
-                        ? "green"
-                        : "red"
                 }
                 strokeWidth="2"
               />
             ))}
 
-            {/* Live drawing line */}
             {startDot && mousePos && (
               <motion.line
                 x1={startDot.x}
@@ -305,22 +286,8 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
 
       <div className="flex items-center gap-3 flex-wrap mt-4">
         <Button
-          text="Create AND Gate"
-          className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[0],id: generateUniqueId() }]);
-          }}
-        />
-        <Button
-          text="Create QR Gate"
-          className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[1],id: generateUniqueId() }]);
-          }}
-        />
-        <Button
           text="Create NOT Gate"
-          className="bg-yellowFunf whitespace-nowrap !w-auto"
+          className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
             setBoxes((prev) => [...prev, { ...eachElement[5],id: generateUniqueId() }]);
           }}
@@ -349,10 +316,10 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
         />
       </div>
       <Modal ref={modalRef}>
-        <LevelComplete level="1" onNextLevel={onComplete} onGoHome={goHome} />
+        <LevelComplete level="3" onNextLevel={onComplete} onGoHome={goHome} />
       </Modal>
     </>
   );
 };
 
-export default LevelOne;
+export default LevelThree;

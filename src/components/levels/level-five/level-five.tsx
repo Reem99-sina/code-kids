@@ -1,10 +1,13 @@
-import { HelpIcon, HomeIcon } from "@/assets";
+import { HomeIcon } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
+import { generateRandomDec } from "@/utils/binary.util";
+import { FormProvider, useForm } from "react-hook-form";
+import InterInput from "./inter-input";
 
 interface LevelFiveProps {
   onComplete: () => void;
@@ -13,13 +16,33 @@ interface LevelFiveProps {
 
 export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
   const modalRef = useRef<ModalRef>(null);
-  const [answer, setAnswer] = useState("");
+  const [level, setLevel] = useState(1);
+
+  const formData = useForm();
+  const transistor = formData.watch("transistors");
+  const binary = formData.watch("binary");
+
+  const { randomDecimal, binaryString } = useMemo(
+    () => generateRandomDec({ length: level + 1, DecNumber: Math.random() }),
+    [level]
+  );
 
   const handleCheckAnswer = () => {
-    if (answer === "101") {
-      modalRef.current?.open();
+    const lastIndex = binaryString?.split("")?.reverse()?.lastIndexOf("1");
+    const numOfTransitor = lastIndex == -1 ? 0 + 1 : lastIndex + 1;
+
+    if (binaryString == binary && transistor == numOfTransitor) {
+      setLevel((prev) => prev + 1);
+      formData?.setValue("binary","")
+      formData?.setValue("transistors","")
+
     }
   };
+  useEffect(() => {
+    if (level == 4) {
+      modalRef.current?.open();
+    }
+  }, [level]);
 
   return (
     <>
@@ -32,7 +55,7 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
           <h2 className="text-2xl text-[#0E0226] font-bold">
             Current mission:
           </h2>
-          <p className="font-bold text-3xl text-[#FF1D92]">5</p>
+          <p className="font-bold text-3xl text-[#FF1D92]">{randomDecimal}</p>
           <p className="text-[#0E0226] font-normal text-xl">Your Progress</p>
           <div className="flex w-[80%]">
             <ProgressBar progress={0} />
@@ -47,12 +70,12 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
               <p>Click bits to toggle (0/1)</p>
             </div>
             <div className="flex items-center gap-3 ">
-              <div className="w-[40px] h-[40px] flex items-center justify-center bg-[#FFC9E6]">
-                0
-              </div>
-              <div className="w-[40px] h-[40px] flex items-center justify-center bg-[#FFC9E6]">
-                0
-              </div>
+              <FormProvider {...formData}>
+                <InterInput
+                  level={binaryString?.length}
+                  nameOfForm={"binary"}
+                />
+              </FormProvider>
             </div>
             <div>
               <p className="font-bold text-sm text-[#0E0226]">
@@ -62,8 +85,7 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
                 <TextInput
                   inputProps={{
                     placeholder: "Type your answer here",
-                    value: answer,
-                    onChange: (e) => setAnswer(e.target.value),
+                    ...formData.register("transistors"),
                   }}
                 />
               </div>
@@ -84,14 +106,11 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
           </div>
           <Modal ref={modalRef}>
             <LevelComplete
-              level="6"
+              level="5"
               onNextLevel={onComplete}
               onGoHome={goHome}
             />
           </Modal>
-        </div>
-        <div className="absolute  bottom-8 right-0">
-          <HelpIcon />
         </div>
       </div>
     </>

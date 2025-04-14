@@ -2,7 +2,7 @@ import Slider, { Settings } from "react-slick";
 import { NextArrow, PrevArrow } from "../common/slider-arrow";
 import RecommededCourse from "./recommeded-course";
 import {
-  // useGetRecommededCourses,
+  useGetRecommededCourses,
   useParentQuery,
 } from "@/services/parent-service";
 
@@ -82,7 +82,7 @@ const SectionThree = () => {
   // const {}=useGetRecommededCourses({id:1})
 
   return (
-    <div className="bg-[url('/section-three.png')] bg-contain bg-no-repeat w-full h-auto  lg:-mt-40  bg-white  text-black">
+    <div className="bg-[url('/section-three.png')] bg-cover bg-no-repeat w-full h-auto  lg:-mt-40  bg-white  text-black">
       <div className="xl:mt-[400px] mt-[15rem]"></div>
       <div className="bg-[url('/bg-recommed.png')]  bg-[position:50px_400%]  bg-contain ">
         <div className="flex flex-col gap-20 mb-5">
@@ -107,7 +107,7 @@ const SectionThree = () => {
                     ))}
                   </Slider>
                 </div> */}
-                <RecommededCourses />
+                <RecommededCourses id={ele?.id} />
               </div>
             ))
           ) : (
@@ -127,20 +127,6 @@ const SectionThree = () => {
               </div>
             </div>
           )}
-
-          <div className=" flex justify-start container mx-auto flex-col gap-7  z-10">
-            <div className="flex items-center justify-between font-bold">
-              <h2 className="text-4xl  text-start">Recommended for Kareem</h2>
-              <p className="text-[#626262] text-2xl cursor-pointer">See all</p>
-            </div>
-            <div className="flex gap-4 max-w-full justify-start">
-              <Slider {...settings} className="max-w-full">
-                {courses?.map((ele) => (
-                  <RecommededCourse key={ele?.title} {...ele} />
-                ))}
-              </Slider>
-            </div>
-          </div>
         </div>
         <div className="pb-5">
           <p className="text-[#828282]">See More Recommended...</p>
@@ -152,15 +138,17 @@ const SectionThree = () => {
 
 export default SectionThree;
 
-const RecommededCourses = () => {
-  // const { data } = useGetRecommededCourses({ id: id });
+const RecommededCourses = ({ id }: { id?: number }) => {
+  const { data } = useGetRecommededCourses({ id: id });
 
   return (
     <div className="flex gap-4 max-w-full justify-start">
       <Slider {...settings} className="max-w-full">
-        {courses?.map((elem) => (
-          <RecommededCourse key={elem?.title} {...elem} />
-        ))}
+        {data && data?.length > 0
+          ? data?.map((elem) => <RecommededCourse key={elem?.id} {...elem} />)
+          : courses?.map((elem) => (
+              <RecommededCourse key={elem?.title} {...elem} />
+            ))}
       </Slider>
     </div>
   );

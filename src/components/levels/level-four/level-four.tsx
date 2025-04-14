@@ -1,4 +1,4 @@
-import { HomeIcon, HelpIcon } from "@/assets";
+import { HomeIcon } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
 import { useRef, useState } from "react";
@@ -93,9 +93,7 @@ export const LevelFour: React.FC<LevelFourProps> = ({ onComplete, goHome }) => {
           <LevelComplete level="4" onNextLevel={onComplete} onGoHome={goHome} />
         </Modal>
       </div>
-      <div className="absolute bottom-8 right-0">
-        <HelpIcon />
-      </div>
+      
     </div>
   );
 };

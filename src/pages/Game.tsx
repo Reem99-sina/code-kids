@@ -1,49 +1,176 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import ContentFooter from "@/components/footer/ContentFooter";
+import LevelFive from "@/components/games/level-five/level-five";
+import LevelFour from "@/components/games/level-four/level-four";
 import LevelOne from "@/components/games/level-one/level-one";
+import LevelSix from "@/components/games/level-six/level-six";
+import LevelThree from "@/components/games/level-three/level-three";
+import LevelTwo from "@/components/games/level-two/levels-two";
 import MainComponent from "@/components/games/main-component";
-import { dataAndItems } from "@/utils/binary.util";
-import { useState } from "react";
+import {
+  dataAndItems,
+  dataNandItems,
+  dataNotItems,
+  dataOrItems,
+} from "@/utils/logic.util";
+import { useMemo, useState } from "react";
 
 const Game = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
 
-  const levels = [
-    {
-      name: "level 1",
-      view: (
-        <LevelCart
-          title="Simple AND Gate"
-          description="Well done keep going 💪😍"
-          levelActive
-          progressNumber={0}
-        />
-      ),
-      component: (
-        <MainComponent
-          title="Level 1: Simple AND Gate"
-          desc="Connect tow inputs to an AND gate and light up the lamp"
-          operation="and"
-          data={dataAndItems}
-        >
-          <LevelOne/>
-        </MainComponent>
-      ),
-    },
-    {
-      name: "level 2",
-      view: (
-        <LevelCart
-          title="Simple OR Gate"
-          description="Come on, build your skills 💪"
-          levelActive
-          progressNumber={0}
-        />
-      ),
-      component: <></>,
-    },
-  ];
+  const levels = useMemo(() => {
+    return [
+      {
+        name: "level 1",
+        view: (
+          <LevelCart
+            title="Simple AND Gate"
+            description="Well done keep going 💪😍"
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <MainComponent
+            title="Level 1: Simple AND Gate"
+            desc="Connect tow inputs to an AND gate and light up the lamp"
+            operation="and"
+            data={dataAndItems}
+          >
+            <LevelOne
+              onComplete={() => setSelectedLevel(2)}
+              goHome={() => setSelectedLevel(0)}
+            />
+          </MainComponent>
+        ),
+      },
+      {
+        name: "level 2",
+        view: (
+          <LevelCart
+            title="Simple OR Gate"
+            description="Come on, build your skills 💪"
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <MainComponent
+            title="Level 2: OR Gate Challenge"
+            desc="Use an OR gate to light up the lamp with either input."
+            operation="and"
+            data={dataOrItems}
+          >
+            <LevelTwo
+              onComplete={() => setSelectedLevel(3)}
+              goHome={() => setSelectedLevel(0)}
+            />
+          </MainComponent>
+        ),
+      },
+      {
+        name: "level 3",
+        view: (
+          <LevelCart
+            title="Simple NOT Gate"
+            description="Come on, build your skills 💪"
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <MainComponent
+            title="Level 3: NOT Gate Illumination"
+            desc="Connect a NOT gate to light up the lamp when the inputs is off."
+            operation="and"
+            data={dataNotItems}
+          >
+            <LevelThree
+              onComplete={() => setSelectedLevel(4)}
+              goHome={() => setSelectedLevel(0)}
+            />
+          </MainComponent>
+        ),
+      },
+      {
+        name: "level 4",
+        view: (
+          <LevelCart
+            title="Simple NAND Gate"
+            description="Come on, build your skills 💪"
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <MainComponent
+            title="Level 4: NAND Gate Creation"
+            desc="Create a NAND gate using AND and NOT gates, then light up the lamp."
+            operation="and"
+            data={dataNandItems}
+          >
+            <LevelFour
+              onComplete={() => setSelectedLevel(5)}
+              goHome={() => setSelectedLevel(0)}
+            />
+          </MainComponent>
+        ),
+      },
+      {
+        name: "level 5",
+        view: (
+          <LevelCart
+            title=" NAND Gate Usage"
+            description="Come on, build your skills 💪"
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="pt-10">
+            <MainComponent
+              title="Level 5: NAND Gate Usage"
+              desc="Use the NAND gate to light up the lamp."
+              operation="and"
+              data={dataNandItems}
+            >
+              <LevelFive
+                onComplete={() => setSelectedLevel(6)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 6",
+        view: (
+          <LevelCart
+            title=" NAND to AND Coversation"
+            description="Create an AND gate using only NAND gates."
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="pt-10">
+            <MainComponent
+              title="Level 6: NAND to AND Coversation"
+              desc="Create an AND gate using only NAND gates."
+              operation="and"
+              data={dataAndItems}
+            >
+              <LevelSix
+                onComplete={() => setSelectedLevel(6)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+    ];
+  }, [selectedLevel]);
 
   return (
     <>

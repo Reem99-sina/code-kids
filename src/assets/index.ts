@@ -132,8 +132,30 @@ export { default as TrackStarTwo } from "./track-star-two.svg?react";
 export { default as TrackStarThree } from "./track-star-three.svg?react";
 export { default as ArrowRotate } from "./arrow-rotate.svg?react";
 
-export { default as Lamp } from "./lampe.svg?react";
+// export { default as Lamp } from "./lampe.svg?react";
 export { default as And } from "./and.svg?react";
-export { default as AndFalse } from "./and-false.svg?react";
+export { default as AndOff } from "./and-off.svg?react";
 
-export { default as Or } from "./or.svg?react";
+export { default as OrOff } from "./or-off.svg?react";
+export { default as OrOn } from "./or-on.svg?react";
+
+export { default as LampOff } from "./lamp-off.svg?react";
+export { default as LampOn } from "./lamp-on.svg?react";
+
+export { default as Nand } from "./nand-on.svg?react";
+export { default as NandOff } from "./nand-off.svg?react";
+export { default as NottIcon } from "./NOT-icon.svg?react";
+export { default as NotOntIcon } from "./not-on.svg?react";
+
+export { default as ClockYellow } from "./clock-yellow.svg?react";
+export { default as Copper } from "./copper.svg?react";
+export { default as Iron } from "./iron.svg?react";
+export { default as Gold } from "./gold.svg?react";
+export { default as Glass } from "./glass.svg?react";
+export { default as Plassic } from "./plassic.svg?react";
+export { default as Silicon } from "./silicon.svg?react";
+export { default as Germanium } from "./germanium.svg?react";
+export { default as Wood } from "./wood.svg?react";
+export { default as Conductors } from "./conductors.svg?react";
+export { default as Insulators } from "./insulators.svg?react";
+export { default as Semiconductors } from "./Semiconductors.svg?react";

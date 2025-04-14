@@ -1,47 +1,40 @@
 import { Button } from "@/components/common/button.component";
 import {
   BoxInterface,
-  componentInputProps,
+  dotInfo,
   eachElement,
   generateUniqueId,
+  LineDirection,
+  mouseMove,
 } from "@/utils/logic.util";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IconDots from "../icon-dots";
+import { LampOff, LampOn } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import { LevelComplete } from "@/components/levels/LevelComplete";
-import { LampOff, LampOn } from "@/assets";
+import toast from "react-hot-toast";
 
-export interface dotInfo {
-  color: string;
-  direction: string;
-  id: number;
-  x: number;
-  y: number;
+interface componentInputProps {
+  value?: number;
+  onChange?: (value: number) => void;
 }
 
-interface mouseMove {
-  x: number;
-  y: number;
-}
-interface LineDirection {
-  from: dotInfo;
-  to: dotInfo;
-}
-interface LevelOneProps {
+interface LevelFiveProps {
   onComplete: () => void;
   goHome: () => void;
 }
-const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
-  const constraintsRef = useRef<HTMLDivElement>(null);
+
+const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
+  const modalRef = useRef<ModalRef>(null);
   const [binary, setBinary] = useState({ input_1: 0, input_2: 0 });
+  const constraintsRef = useRef<HTMLDivElement>(null);
   const rect = constraintsRef?.current?.getBoundingClientRect();
   const [visible, setVisible] = useState<number | undefined>();
   const [boxes, setBoxes] = useState<BoxInterface[]>([]);
-  const [lines, setLines] = useState<(LineDirection | undefined)[]>([]);
-  const [startDot, setStartDot] = useState<dotInfo | null>(null);
-  const [mousePos, setMousePos] = useState<mouseMove | null>(null);
-  const modalRef = useRef<ModalRef>(null);
+  const [lines, setLines] = useState<(LineDirection | undefined)[]>([]); // Final lines
+  const [startDot, setStartDot] = useState<dotInfo | null>(null); // Starting dot
+  const [mousePos, setMousePos] = useState<mouseMove | null>(null); // For live line
 
   const handleDotClick = ({
     dot,
@@ -70,31 +63,9 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
     });
   };
 
-  const validateConnections = () => {
-    const connections = [...lines];
-
-    const andGate = boxes.find((box) => box.title === "and");
-    const lamp = boxes.find((box) => box.title === "lamp-off");
-
-    if (!andGate || !lamp) {
-      alert("Missing AND gate or Lamp.");
-
-      return;
-    }
-
-
-    const inputsToAnd = connections.filter((line) => line?.to.id === andGate?.id);
-
-    const andToLamp = connections.find(
-      (line) => line?.from.id === andGate?.id && line?.to.id === lamp?.id
-    );
-
-    if (inputsToAnd.length > 1 && andToLamp) {
-      modalRef.current?.open();
-    } else {
-      alert("❌ Incorrect logic, try again.");
-    }
-  };
+  const hasInput = useMemo(() => {
+    return boxes.filter((ele) => ele?.title == "input");
+  }, [boxes]);
 
   const output = ({
     input_1,
@@ -103,21 +74,45 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
     input_1: number;
     input_2: number;
   }) => {
-    return input_1 == 1 && input_2 == 1 ? 1 : 0;
+    return (input_1 == 0 && input_2 == 0) || input_1 != input_2 ? 1 : 0;
   };
 
-  const hasInput = useMemo(() => {
-    return boxes.filter((ele) => ele?.title == "input");
-  }, [boxes]);
+  const validateConnections = () => {
+    const connections = [...lines];
+
+    const nandGate = boxes.find((box) => box.title === "nand");
+    const lamp = boxes.find((box) => box.title === "lamp-off");
+   
+    if (!nandGate || !lamp ) {
+      toast.error("Missing NAND gate or Lamp.");
+
+      return;
+    }
+
+
+    const inputsToAnd = connections.filter(
+      (line) => line?.to.id === nandGate?.id
+    );
+
+    const andToLamp = connections.find(
+      (line) => line?.from.id === nandGate?.id && line?.to.id === lamp?.id
+    );
+
+    if (inputsToAnd.length >= 1 && andToLamp) {
+      modalRef.current?.open();
+    } else {
+      toast.error("❌ Incorrect logic, try again.");
+    }
+  };
 
   return (
     <>
       <div
-        className="relative w-full bg-gray-100"
+        className="relative w-full  bg-gray-100"
         onMouseMove={handleMouseMove}
       >
         <div
-          className="bg-purpleLight min-h-[380px] w-full"
+          className="bg-purpleLight min-h-[380px] w-full "
           ref={constraintsRef}
         >
           {boxes?.map((ele, index) => {
@@ -134,7 +129,7 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                   event?.preventDefault();
                   setVisible(index);
                 }}
-                key={ele?.id}
+                key={index}
               >
                 <div className="relative">
                   {ele?.title == "input" ? (
@@ -203,7 +198,7 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                     (() => {
                       const Component =
                         Icon as FunctionComponent<componentInputProps>;
-                      const id = `input_${ele?.index}` as keyof typeof binary;
+                        const id = `input_${ele?.index}` as keyof typeof binary;
 
                       return (
                         <Component
@@ -211,7 +206,7 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                           onChange={(value) =>
                             setBinary((prev) => ({ ...prev, [id]: value }))
                           }
-                          key={ele?.id}
+                          key={index}
                         />
                       );
                     })()
@@ -255,7 +250,6 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
               </motion.div>
             );
           })}
-
           <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
             {/* Final lines */}
             {lines?.map((line, index) => (
@@ -302,34 +296,45 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           </svg>
         </div>
       </div>
-
-      <div className="flex items-center gap-3 flex-wrap mt-4">
+      <div className="flex items-center gap-3 flex-wrap">
         <Button
           text="Create AND Gate"
           className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[0],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[0], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create QR Gate"
           className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[1],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[1], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create NOT Gate"
-          className="bg-yellowFunf whitespace-nowrap !w-auto"
+          className="bg-yellowFunf  whitespace-nowrap !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[5],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[5], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[2],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[2], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
@@ -338,7 +343,21 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           onClick={() => {
             setBoxes((prev) => [
               ...prev,
-              { ...eachElement[3], index: hasInput?.length == 1 ? 2 : 1 ,id: generateUniqueId()},
+              {
+                ...eachElement[3],
+                id: generateUniqueId(),
+                index: hasInput?.length == 1 ? 2 : 1,
+              },
+            ]);
+          }}
+        />
+        <Button
+          text="Create NAND Gate"
+          className="bg-purpleNine whitespace-nowrap text-white !w-auto"
+          onClick={() => {
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[4], id: generateUniqueId() },
             ]);
           }}
         />
@@ -349,10 +368,10 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
         />
       </div>
       <Modal ref={modalRef}>
-        <LevelComplete level="1" onNextLevel={onComplete} onGoHome={goHome} />
+        <LevelComplete level="5" onNextLevel={onComplete} onGoHome={goHome} />
       </Modal>
     </>
   );
 };
 
-export default LevelOne;
+export default LevelFive;

@@ -69,9 +69,14 @@ export interface AddChildRequest {
   image?:File
 }
 
+export interface AddImageChildRequest {
+  id:number,
+  image?:File
+}
 export interface AddChildResponse {
   username: string;
   password: string;
   age: number;
   skills: string[];
+  id:number
 }

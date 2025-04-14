@@ -31,7 +31,7 @@ const SectionTwo = () => {
         <h2 className="text-4xl font-black">Child Overview</h2>
         <div className="flex items-center gap-4 flex-wrap">
           {data && data?.length > 0
-            ? data?.map((ele) => (
+            ? data?.slice(0,2)?.map((ele) => (
                 <ChildrenCard
                   key={ele?.fullName}
                   name={ele?.fullName||""}

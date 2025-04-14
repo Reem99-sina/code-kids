@@ -1,3 +1,9 @@
+export enum OperationStatus {
+  AND = "and",
+  OR = "or",
+  NOT = "not",
+
+}
 export const generateBinary = ({
   length,
   DecNumber,
@@ -12,6 +18,19 @@ export const generateBinary = ({
   return binaryString;
 };
 
+export const generateRandomDec = ({
+  length,
+  DecNumber,
+}: {
+  length: number;
+  DecNumber: number;
+}) => {
+  const maxDecimal = Math.pow(2, length) - 1;
+  const randomDecimal = Math.floor(DecNumber * (maxDecimal + 1));
+  const binaryString = randomDecimal.toString(2).padStart(length, "0");
+
+  return {randomDecimal,binaryString};
+};
 export const sumBinaryNumber = ({
   first_num,
   second_num,
@@ -59,25 +78,3 @@ export const checkIfUserAddRightNumber = ({
   );
 };
 
-export  const dataAndItems = [
-    {
-      input_1: 0,
-      input_2: 0,
-      output: 0,
-    },
-    {
-      input_1: 0,
-      input_2: 1,
-      output: 0,
-    },
-    {
-      input_1: 1,
-      input_2: 0,
-      output: 0,
-    },
-    {
-      input_1: 1,
-      input_2: 1,
-      output: 1,
-    },
-  ];
