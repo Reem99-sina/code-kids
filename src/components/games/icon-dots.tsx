@@ -48,9 +48,9 @@ const IconDots = ({
 
   return (
     <div>
-      {positionedDots.map((dot) => (
+      {positionedDots.map((dot,index) => (
         <motion.div
-          key={dot.id}
+          key={dot.id+index+1}
           className={dot.positionClasses}
           onClick={(event) =>
             onClick({

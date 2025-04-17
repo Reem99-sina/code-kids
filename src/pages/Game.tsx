@@ -1,18 +1,24 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import ContentFooter from "@/components/footer/ContentFooter";
+import LevelEight from "@/components/games/level-eight/level-eight";
 import LevelFive from "@/components/games/level-five/level-five";
 import LevelFour from "@/components/games/level-four/level-four";
+import LevelNine from "@/components/games/level-nine/level-nine";
 import LevelOne from "@/components/games/level-one/level-one";
+import LevelSeven from "@/components/games/level-seven/level-seven";
 import LevelSix from "@/components/games/level-six/level-six";
+import LevelTen from "@/components/games/level-ten/level-ten";
 import LevelThree from "@/components/games/level-three/level-three";
 import LevelTwo from "@/components/games/level-two/levels-two";
 import MainComponent from "@/components/games/main-component";
 import {
   dataAndItems,
   dataNandItems,
+  dataNorItems,
   dataNotItems,
   dataOrItems,
+  dataXorItems,
 } from "@/utils/logic.util";
 import { useMemo, useState } from "react";
 
@@ -162,7 +168,111 @@ const Game = () => {
               data={dataAndItems}
             >
               <LevelSix
-                onComplete={() => setSelectedLevel(6)}
+                onComplete={() => setSelectedLevel(7)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 7",
+        view: (
+          <LevelCart
+            title=" OR from NAND"
+            description="Create an OR gate using only NAND gates."
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="pt-10">
+            <MainComponent
+              title="Level 7: OR from NAND"
+              desc="Create an OR gate using only NAND gates."
+              operation="and"
+              data={dataOrItems}
+            >
+              <LevelSeven
+                onComplete={() => setSelectedLevel(8)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 8",
+        view: (
+          <LevelCart
+            title="  NOT from NAND"
+            description="Create a NOT gate using a single NAND gate"
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="pt-10">
+            <MainComponent
+              title="Level 8: NOT from NAND"
+              desc="Create a NOT gate using a single NAND gate"
+              operation="and"
+              data={dataNotItems}
+            >
+              <LevelEight
+                onComplete={() => setSelectedLevel(9)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 9",
+        view: (
+          <LevelCart
+            title=" NOR from NAND"
+            description="Create a NOR gate using only NAND gates. NOR is true only when both inputs are false"
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="pt-10">
+            <MainComponent
+              title="Level 9: NOR from NAND"
+              desc="Create a NOR gate using only NAND gates. NOR is true only when both inputs are false"
+              operation="and"
+              data={dataNorItems}
+            >
+              <LevelNine
+                onComplete={() => setSelectedLevel(10)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 10",
+        view: (
+          <LevelCart
+            title=" NAND to XOR Conversion"
+            description="Create an XOR gate using only NAND gates."
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="pt-10">
+            <MainComponent
+              title="Level 10: NAND to XOR Conversion"
+              desc="Create an XOR gate using only NAND gates."
+              operation="and"
+              data={dataXorItems}
+            >
+              <LevelTen
+                onComplete={() => setSelectedLevel(10)}
                 goHome={() => setSelectedLevel(0)}
               />
             </MainComponent>

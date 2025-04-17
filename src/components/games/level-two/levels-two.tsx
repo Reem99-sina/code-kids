@@ -4,6 +4,7 @@ import {
   componentInputProps,
   eachElement,
   generateUniqueId,
+  useLineInBoxRemove,
 } from "@/utils/logic.util";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -44,6 +45,11 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
   const [mousePos, setMousePos] = useState<mouseMove | null>(null);
   const modalRef = useRef<ModalRef>(null);
 
+  const onClose = () => {
+    setBoxes([]);
+    setLines([]);
+  };
+
   const handleDotClick = ({
     dot,
   }: {
@@ -79,11 +85,10 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
 
     if (!orGate || !lamp) {
       alert("Missing OR gate or Lamp.");
-
+      onClose();
+      
       return;
     }
-
-   
 
     const inputsToOr = connections.filter((line) => line?.to.id === orGate?.id);
 
@@ -94,6 +99,7 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
     if (inputsToOr.length > 1 && orToLamp) {
       modalRef.current?.open();
     } else {
+      onClose();
       alert("❌ Incorrect logic, try again.");
     }
   };
@@ -249,6 +255,9 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                       onClick={() => {
                         setBoxes((prev) =>
                           prev ? prev.filter((_, ind) => ind != index) : []
+                        );
+                        useLineInBoxRemove(boxes[index], lines, (linesNew) =>
+                          setLines(linesNew)
                         );
                         setVisible(undefined);
                       }}

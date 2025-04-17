@@ -3,6 +3,7 @@ import {
   BoxInterface,
   componentInputProps,
   eachElement,
+  useLineInBoxRemove,
 } from "@/utils/logic.util";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -48,6 +49,11 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
   const [mousePos, setMousePos] = useState<mouseMove | null>(null);
   const modalRef = useRef<ModalRef>(null);
 
+  const onClose = () => {
+    setBoxes([]);
+    setLines([]);
+  };
+
   const generateUniqueId = () => Date.now() + Math.floor(Math.random() * 1000);
 
   const handleDotClick = ({
@@ -86,7 +92,8 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
 
     if (!andGate || !notGate || !lamp) {
       alert("Missing one of the gates or lamp.");
-
+      onClose();
+      
       return;
     }
 
@@ -103,6 +110,7 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
     if (inputsToAND.length >= 2 && andToNot && notToLamp) {
       modalRef.current?.open();
     } else {
+      onClose()
       alert("❌ Try again. Make sure the NAND sequence is correct.");
     }
   };
@@ -262,7 +270,6 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                         Icon as FunctionComponent<componentInputProps>;
                       // const id = hasInput.length==1? "input_1" : "input_2";
                       const id = `input_${ele?.index}` as keyof typeof binary;
-                     
 
                       return (
                         <Component
@@ -325,6 +332,7 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                         setBoxes((prev) =>
                           prev ? prev.filter((_, ind) => ind !== index) : []
                         );
+                        useLineInBoxRemove(boxes[index],lines,(linesNew)=>setLines(linesNew));
                         setVisible(undefined);
                       }}
                     />
