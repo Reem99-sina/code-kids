@@ -159,3 +159,4 @@ export { default as Wood } from "./wood.svg?react";
 export { default as Conductors } from "./conductors.svg?react";
 export { default as Insulators } from "./insulators.svg?react";
 export { default as Semiconductors } from "./Semiconductors.svg?react";
+export { default as Goal } from "./goal.svg?react";

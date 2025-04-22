@@ -191,7 +191,7 @@ const LevelTen: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
     ) {
       toast.error("Missing NAND gate or Lamp.");
       onClose();
-      
+
       return;
     }
 
@@ -336,8 +336,17 @@ const LevelTen: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
                           direction: "center",
                           color:
                             useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
+                              input_1:
+                                binary[
+                                  (hasLine({ dot: ele, direction: "top" })?.from
+                                    ?.input as keyof typeof binary) || "input_1"
+                                ],
+                              input_2:
+                                binary[
+                                  (hasLine({ dot: ele, direction: "bottom" })
+                                    ?.from?.input as keyof typeof binary) ||
+                                    "input_2"
+                                ],
                               operation: "nand",
                             }) == 1
                               ? "green"
@@ -378,8 +387,17 @@ const LevelTen: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
                           direction: "center",
                           color:
                             useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
+                              input_1:
+                                binary[
+                                  (hasLine({ dot: ele, direction: "top" })?.from
+                                    ?.input as keyof typeof binary) || "input_1"
+                                ],
+                              input_2:
+                                binary[
+                                  (hasLine({ dot: ele, direction: "bottom" })
+                                    ?.from?.input as keyof typeof binary) ||
+                                    "input_2"
+                                ],
                               operation: "nand",
                             }) == 1
                               ? "green"
@@ -582,12 +600,12 @@ const LevelTen: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
                       operation: ele?.title,
                     }) == 1 ? (
                       Reverse ? (
-                        <Reverse className="w-16 h-16"/>
+                        <Reverse className="w-16 h-16" />
                       ) : (
                         <></>
                       )
                     ) : (
-                      <Icon className="w-16 h-16"/>
+                      <Icon className="w-16 h-16" />
                     )
                   ) : ele?.repeat == 1 && ele?.title == "nand" ? (
                     useOutput({
@@ -596,12 +614,12 @@ const LevelTen: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
                       operation: ele?.title,
                     }) == 1 ? (
                       Reverse ? (
-                        <Reverse className="w-16 h-16"/>
+                        <Reverse className="w-16 h-16" />
                       ) : (
                         <></>
                       )
                     ) : (
-                      <Icon className="w-16 h-16"/>
+                      <Icon className="w-16 h-16" />
                     )
                   ) : ele?.repeat == 2 && ele?.title == "nand" ? (
                     useOutput({
@@ -618,12 +636,12 @@ const LevelTen: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
                       operation: ele?.title,
                     }) == 1 ? (
                       Reverse ? (
-                        <Reverse className="w-16 h-16"/>
+                        <Reverse className="w-16 h-16" />
                       ) : (
                         <></>
                       )
                     ) : (
-                      <Icon className="w-16 h-16"/>
+                      <Icon className="w-16 h-16" />
                     )
                   ) : ele?.repeat == 3 && ele?.title == "nand" ? (
                     useOutput({
@@ -633,12 +651,12 @@ const LevelTen: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
                       operation: "xor",
                     }) == 1 ? (
                       Reverse ? (
-                        <Reverse className="w-16 h-16"/>
+                        <Reverse className="w-16 h-16" />
                       ) : (
                         <></>
                       )
                     ) : (
-                      <Icon className="w-16 h-16"/>
+                      <Icon className="w-16 h-16" />
                     )
                   ) : useOutput({
                       input_1: binary["input_1"],
@@ -646,12 +664,12 @@ const LevelTen: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
                       operation: ele?.title,
                     }) == 1 ? (
                     Reverse ? (
-                      <Reverse className="w-16 h-16"/>
+                      <Reverse className="w-16 h-16" />
                     ) : (
                       <></>
                     )
                   ) : (
-                    <Icon className="w-16 h-16"/>
+                    <Icon className="w-16 h-16" />
                   )}
                 </div>
 

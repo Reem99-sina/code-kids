@@ -76,7 +76,7 @@ export const FetchProvider: FC<{ children: ReactNode }> = ({ children }) => {
     | undefined;
 
   const { token } = storeValue ?? {};
- 
+
   const api = useMemo(() => {
     return createInstance({
       url: API_URL as string,

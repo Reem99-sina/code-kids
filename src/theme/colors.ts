@@ -27,6 +27,7 @@ export const colors = {
   pinkLightTwo:'#FDEFFF',
   pinkFour:"#FF00B8",
   pinkLightThree:"#FBE7FF",
+  pinkLightFour:"#FFE9F4",
 
   yellowOne: "#EFBB00",
   yellowTwo: "#FCD90D",
@@ -38,6 +39,8 @@ export const colors = {
   blueLightTwo: "#DFE9FF",
   blueCustom: "#6EC2CB",
   blueLightOne: "#00FFFF",
+  blueLightThree:"#C9FFF5",
+  blueThree:"#3B82F7",
 
   grayOne: "#A0A3BD",
   grayTwo: "#F3F3F3",
