@@ -8,6 +8,7 @@ import {
   LineDirection,
   mouseMove,
   useLineInBoxRemove,
+  useOutput,
 } from "@/utils/logic.util";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -17,12 +18,12 @@ import { Modal, ModalRef } from "@/components/common/modal.component";
 import { LevelComplete } from "@/components/levels/LevelComplete";
 import toast from "react-hot-toast";
 
-interface LevelFiveProps {
+interface LevelSevenProps {
   onComplete: () => void;
   goHome: () => void;
 }
 
-const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
+const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
   const modalRef = useRef<ModalRef>(null);
   const [binary, setBinary] = useState({ input_1: 0, input_2: 0 });
   const constraintsRef = useRef<HTMLDivElement>(null);
@@ -41,19 +42,27 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
   const handleDotClick = ({
     dot,
     input,
+    box,
   }: {
     event: React.MouseEvent<HTMLDivElement>;
     dot: dotInfo;
     input?: string;
+    box: BoxInterface;
   }) => {
     if (!rect) return;
     if (!startDot) {
-      setStartDot({ ...dot, x: dot.x - rect.left, y: dot.y - rect.top, input });
+      setStartDot({
+        ...dot,
+        x: dot.x - rect.left,
+        y: dot.y - rect.top,
+        input,
+        box: box,
+      });
     } else {
       if (dot.id !== startDot.id) {
         setLines([
           ...lines,
-          { from: startDot, to: { ...dot, ...mousePos, input } },
+          { from: startDot, to: { ...dot, ...mousePos, input, box: box } },
         ]);
       }
       setStartDot(null);
@@ -78,41 +87,69 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
     return boxes.filter((ele) => ele?.title == "nand");
   }, [boxes]);
 
-  const output = ({
-    input_1,
-    input_2,
-  }: {
-    input_1: number;
-    input_2: number;
-  }) => {
-    return (input_1 == 0 && input_2 == 0) || input_1 != input_2 ? 1 : 0;
-  };
-
-  const outputAnd = ({
-    input_1,
-    input_2,
-  }: {
-    input_1: number;
-    input_2: number;
-  }) => {
-    return input_1 == 1 && input_2 == 1 ? 1 : 0;
-  };
+  const lineColor = useMemo(() => {
+    return (line?: LineDirection) =>
+      line?.from?.input
+        ? binary[line?.from?.input as keyof typeof binary] == 1
+          ? "green"
+          : "red"
+        : line?.to?.input
+          ? binary[line?.to?.input as keyof typeof binary] == 1
+            ? "green"
+            : "red"
+          : line?.from?.direction == "center"
+            ? line?.to?.direction == "top"
+              ? useOutput({
+                  input_1: binary["input_1"],
+                  input_2: binary["input_1"],
+                  operation: "nand",
+                }) == 1
+                ? "green"
+                : "red"
+              : line?.to?.direction == "bottom"
+                ? useOutput({
+                    input_1: binary["input_2"],
+                    input_2: binary["input_2"],
+                    operation: "nand",
+                  }) == 1
+                  ? "green"
+                  : "red"
+                : line?.to?.direction == "center"
+                  ? useOutput({
+                      input_1: binary["input_1"],
+                      input_2: binary["input_2"],
+                      operation: "or",
+                    }) == 1
+                    ? "green"
+                    : "red"
+                  : "red"
+            : "red";
+  }, [binary]);
 
   const validateConnections = () => {
     const connections = [...lines];
 
-    const nandGate = boxes.find((box) => box.title === "nand");
-    const nandSecondGate = boxes.find(
+    const nandOneGate = boxes.find(
+      (box) => box.title === "nand" && box?.repeat == 0
+    );
+    const nandTwoGate = boxes.find(
       (box) => box.title === "nand" && box?.repeat == 1
     );
-
+    const nandThreeGate = boxes.find(
+      (box) => box.title === "nand" && box?.repeat == 2
+    );
     const lamp = boxes.find((box) => box.title === "lamp-off");
-    const result = outputAnd({
+    const result = useOutput({
       input_1: binary["input_1"],
       input_2: binary["input_2"],
+      operation: "or",
     });
 
-    if (!nandGate || !lamp || result == 0 || !nandSecondGate) {
+    if (
+      !lamp ||
+      result == 0 ||
+      (!nandTwoGate && !nandThreeGate && !nandOneGate)
+    ) {
       toast.error("Missing NAND gate or Lamp.");
       onClose();
       
@@ -120,14 +157,22 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
     }
 
     const inputsToAnd = connections.filter(
-      (line) => line?.to.id === nandGate?.id
+      (line) => line?.to.id === nandOneGate?.id
     );
     const inputsToSecondAnd = connections.filter(
-      (line) => line?.to.id === nandSecondGate?.id
+      (line) => line?.to.id === nandTwoGate?.id
+    );
+    const inputsToThreeAnd = connections.filter(
+      (line) => line?.to.id === nandThreeGate?.id
     );
     const andToLamp = connections.find((line) => line?.to.id === lamp?.id);
 
-    if (inputsToAnd.length > 1 && andToLamp && inputsToSecondAnd?.length > 1) {
+    if (
+      inputsToAnd.length > 1 &&
+      andToLamp &&
+      inputsToSecondAnd?.length > 1 &&
+      inputsToThreeAnd?.length > 1
+    ) {
       modalRef.current?.open();
     } else {
       onClose();
@@ -181,6 +226,7 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                           dot,
                           event,
                           input: `input_${ele?.index}`,
+                          box: ele,
                         })
                       }
                     />
@@ -190,9 +236,10 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "center",
                           color:
-                            outputAnd({
+                            useOutput({
                               input_1: binary["input_1"],
                               input_2: binary["input_2"],
+                              operation: "or",
                             }) == 1
                               ? "green"
                               : "red",
@@ -200,7 +247,9 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                           side: "left",
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
                     />
                   ) : ele?.repeat == 0 && ele?.title == "nand" ? (
                     <IconDots
@@ -212,32 +261,66 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         },
                         {
                           direction: "bottom",
-                          color: binary["input_2"] == 1 ? "green" : "red",
+                          color: binary["input_1"] == 1 ? "green" : "red",
                           id: ele?.id,
                         },
                         {
                           direction: "center",
                           color:
-                            output({
+                            useOutput({
                               input_1: binary["input_1"],
-                              input_2: binary["input_2"],
+                              input_2: binary["input_1"],
+                              operation: "nand",
                             }) == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
                     />
-                  ) : (
+                  ) : ele?.repeat == 1 && ele?.title == "nand" ? (
+                    <IconDots
+                      direction_dots_true={[
+                        {
+                          direction: "top",
+                          color: binary["input_2"] == 1 ? "green" : "red",
+                          id: ele?.id,
+                        },
+                        {
+                          direction: "bottom",
+                          color: binary["input_2"] == 1 ? "green" : "red",
+                          id: ele?.id,
+                        },
+                        {
+                          direction: "center",
+                          color:
+                            useOutput({
+                              input_1: binary["input_2"],
+                              input_2: binary["input_2"],
+                              operation: "nand",
+                            }) == 1
+                              ? "green"
+                              : "red",
+                          id: ele?.id,
+                        },
+                      ]}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
+                    />
+                  ) : ele?.repeat == 2 && ele?.title == "nand" ? (
                     <IconDots
                       direction_dots_true={[
                         {
                           direction: "top",
                           color:
-                            output({
+                            useOutput({
                               input_1: binary["input_1"],
-                              input_2: binary["input_2"],
+                              input_2: binary["input_1"],
+                              operation: "nand",
                             }) == 1
                               ? "green"
                               : "red",
@@ -246,9 +329,10 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "bottom",
                           color:
-                            output({
-                              input_1: binary["input_1"],
+                            useOutput({
+                              input_1: binary["input_2"],
                               input_2: binary["input_2"],
+                              operation: "nand",
                             }) == 1
                               ? "green"
                               : "red",
@@ -256,16 +340,72 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         },
                         {
                           direction: "center",
-                          color: outputAnd({
-                            input_1: binary["input_1"],
-                            input_2: binary["input_2"],
-                          })
-                            ? "green"
-                            : "red",
+                          color:
+                            useOutput({
+                              input_1: useOutput({
+                                input_1: binary["input_1"],
+                                input_2: binary["input_1"],
+                                operation: "nand",
+                              }),
+                              input_2: useOutput({
+                                input_1: binary["input_2"],
+                                input_2: binary["input_2"],
+                                operation: "nand",
+                              }),
+                              operation: "nand",
+                            }) == 1
+                              ? "green"
+                              : "red",
                           id: ele?.id,
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
+                    />
+                  ) : (
+                    <IconDots
+                      direction_dots_true={[
+                        {
+                          direction: "top",
+                          color:
+                            useOutput({
+                              input_1: binary["input_1"],
+                              input_2: binary["input_2"],
+                              operation: ele?.title,
+                            }) == 1
+                              ? "green"
+                              : "red",
+                          id: ele?.id,
+                        },
+                        {
+                          direction: "bottom",
+                          color:
+                            useOutput({
+                              input_1: binary["input_1"],
+                              input_2: binary["input_2"],
+                              operation: ele?.title,
+                            }) == 1
+                              ? "green"
+                              : "red",
+                          id: ele?.id,
+                        },
+                        {
+                          direction: "center",
+                          color:
+                            useOutput({
+                              input_1: binary["input_1"],
+                              input_2: binary["input_2"],
+                              operation: ele?.title,
+                            }) == 1
+                              ? "green"
+                              : "red",
+                          id: ele?.id,
+                        },
+                      ]}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
                     />
                   )}
 
@@ -286,38 +426,77 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                       );
                     })()
                   ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
-                    outputAnd({
+                    useOutput({
                       input_1: binary["input_1"],
                       input_2: binary["input_2"],
+                      operation: "or",
                     }) == 1 ? (
                       <LampOn />
                     ) : (
                       <LampOff />
                     )
                   ) : ele?.repeat == 0 && ele?.title == "nand" ? (
-                    output({
+                    useOutput({
                       input_1: binary["input_1"],
-                      input_2: binary["input_2"],
+                      input_2: binary["input_1"],
+                      operation: ele?.title,
                     }) == 1 ? (
                       Reverse ? (
-                        <Reverse />
+                        <Reverse className="w-16 h-16"/>
                       ) : (
                         <></>
                       )
                     ) : (
-                      <Icon />
+                      <Icon className="w-16 h-16"/>
                     )
-                  ) : outputAnd({
+                  ) : ele?.repeat == 1 && ele?.title == "nand" ? (
+                    useOutput({
+                      input_1: binary["input_2"],
+                      input_2: binary["input_2"],
+                      operation: ele?.title,
+                    }) == 1 ? (
+                      Reverse ? (
+                        <Reverse className="w-16 h-16"/>
+                      ) : (
+                        <></>
+                      )
+                    ) : (
+                      <Icon className="w-16 h-16"/>
+                    )
+                  ) : ele?.repeat == 2 && ele?.title == "nand" ? (
+                    useOutput({
+                      input_1: useOutput({
+                        input_1: binary["input_1"],
+                        input_2: binary["input_1"],
+                        operation: ele?.title,
+                      }),
+                      input_2: useOutput({
+                        input_1: binary["input_2"],
+                        input_2: binary["input_2"],
+                        operation: ele?.title,
+                      }),
+                      operation: ele?.title,
+                    }) == 1 ? (
+                      Reverse ? (
+                        <Reverse className="w-16 h-16"/>
+                      ) : (
+                        <></>
+                      )
+                    ) : (
+                      <Icon className="w-16 h-16"/>
+                    )
+                  ) : useOutput({
                       input_1: binary["input_1"],
                       input_2: binary["input_2"],
+                      operation: ele?.title,
                     }) == 1 ? (
                     Reverse ? (
-                      <Reverse />
+                      <Reverse className="w-16 h-16"/>
                     ) : (
                       <></>
                     )
                   ) : (
-                    <Icon />
+                    <Icon className="w-16 h-16"/>
                   )}
                 </div>
 
@@ -330,7 +509,9 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         setBoxes((prev) =>
                           prev ? prev.filter((_, ind) => ind != index) : []
                         );
-                         useLineInBoxRemove(boxes[index],lines,(linesNew)=>setLines(linesNew));
+                        useLineInBoxRemove(boxes[index], lines, (linesnew) =>
+                          setLines(linesnew)
+                        );
                         setVisible(undefined);
                       }}
                     />
@@ -349,33 +530,7 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                 initial={{ x2: line?.from.x, y2: line?.from.y }}
                 animate={{ x2: line?.to.x, y2: line?.to.y }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                stroke={
-                  line?.from?.input
-                    ? binary[line?.from?.input as keyof typeof binary] == 1
-                      ? "green"
-                      : "red"
-                    : line?.to?.input
-                      ? binary[line?.to?.input as keyof typeof binary] == 1
-                        ? "green"
-                        : "red"
-                      : line?.from?.direction == "bottom" ||
-                          line?.to?.direction == "bottom" ||
-                          line?.from?.direction == "top" ||
-                          line?.to?.direction == "top"
-                        ? output({
-                            input_1: binary["input_1"],
-                            input_2: binary["input_2"],
-                          }) == 1
-                          ? "green"
-                          : "red"
-                        : line?.from?.color == line?.to?.color &&
-                            outputAnd({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                            }) == 1
-                          ? "green"
-                          : "red"
-                }
+                stroke={lineColor(line)}
                 strokeWidth="2"
               />
             ))}
@@ -415,16 +570,7 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
             ]);
           }}
         />
-        <Button
-          text="Create NOT Gate"
-          className="bg-yellowFunf  whitespace-nowrap !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[5], id: generateUniqueId() },
-            ]);
-          }}
-        />
+
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
@@ -470,10 +616,10 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
         />
       </div>
       <Modal ref={modalRef}>
-        <LevelComplete level="6" onNextLevel={onComplete} onGoHome={goHome} />
+        <LevelComplete level="8" onNextLevel={onComplete} onGoHome={goHome} />
       </Modal>
     </>
   );
 };
 
-export default LevelSix;
+export default LevelSeven;

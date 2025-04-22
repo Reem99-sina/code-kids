@@ -4,6 +4,7 @@ import {
   componentInputProps,
   eachElement,
   generateUniqueId,
+  useLineInBoxRemove,
 } from "@/utils/logic.util";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -18,7 +19,7 @@ export interface dotInfo {
   id: number;
   x: number;
   y: number;
-  side?:string
+  side?: string;
 }
 
 interface mouseMove {
@@ -44,6 +45,11 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
   const [startDot, setStartDot] = useState<dotInfo | null>(null);
   const [mousePos, setMousePos] = useState<mouseMove | null>(null);
   const modalRef = useRef<ModalRef>(null);
+
+  const onClose = () => {
+    setBoxes([]);
+    setLines([]);
+  };
 
   const handleDotClick = ({
     dot,
@@ -73,8 +79,8 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
   };
 
   const hasInput = useMemo(() => {
-      return boxes.filter((ele) => ele?.title == "input");
-    }, [boxes]);
+    return boxes.filter((ele) => ele?.title == "input");
+  }, [boxes]);
 
   const validateConnections = () => {
     const connections = [...lines];
@@ -84,12 +90,14 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
 
     if (!notGate || !lamp) {
       alert("Missing NOT gate or Lamp.");
-
+      onClose();
+      
       return;
     }
 
-
-    const inputsToNot = connections.filter((line) => line?.to.id === notGate?.id);
+    const inputsToNot = connections.filter(
+      (line) => line?.to.id === notGate?.id
+    );
 
     const notToLamp = connections.find(
       (line) => line?.from.id === notGate?.id && line?.to.id === lamp?.id
@@ -97,6 +105,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
     if (inputsToNot.length >= 1 && notToLamp) {
       modalRef.current?.open();
     } else {
+      onClose();
       alert("❌ Incorrect logic, try again.");
     }
   };
@@ -197,7 +206,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
                       const Component =
                         Icon as FunctionComponent<componentInputProps>;
                       const id = "input_1";
-                      
+
                       return (
                         <Component
                           value={binary[id]}
@@ -237,6 +246,9 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
                       onClick={() => {
                         setBoxes((prev) =>
                           prev ? prev.filter((_, ind) => ind != index) : []
+                        );
+                        useLineInBoxRemove(boxes[index], lines, (linesNew) =>
+                          setLines(linesNew)
                         );
                         setVisible(undefined);
                       }}
@@ -289,14 +301,20 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
           text="Create NOT Gate"
           className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[5],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[5], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[2],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[2], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
@@ -305,7 +323,11 @@ const LevelThree: React.FC<LevelThreeProps> = ({ onComplete, goHome }) => {
           onClick={() => {
             setBoxes((prev) => [
               ...prev,
-              { ...eachElement[3], index: hasInput?.length == 1 ? 2 : 1 ,id: generateUniqueId()},
+              {
+                ...eachElement[3],
+                index: hasInput?.length == 1 ? 2 : 1,
+                id: generateUniqueId(),
+              },
             ]);
           }}
         />

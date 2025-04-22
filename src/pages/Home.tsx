@@ -29,7 +29,7 @@ const Home = () => {
       ),
       component: (
         <LevelOne
-          onComplete={() => setSelectedLevel(3)}
+          onComplete={() => setSelectedLevel(2)}
           goHome={() => setSelectedLevel(0)}
         />
       ),

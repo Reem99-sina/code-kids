@@ -4,6 +4,7 @@ import {
   componentInputProps,
   eachElement,
   generateUniqueId,
+  useLineInBoxRemove,
 } from "@/utils/logic.util";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -43,6 +44,10 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
   const [mousePos, setMousePos] = useState<mouseMove | null>(null);
   const modalRef = useRef<ModalRef>(null);
 
+  const onClose = () => {
+    setBoxes([]);
+    setLines([]);
+  };
   const handleDotClick = ({
     dot,
   }: {
@@ -78,12 +83,14 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
 
     if (!andGate || !lamp) {
       alert("Missing AND gate or Lamp.");
-
+      onClose();
+      
       return;
     }
 
-
-    const inputsToAnd = connections.filter((line) => line?.to.id === andGate?.id);
+    const inputsToAnd = connections.filter(
+      (line) => line?.to.id === andGate?.id
+    );
 
     const andToLamp = connections.find(
       (line) => line?.from.id === andGate?.id && line?.to.id === lamp?.id
@@ -92,6 +99,7 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
     if (inputsToAnd.length > 1 && andToLamp) {
       modalRef.current?.open();
     } else {
+      onClose();
       alert("❌ Incorrect logic, try again.");
     }
   };
@@ -247,6 +255,9 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
                         setBoxes((prev) =>
                           prev ? prev.filter((_, ind) => ind != index) : []
                         );
+                        useLineInBoxRemove(boxes[index], lines, (linesNew) =>
+                          setLines(linesNew)
+                        );
                         setVisible(undefined);
                       }}
                     />
@@ -308,28 +319,40 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           text="Create AND Gate"
           className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[0],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[0], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create QR Gate"
           className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[1],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[1], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create NOT Gate"
           className="bg-yellowFunf whitespace-nowrap !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[5],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[5], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [...prev, { ...eachElement[2],id: generateUniqueId() }]);
+            setBoxes((prev) => [
+              ...prev,
+              { ...eachElement[2], id: generateUniqueId() },
+            ]);
           }}
         />
         <Button
@@ -338,7 +361,11 @@ const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
           onClick={() => {
             setBoxes((prev) => [
               ...prev,
-              { ...eachElement[3], index: hasInput?.length == 1 ? 2 : 1 ,id: generateUniqueId()},
+              {
+                ...eachElement[3],
+                index: hasInput?.length == 1 ? 2 : 1,
+                id: generateUniqueId(),
+              },
             ]);
           }}
         />

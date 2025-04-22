@@ -19,6 +19,8 @@ import { useEffect, useRef, useState } from "react";
 import EachMaterial from "./each-material";
 import EachCollector from "./each-collector";
 import { Button } from "@/components/common/button.component";
+import { Modal, ModalRef } from "@/components/common/modal.component";
+import ModalReviewResult from "./modal-review-result";
 
 export const LevelTwo = ({
   onComplete,
@@ -27,14 +29,22 @@ export const LevelTwo = ({
   onComplete: () => void;
   goHome: () => void;
 }) => {
+  const refModal = useRef<ModalRef>(null);
+
   const [time, setTime] = useState(60);
-  const [level, ] = useState(1);
+  const [message] = useState({
+    title: "",
+    desc: "",
+  });
+
+  const [level] = useState(1);
   const constraintsRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const interval = setInterval(() => {
       if (time > 0) {
         setTime((prev) => prev - 1);
       } else {
+        refModal?.current?.open();
         clearInterval(interval);
       }
     }, 1000);
@@ -42,7 +52,7 @@ export const LevelTwo = ({
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [time]);
 
   return (
     <div className="flex flex-col text-white justify-start items-start mt-16 px-6">
@@ -64,7 +74,11 @@ export const LevelTwo = ({
         <h3 className="text-xl font-bold">Avaliable materials</h3>
         <div className=" flex items-center gap-4 flex-wrap w-[60%] justify-center">
           {materials?.map((ele) => (
-            <EachMaterial {...ele} constraintsRef={constraintsRef} key={ele?.title} />
+            <EachMaterial
+              {...ele}
+              constraintsRef={constraintsRef}
+              key={ele?.title}
+            />
           ))}
         </div>
         <div className="flex gap-5" ref={constraintsRef}>
@@ -86,6 +100,21 @@ export const LevelTwo = ({
           />
         </div>
       </div>
+      <Modal
+        ref={refModal}
+        className="bg-transparent "
+        // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        // onClose={() => navigate("/")}
+      >
+        <ModalReviewResult
+          title={message?.title}
+          desc={message?.desc}
+          onClick={() => {
+            refModal?.current?.close();
+            setTime(60);
+          }}
+        />
+      </Modal>
     </div>
   );
 };
@@ -124,3 +153,7 @@ export const materials = [
     icon: <Germanium />,
   },
 ];
+
+// const ConductorsResult = ["Iron", "Copper", "Gold"];
+// const InsulatorsResult = ["Wood", "Glass", "Plastic"];
+// const SemiconductorsResult = ["Germanium", "Silicon"];

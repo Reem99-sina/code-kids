@@ -6,6 +6,7 @@ import {
   generateUniqueId,
   LineDirection,
   mouseMove,
+  useLineInBoxRemove,
 } from "@/utils/logic.util";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -35,6 +36,11 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
   const [lines, setLines] = useState<(LineDirection | undefined)[]>([]); // Final lines
   const [startDot, setStartDot] = useState<dotInfo | null>(null); // Starting dot
   const [mousePos, setMousePos] = useState<mouseMove | null>(null); // For live line
+
+  const onClose = () => {
+    setBoxes([]);
+    setLines([]);
+  };
 
   const handleDotClick = ({
     dot,
@@ -85,7 +91,8 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
    
     if (!nandGate || !lamp ) {
       toast.error("Missing NAND gate or Lamp.");
-
+      onClose()
+      
       return;
     }
 
@@ -101,6 +108,7 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
     if (inputsToAnd.length >= 1 && andToLamp) {
       modalRef.current?.open();
     } else {
+      onClose()
       toast.error("❌ Incorrect logic, try again.");
     }
   };
@@ -242,6 +250,7 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         setBoxes((prev) =>
                           prev ? prev.filter((_, ind) => ind != index) : []
                         );
+                        useLineInBoxRemove(boxes[index],lines,(linesNew)=>setLines(linesNew));
                         setVisible(undefined);
                       }}
                     />

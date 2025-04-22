@@ -2,6 +2,7 @@ import {  Chart, Clock, RedArrow } from "@/assets";
 import { Button } from "../common/button.component";
 import ProgressBar from "../common/ProgressBar";
 import RewardBadgeStar from "../common/reward-badge-star";
+import { useNavigate } from "react-router-dom";
 // import { useGetRecommededCourses } from "@/services/parent-service";
 
 interface props {
@@ -14,8 +15,10 @@ interface props {
   prev_cost: number;
 }
 const Card = ({ title }: props) => {
+  const navigate=useNavigate()
   // const { data: dataRecommended } = useGetRecommededCourses({ id: id });
   // console.log(dataRecommended, "dataRecommended");
+  
   return (
     <div className="min-h-[400px] rounded-3xl mx-4 my-2 bg-white hover:bg-hoverCard  hover:shadow-[0px_0px_6px_0px_#FF0084] hover:border-[1px_solid_#FF1D92] ">
       <img src="/course.png" className="w-full h-[136px]" />
@@ -43,6 +46,7 @@ const Card = ({ title }: props) => {
             text="Continue Learning"
             className="!text-base font-bold !rounded-full px-4 py-2 whitespace-nowrap"
             endIcon={<RedArrow className="ms-3" />}
+            onClick={()=>navigate("/assembly-game")}
           />
         </div>
       </div>

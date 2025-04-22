@@ -36,11 +36,16 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     };
 
     return (
-      <Dialog open={isVisible} onOpenChange={setIsVisible}>
-        <DialogOverlay
-          className={classNameOverlay}
-          onClick={onClose}
-        />
+      <Dialog
+        open={isVisible}
+        onOpenChange={(open) => {
+          setIsVisible(open);
+          if (!open&&onClose) {
+            onClose();
+          }
+        }}
+      >
+        <DialogOverlay className={classNameOverlay} onClick={onClose} />
         <DialogContent
           className={cn(
             "border-0 focus:border-0 p-0",

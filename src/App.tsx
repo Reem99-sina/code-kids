@@ -13,6 +13,7 @@ import ForgetPassword from "./pages/Forget-Password";
 import LandingPage from "./pages/LandingPage";
 import HomeChild from "./pages/HomeChild";
 import Game from "./pages/Game";
+import AssemblyGame from "./pages/AssemblyGame";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
 
           <Route path="/home" element={<Home />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/assembly-game" element={<AssemblyGame />} />
 
         </Route>
         <Route path="/auth/google/callback" element={<GoogleCallbackHandler />} />
