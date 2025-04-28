@@ -12,7 +12,6 @@ import CardElement from "@/components/common/card-element";
 import ProgressBar from "@/components/common/ProgressBar";
 import TransistorComponent from "@/components/common/transistor-component";
 import clsx from "clsx";
-import videoSrc from "@/assets/video/transistor+circuit+builder.mp4";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { ModalRef } from "@/components/common/modal.component";
 import CommonModal from "@/components/common/common-modal";
@@ -165,17 +164,13 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete }) => {
         <HelpIcon />
       </div>
       <CommonModal refModal={modalRef} title={"Teach Course"}>
-        <div className="relative  w-full">
-          <video
-            className="w-full h-auto"
-            controls
-            preload="metadata"
-            autoPlay
-            aria-label={"Teach Course"}
-          >
-            <source src={videoSrc} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
         </div>
       </CommonModal>
     </div>

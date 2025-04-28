@@ -7,7 +7,7 @@ import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
 import { generateRandomDec } from "@/utils/binary.util";
 import { useForm } from "react-hook-form";
-import videoSrc from "@/assets/video/binary+to+hex+heroes.mp4";
+
 import CommonModal from "@/components/common/common-modal";
 
 interface LevelSixProps {
@@ -115,17 +115,13 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
         </Modal>
       </div>
       <CommonModal refModal={refModal} title={"Teach Course"}>
-        <div className="relative  w-full">
-          <video
-            className="w-full h-auto"
-            controls
-            preload="metadata"
-            autoPlay
-            aria-label={"Teach Course"}
-          >
-            <source src={videoSrc} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+6+Binary+to+Hex+Heroes.mp4`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
         </div>
       </CommonModal>
     </div>
