@@ -36,7 +36,7 @@ const HeaderLinks: React.FC = () => {
             },
             {
               title: "Courses",
-              href: "/courses",
+              href: "/home",
             },
             {
               title: "Mentors",
