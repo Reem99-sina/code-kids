@@ -1,10 +1,12 @@
-import { BatteryIconB,  HomeIcon, Light, LightOff } from "@/assets";
+import { BatteryIconB, HomeIcon, Light, LightOff } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
 import { TransmitCard } from "@/components/common/transmit-card";
 import { useEffect, useRef, useState } from "react";
 import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
+import CommonModal from "@/components/common/common-modal";
+import videoSrc from "@/assets/video/material-conductivity.mp4";
 
 interface LevelOneProps {
   onComplete: () => void;
@@ -12,6 +14,7 @@ interface LevelOneProps {
 }
 
 export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
+  const refModal = useRef<ModalRef>(null);
   const [conductorPressed, setConductorPressed] = useState(false);
   const [semiconductorPressed, setSemiconductorPressed] = useState(false);
   const [insulatorPressed, setInsulatorPressed] = useState(false);
@@ -31,6 +34,9 @@ export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
       modalRef.current?.open();
     }
   }, [conductorPressed, semiconductorPressed, insulatorPressed]);
+  useEffect(() => {
+    refModal?.current?.open();
+  }, []);
 
   return (
     <>
@@ -106,8 +112,21 @@ export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
             />
           </Modal>
         </div>
-       
       </div>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative  w-full">
+          <video
+            className="w-full h-auto"
+            controls
+            preload="metadata"
+            autoPlay
+            aria-label={"Teach Course"}
+          >
+            <source src={videoSrc} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </CommonModal>
     </>
   );
 };

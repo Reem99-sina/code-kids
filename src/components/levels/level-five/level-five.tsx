@@ -8,6 +8,8 @@ import { TextInput } from "@/components/common/form/text-input.component";
 import { generateRandomDec } from "@/utils/binary.util";
 import { FormProvider, useForm } from "react-hook-form";
 import InterInput from "./inter-input";
+import videoSrc from "@/assets/video/decimal+to+binary+blastoff.mp4";
+import CommonModal from "@/components/common/common-modal";
 
 interface LevelFiveProps {
   onComplete: () => void;
@@ -16,6 +18,8 @@ interface LevelFiveProps {
 
 export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
   const modalRef = useRef<ModalRef>(null);
+  const refModal = useRef<ModalRef>(null);
+
   const [level, setLevel] = useState(1);
 
   const formData = useForm();
@@ -33,9 +37,8 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
 
     if (binaryString == binary && transistor == numOfTransitor) {
       setLevel((prev) => prev + 1);
-      formData?.setValue("binary","")
-      formData?.setValue("transistors","")
-
+      formData?.setValue("binary", "");
+      formData?.setValue("transistors", "");
     }
   };
   useEffect(() => {
@@ -43,6 +46,9 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
       modalRef.current?.open();
     }
   }, [level]);
+  useEffect(() => {
+    refModal.current?.open();
+  }, []);
 
   return (
     <>
@@ -113,6 +119,20 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
           </Modal>
         </div>
       </div>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative  w-full">
+          <video
+            className="w-full h-auto"
+            controls
+            preload="metadata"
+            autoPlay
+            aria-label={"Teach Course"}
+          >
+            <source src={videoSrc} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </CommonModal>
     </>
   );
 };

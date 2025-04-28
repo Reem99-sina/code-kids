@@ -26,11 +26,15 @@ const InstructionComponent = ({
   const [clicks, setClicks] = useState(0);
   const [operands, setOperands] = useState<{
     operand_1: string | undefined;
-    operand_2: string | undefined;
-  }>({
-    operand_1: undefined,
-    operand_2: undefined,
-  });
+    operand_2?: string | undefined;
+  }>(
+    open?.startsWith("J")
+      ? { operand_1: undefined }
+      : {
+          operand_1: undefined,
+          operand_2: undefined,
+        }
+  );
 
   const handleClick = () => {
     if (clicks < 3) {
@@ -40,21 +44,25 @@ const InstructionComponent = ({
   };
 
   useEffect(() => {
-    setOperands({
-      operand_1: undefined,
-      operand_2: undefined,
-    });
+    setOperands(
+      open?.startsWith("J") || open?.startsWith("L")
+        ? { operand_1: undefined }
+        : {
+            operand_1: undefined,
+            operand_2: undefined,
+          }
+    );
   }, [instructions, open]);
 
   return (
     <div className=" flex-[0.5] bg-pinkLightFour p-6 rounded-2xl flex flex-col gap-5 min-h-[420px] text-start">
       <h3 className="text-2xl font-bold">Instuctions</h3>
       <Line className="bg-pinkOne" />
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         {instructions?.map((ele) => (
           <Button
             text={ele}
-            className="!bg-blueThree text-white px-8 py-2"
+            className="!bg-blueThree text-white px-6 py-2 !w-auto"
             onClick={() => {
               setOpen(ele);
             }}
@@ -67,45 +75,71 @@ const InstructionComponent = ({
           <h3 className="text-lg font-bold mb-2">
             Enter operand(s) for {open}
           </h3>
-          <div className="flex gap-2">
-            <TextInput
-              className="!rounded-lg !py-2 !px-3  "
-              inputProps={{
-                placeholder: "Enter Ax",
-                value: operands?.operand_1,
-                onChange: (event) => {
-                  onChange({
-                    operation: open,
-                    key: "operand_1",
-                    value: event?.target?.value,
-                  });
-                  setOperands((prev) => ({
-                    ...prev,
-                    operand_1: event?.target?.value,
-                  }));
-                },
-              }}
-            />
-            <TextInput
-              className="!rounded-lg !py-2 !px-3 "
-              inputProps={{
-                placeholder: "Enter bx",
-                value: operands?.operand_2,
+          {open?.startsWith("J") ||
+          open?.startsWith("L") ||
+          open?.startsWith("P") ? (
+            <div className="flex gap-2">
+              <TextInput
+                className="!rounded-lg !py-2 !px-3  "
+                inputProps={{
+                  placeholder: "Enter ",
+                  value: operands?.operand_1,
+                  onChange: (event) => {
+                    onChange({
+                      operation: open,
+                      key: "operand_1",
+                      value: event?.target?.value,
+                    });
 
-                onChange: (event) => {
-                  onChange({
-                    operation: open,
-                    key: "operand_2",
-                    value: event?.target?.value,
-                  });
-                  setOperands((prev) => ({
-                    ...prev,
-                    operand_2: event?.target?.value,
-                  }));
-                },
-              }}
-            />
-          </div>
+                    setOperands((prev) => ({
+                      ...prev,
+                      operand_1: event?.target?.value,
+                    }));
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <TextInput
+                className="!rounded-lg !py-2 !px-3  "
+                inputProps={{
+                  placeholder: "Enter Ax",
+                  value: operands?.operand_1,
+                  onChange: (event) => {
+                    onChange({
+                      operation: open,
+                      key: "operand_1",
+                      value: event?.target?.value,
+                    });
+                    setOperands((prev) => ({
+                      ...prev,
+                      operand_1: event?.target?.value,
+                    }));
+                  },
+                }}
+              />
+              <TextInput
+                className="!rounded-lg !py-2 !px-3 "
+                inputProps={{
+                  placeholder: "Enter bx",
+                  value: operands?.operand_2,
+
+                  onChange: (event) => {
+                    onChange({
+                      operation: open,
+                      key: "operand_2",
+                      value: event?.target?.value,
+                    });
+                    setOperands((prev) => ({
+                      ...prev,
+                      operand_2: event?.target?.value,
+                    }));
+                  },
+                }}
+              />
+            </div>
+          )}
           <Button
             text={open}
             className="!bg-[#76C75E] !px-6 !py-2 !text-white !w-auto !text-base !mt-6"

@@ -7,6 +7,8 @@ import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
 import { generateRandomDec } from "@/utils/binary.util";
 import { useForm } from "react-hook-form";
+import videoSrc from "@/assets/video/binary+to+hex+heroes.mp4";
+import CommonModal from "@/components/common/common-modal";
 
 interface LevelSixProps {
   onComplete: () => void;
@@ -23,9 +25,10 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
   const hex = formData.watch("hex");
 
   const modalRef = useRef<ModalRef>(null);
+  const refModal = useRef<ModalRef>(null);
 
   const { randomDecimal, binaryString } = useMemo(
-    () => generateRandomDec({ length: level *4, DecNumber: Math.random() }),
+    () => generateRandomDec({ length: level * 4, DecNumber: Math.random() }),
     [level]
   );
 
@@ -47,8 +50,7 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
     const CorrectHex = randomDecimal.toString(16).toUpperCase();
     if (CorrectHex == hex) {
       setLevel((prev) => prev + 1);
-      formData.setValue("hex","")
-
+      formData.setValue("hex", "");
     }
     // if (answer === "101") {
     //   modalRef.current?.open();
@@ -60,6 +62,10 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
       modalRef.current?.open();
     }
   }, [level]);
+
+  useEffect(() => {
+    refModal.current?.open();
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -108,6 +114,20 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
           <LevelComplete level="6" onNextLevel={onComplete} onGoHome={goHome} />
         </Modal>
       </div>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative  w-full">
+          <video
+            className="w-full h-auto"
+            controls
+            preload="metadata"
+            autoPlay
+            aria-label={"Teach Course"}
+          >
+            <source src={videoSrc} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </CommonModal>
     </div>
   );
 };

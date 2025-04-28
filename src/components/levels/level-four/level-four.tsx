@@ -1,10 +1,12 @@
 import { HomeIcon } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
+import CommonModal from "@/components/common/common-modal";
+import videoSrc from "@/assets/video/fun+binary+adventure.mp4";
 
 interface LevelFourProps {
   onComplete: () => void;
@@ -17,6 +19,7 @@ export const LevelFour: React.FC<LevelFourProps> = ({ onComplete, goHome }) => {
   // const [insulatorPressed, setInsulatorPressed] = useState(false);
   // const [progress, setProgress] = useState(0);
   const [answer, setAnswer] = useState("");
+  const refModal = useRef<ModalRef>(null);
   const modalRef = useRef<ModalRef>(null);
 
   // useEffect(() => {
@@ -38,6 +41,9 @@ export const LevelFour: React.FC<LevelFourProps> = ({ onComplete, goHome }) => {
       modalRef.current?.open();
     }
   };
+  useEffect(() => {
+    refModal?.current?.open();
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -93,7 +99,20 @@ export const LevelFour: React.FC<LevelFourProps> = ({ onComplete, goHome }) => {
           <LevelComplete level="4" onNextLevel={onComplete} onGoHome={goHome} />
         </Modal>
       </div>
-      
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative  w-full">
+          <video
+            className="w-full h-auto"
+            controls
+            preload="metadata"
+            autoPlay
+            aria-label={"Teach Course"}
+          >
+            <source src={videoSrc} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </CommonModal>
     </div>
   );
 };
