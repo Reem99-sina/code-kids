@@ -46,6 +46,42 @@ const AssemblyGame = () => {
         ),
         component: <MainComponent initLevel={2}></MainComponent>,
       },
+      {
+        name: "level 4",
+        view: (
+          <LevelCart
+            title="Conditional Jumps"
+            description="Well done keep going 💪😍"
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: <MainComponent initLevel={3}></MainComponent>,
+      },
+      {
+        name: "level 5",
+        view: (
+          <LevelCart
+            title="Simple loop"
+            description="Well done keep going 💪😍"
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: <MainComponent initLevel={4}></MainComponent>,
+      },
+      {
+        name: "level 6",
+        view: (
+          <LevelCart
+            title="Working with stack"
+            description="Well done keep going 💪😍"
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: <MainComponent initLevel={5}></MainComponent>,
+      },
     ];
   }, [selectedLevel]);
 

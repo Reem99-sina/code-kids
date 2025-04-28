@@ -12,8 +12,9 @@ import CardElement from "@/components/common/card-element";
 import ProgressBar from "@/components/common/ProgressBar";
 import TransistorComponent from "@/components/common/transistor-component";
 import clsx from "clsx";
-
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { ModalRef } from "@/components/common/modal.component";
+import CommonModal from "@/components/common/common-modal";
 
 interface LevelThreeProps {
   onComplete: () => void;
@@ -48,6 +49,8 @@ const helpTools = [
 ];
 
 const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete }) => {
+  const modalRef = useRef<ModalRef>(null);
+
   const [appear, setAppear] = useState(false);
   const [progress, setProgress] = useState(1);
   const [componentDrag, setComponentDrag] = useState<DragComProps[]>([]);
@@ -77,6 +80,10 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete }) => {
       { title: componentType, component: getElement({ title: componentType }) },
     ]);
   };
+
+  useEffect(() => {
+    modalRef?.current?.open();
+  }, []);
 
   return (
     <div className="flex items-start gap-5">
@@ -156,6 +163,16 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete }) => {
       <div className="absolute  bottom-0 right-0">
         <HelpIcon />
       </div>
+      <CommonModal refModal={modalRef} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </CommonModal>
     </div>
   );
 };

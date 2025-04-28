@@ -1,10 +1,11 @@
-import { BatteryIconB,  HomeIcon, Light, LightOff } from "@/assets";
+import { BatteryIconB, HomeIcon, Light, LightOff } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
 import { TransmitCard } from "@/components/common/transmit-card";
 import { useEffect, useRef, useState } from "react";
 import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
+import CommonModal from "@/components/common/common-modal";
 
 interface LevelOneProps {
   onComplete: () => void;
@@ -12,6 +13,7 @@ interface LevelOneProps {
 }
 
 export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
+  const refModal = useRef<ModalRef>(null);
   const [conductorPressed, setConductorPressed] = useState(false);
   const [semiconductorPressed, setSemiconductorPressed] = useState(false);
   const [insulatorPressed, setInsulatorPressed] = useState(false);
@@ -31,6 +33,9 @@ export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
       modalRef.current?.open();
     }
   }, [conductorPressed, semiconductorPressed, insulatorPressed]);
+  useEffect(() => {
+    refModal?.current?.open();
+  }, []);
 
   return (
     <>
@@ -106,8 +111,17 @@ export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
             />
           </Modal>
         </div>
-       
       </div>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video%201%20Material%20Conductivity.mp4`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </CommonModal>
     </>
   );
 };

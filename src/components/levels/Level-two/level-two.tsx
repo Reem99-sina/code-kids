@@ -21,6 +21,8 @@ import EachCollector from "./each-collector";
 import { Button } from "@/components/common/button.component";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ModalReviewResult from "./modal-review-result";
+import CommonModal from "@/components/common/common-modal";
+
 
 export const LevelTwo = ({
   onComplete,
@@ -30,6 +32,7 @@ export const LevelTwo = ({
   goHome: () => void;
 }) => {
   const refModal = useRef<ModalRef>(null);
+  const modalRef = useRef<ModalRef>(null);
 
   const [time, setTime] = useState(60);
   const [message] = useState({
@@ -39,6 +42,7 @@ export const LevelTwo = ({
 
   const [level] = useState(1);
   const constraintsRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (time > 0) {
@@ -53,6 +57,10 @@ export const LevelTwo = ({
       clearInterval(interval);
     };
   }, [time]);
+
+  useEffect(() => {
+    modalRef?.current?.open();
+  }, []);
 
   return (
     <div className="flex flex-col text-white justify-start items-start mt-16 px-6">
@@ -115,6 +123,16 @@ export const LevelTwo = ({
           }}
         />
       </Modal>
+      <CommonModal refModal={modalRef} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+4+Fun+Binary+Adventure.mp4`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </CommonModal>
     </div>
   );
 };
