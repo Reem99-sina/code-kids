@@ -40,11 +40,11 @@ const HeaderLinks: React.FC = () => {
             },
             {
               title: "Mentors",
-              href: "/mentors",
+              href: "/game",
             },
             {
               title: "Projects",
-              href: "/projects",
+              href: "/assembly-game",
             },
             {
               title: "Partners",

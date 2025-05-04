@@ -23,7 +23,6 @@ import { Modal, ModalRef } from "@/components/common/modal.component";
 import ModalReviewResult from "./modal-review-result";
 import CommonModal from "@/components/common/common-modal";
 
-
 export const LevelTwo = ({
   onComplete,
   goHome,

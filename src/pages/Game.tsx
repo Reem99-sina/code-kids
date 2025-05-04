@@ -20,7 +20,7 @@ import {
   dataOrItems,
   dataXorItems,
 } from "@/utils/logic.util";
-import { useMemo, useState } from "react";
+import {  useMemo, useState } from "react";
 
 const Game = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
@@ -65,7 +65,7 @@ const Game = () => {
           <MainComponent
             title="Level 2: OR Gate Challenge"
             desc="Use an OR gate to light up the lamp with either input."
-            operation="and"
+            operation="or"
             data={dataOrItems}
           >
             <LevelTwo
@@ -89,7 +89,7 @@ const Game = () => {
           <MainComponent
             title="Level 3: NOT Gate Illumination"
             desc="Connect a NOT gate to light up the lamp when the inputs is off."
-            operation="and"
+            operation="not"
             data={dataNotItems}
           >
             <LevelThree
@@ -282,6 +282,8 @@ const Game = () => {
     ];
   }, [selectedLevel]);
 
+
+
   return (
     <>
       <div className="flex flex-col justify-center items-center min-h-screen w-full bg-[url('/home-background.png')] bg-[length:100%_100%] bg-no-repeat bg-center">
@@ -320,9 +322,7 @@ const Game = () => {
                 ))}
               </div>
             ) : (
-              <div className="w-full">
-                {levels[selectedLevel - 1]?.component}
-              </div>
+              <div key={selectedLevel} className="w-full">{levels[selectedLevel-1]?.component}</div>
             )}
           </div>
         </div>

@@ -2,7 +2,7 @@ import { GoogleColor } from "@/assets";
 import CommenSide from "../register/commen-side";
 import DividerWithText from "../common/line-text-component";
 import { TextInput } from "../common/form/text-input.component";
-import { LockKeyhole, Mail } from "lucide-react";
+import {  Mail } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../common/button.component";
@@ -105,6 +105,7 @@ const LoginParent = () => {
             label="Password"
             inputProps={{
               placeholder: "Password",
+              type:"password",
               ...register("password", {
                 required: { value: true, message: "this input required" },
                 minLength: {
@@ -118,7 +119,7 @@ const LoginParent = () => {
                 ? String(errors?.password?.message)
                 : undefined
             }
-            leftIcon={<LockKeyhole className="text-grayOne" />}
+            
           />
         </div>
         <div className="flex items-center justify-between mt-4 text-grayFour">
