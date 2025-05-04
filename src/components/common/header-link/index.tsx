@@ -9,15 +9,15 @@ const Parentlinks = [
   },
   {
     title: "My Kids",
-    href: "/",
+    href: "/my-kids",
   },
   {
     title: "Courses",
-    href: "/",
+    href: "/courses",
   },
   {
     title: "Mentors",
-    href: "/",
+    href: "/mentors",
   },
 ];
 

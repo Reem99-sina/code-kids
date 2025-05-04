@@ -196,6 +196,114 @@ const levels = [
       program: ["PUSH AX", "PUSH BX", "POP AX", "POP BX"],
     },
   },
+  {
+    name: "level_6",
+    desc: "Perform AND operation between AX and BX , store in CX",
+    instruction: ["MOV", "AND", "OR", "XOR"],
+    registers: [
+      { title: "AX", value: 12 },
+      { title: "BX", value: 10 },
+      { title: "CX", value: 0 },
+    ],
+    flags: [
+      { title: "ZF", value: 0 },
+      { title: "SF", value: 0 },
+      { title: "CF", value: 0 },
+    ],
+    result: {
+      registers: [
+        { title: "AX", value: 12 },
+        { title: "BX", value: 10 },
+        { title: "CX", value: 8 },
+      ],
+      flags: [
+        { title: "ZF", value: 0 },
+        { title: "SF", value: 0 },
+        { title: "CF", value: 0 },
+      ],
+      program: ["MOV CX AX", "AND CX BX"],
+    },
+  },
+  {
+    name: "level_7",
+    desc: "Load values from three consecutive memory locations starting at address in BX,sum them in AX",
+    instruction: ["MOV", "ADD", "LOAD", "STORE"],
+    registers: [
+      { title: "AX", value: 5 },
+      { title: "BX", value: 100 },
+      { title: "CX", value: 0 },
+    ],
+    memory: [
+      { address: "100", value: 5 },
+      { address: "101", value: 10 },
+      { address: "102", value: 15 },
+    ],
+    flags: [
+      { title: "ZF", value: 0 },
+      { title: "SF", value: 0 },
+      { title: "CF", value: 0 },
+    ],
+    result: {
+      registers: [
+        { title: "AX", value: 30 },
+        { title: "BX", value: 100 },
+        { title: "CX", value: 15 },
+      ],
+      flags: [
+        { title: "ZF", value: 0 },
+        { title: "SF", value: 0 },
+        { title: "CF", value: 0 },
+      ],
+      program: [
+        "LOAD AX [BX]",
+        "LOAD CX [101]",
+        "ADD AX CX",
+        "LOAD CX [102]",
+        "ADD AX CX",
+      ],
+    },
+  },
+  {
+    name: "level_8",
+    desc: "Compare AX and BX,set CX to: 1 if AX > BX , -1 if AX < BX ,0 if equal ",
+    instruction: ["MOV", "CMP", "JG", "JL", "JMP", "LABEL"],
+    registers: [
+      { title: "AX", value: 5 },
+      { title: "BX", value: 10 },
+      { title: "CX", value: 0 },
+    ],
+
+    flags: [
+      { title: "ZF", value: 0 },
+      { title: "SF", value: 0 },
+      { title: "CF", value: 0 },
+    ],
+    result: {
+      registers: [
+        { title: "AX", value: 5 },
+        { title: "BX", value: 10 },
+        { title: "CX", value: -1 },
+      ],
+      flags: [
+        { title: "ZF", value: 0 },
+        { title: "SF", value: 1 },
+        { title: "CF", value: 1 },
+      ],
+      program: [
+        "CMP AX BX",
+        "JG greater",
+        "JL less",
+        "MOV CX 0",
+        "JMP end",
+        "greater",
+        "MOV CX 1",
+        "JMP end",
+        "less",
+        "MOV CX -1",
+        "end",
+      ],
+    },
+  },
 ];
 
 const MainComponent = ({ initLevel }: { initLevel?: number }) => {
@@ -244,6 +352,7 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
         title: ele,
       }))
     );
+    setMemory(levels[level]?.memory || []);
   };
 
   const handleExecute = ({
@@ -254,7 +363,7 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
     const index = 0;
     const resultRegisters = [...registers.map((r) => ({ ...r }))];
     const resultFlags = [...flags.map((f) => ({ ...f }))];
-    const resultMemory = memory?[...memory.map((f) => ({ ...f }))]:[];
+    const resultMemory = memory ? [...memory.map((f) => ({ ...f }))] : [];
 
     executeInstruction({
       index,

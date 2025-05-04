@@ -29,8 +29,8 @@ const MainHeader = () => {
       <div className={clsx("flex items-center justify-center bg-transparent ")}>
         <div
           className={clsx(
-            "container mx-auto py-3 flex items-center justify-between",
-            pathname == "/add-child" || pathname == "/home-child"
+            "  py-3 flex items-center justify-around w-full gap-5 px-3",
+            pathname == "/add-child" ||user?.userType=="child"
               ? "absolute top-0 z-10"
               : ""
           )}
