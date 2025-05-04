@@ -76,7 +76,7 @@ const InstructionComponent = ({
             Enter operand(s) for {open}
           </h3>
           {open?.startsWith("J") ||
-          open?.startsWith("L") ||
+          (open?.startsWith("L") && !open?.startsWith("LO")) ||
           open?.startsWith("P") ? (
             <div className="flex gap-2">
               <TextInput

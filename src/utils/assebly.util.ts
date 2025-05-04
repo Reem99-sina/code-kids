@@ -42,7 +42,7 @@ export const executeInstruction = ({
 
     const getValue = (arg: string) => {
       const reg = findRegister(arg);
-      
+
       return reg ? reg.value : Number(arg);
     };
 
@@ -142,18 +142,42 @@ export const executeInstruction = ({
           if (reg1.value == reg2.value) {
             setFlag("ZF", 1);
           } else {
+            const result = reg1.value - reg2.value;
+            if (result >= 0) {
+              setFlag("SF", 0);
+              setFlag("CF", 0);
+            } else {
+              setFlag("SF", 1);
+              setFlag("CF", 1);
+            }
             setFlag("ZF", 0);
           }
         } else if (reg1 && !reg2) {
           if (reg1.value == getValue(arg2)) {
             setFlag("ZF", 1);
           } else {
+            const result = reg1.value - getValue(arg2);
+            if (result >= 0) {
+              setFlag("SF", 0);
+              setFlag("CF", 0);
+            } else {
+              setFlag("SF", 1);
+              setFlag("CF", 1);
+            }
             setFlag("ZF", 0);
           }
         } else if (reg2 && !reg1) {
           if (reg2.value == getValue(arg1)) {
             setFlag("ZF", 1);
           } else {
+            const result = reg2.value - getValue(arg1);
+            if (result >= 0) {
+              setFlag("SF", 0);
+              setFlag("CF", 0);
+            } else {
+              setFlag("SF", 1);
+              setFlag("CF", 1);
+            }
             setFlag("ZF", 0);
           }
         }
@@ -190,7 +214,9 @@ export const executeInstruction = ({
           const sp = findRegister("SP");
 
           if (reg1 && sp) {
-            sp.value -= 1;
+            if (memory && memory.length > 0) {
+              sp.value -= 1;
+            }
             memory?.unshift({ address: String(sp?.value), value: reg1.value });
           }
         }
@@ -209,12 +235,83 @@ export const executeInstruction = ({
               memory = memory?.filter(
                 (ele) => ele?.address != String(sp?.value)
               );
-              sp.value += 1;
+              if (memory && memory?.length > 0) {
+                sp.value += 1;
+              }
             }
           }
         }
         break;
+      case "AND":
+        {
+          if (reg1 && reg2) {
+            const result = reg1.value & reg2.value;
+            reg1.value = result;
+          } else if (reg1 && !reg2 && arg2.startsWith("[")) {
+            const datauser = arg2.replace(/\[|\]/g, "");
+            const value = memory?.find((ele) => ele.address == datauser)?.value;
+            if (value) {
+              const result = reg1.value & value;
+              reg1.value = result;
+            }
+          } else if (reg1 && !reg2 && !arg2.startsWith("[")) {
+            const result = reg1.value & Number(arg2);
+            reg1.value = result;
+          }
+        }
+        break;
+      case "LOAD":
+        {
+          if (reg1 && arg2.startsWith("[")) {
+            const datauser = arg2.replace(/\[|\]/g, "");
 
+            const value = memory?.find((ele) => ele.address == datauser)?.value;
+            if (value) {
+              reg1.value = value;
+            } else {
+              const reg2 = findRegister(datauser);
+              if (reg2) {
+                const value = memory?.find(
+                  (ele) => ele.address == String(reg2?.value)
+                )?.value;
+                if (value) reg1.value = value;
+              }
+            }
+          }
+        }
+        break;
+      case "JG":
+        {
+          const zf = resultFlags.find((f) => f.title === "ZF")?.value;
+          const sf = resultFlags.find((f) => f.title === "SF")?.value;
+
+          if (zf == sf) {
+            const jumpTo = program.findIndex((line) =>
+              line.trim().startsWith(arg1)
+            );
+            if (jumpTo !== -1) {
+              index = jumpTo;
+              break;
+            }
+          }
+        }
+        break;
+      case "JL":
+        {
+     
+          const sf = resultFlags.find((f) => f.title === "SF")?.value;
+
+          if (sf&&sf>0) {
+            const jumpTo = program.findIndex((line) =>
+              line.trim().startsWith(arg1)
+            );
+            if (jumpTo !== -1) {
+              index = jumpTo;
+              break;
+            }
+          }
+        }
+        break;
       case "INC":
         if (reg1) reg1.value += 1;
         break;

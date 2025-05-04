@@ -113,7 +113,7 @@ export { default as ParentIcon } from "./parent-icon.svg?react";
 export { default as SafeIcon } from "./safe-icon.svg?react";
 export { default as AvaterIcon } from "./avatar.svg?react";
 
-export { default as ChildWelcome } from "./child-welcome.svg?react";
+export { default as ChildWelcome } from "./welcome-child.svg?react";
 export { default as LineTriangular } from "./line-triangular.svg?react";
 export { default as Home } from "./home.svg?react";
 export { default as Courses } from "./courses.svg?react";
