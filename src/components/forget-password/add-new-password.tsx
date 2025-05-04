@@ -65,6 +65,7 @@ const AddNewPassword = () => {
             label="New Password"
             inputProps={{
               placeholder: "New Password",
+              type:"password",
               ...register("password", {
                 required: { value: true, message: "this input required" },
               }),
@@ -74,13 +75,14 @@ const AddNewPassword = () => {
                 ? String(errors?.password?.message)
                 : undefined
             }
-            leftIcon={<LockKeyhole className="text-grayOne" />}
+   
           />
           <TextInput
             className="!rounded-full !py-4 !px-4"
             label="Confirm Password"
             inputProps={{
               placeholder: "Confirm Password Password",
+              type:"password",
               ...register("repeate_password", {
                 required: { value: true, message: "this input required" },
               }),

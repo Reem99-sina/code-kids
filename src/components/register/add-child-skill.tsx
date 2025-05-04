@@ -80,7 +80,7 @@ const AddChildSkill: FC<props> = ({ onComplete, result }) => {
         ref={refModal}
         className="bg-transparent "
         classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
-        onClose={() => router("/login?type=parent")}
+        onClose={() => router("/")}
       >
         <div className="bg-transparent rounded-t-3xl text-white">
           <div className="rounded-t-3xl  bg-pinkThree flex justify-center py-2">
