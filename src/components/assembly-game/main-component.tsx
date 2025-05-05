@@ -12,6 +12,7 @@ import { checkRegisterTrue, executeInstruction } from "@/utils/assebly.util";
 import { Modal, ModalRef } from "../common/modal.component";
 import { LevelComplete } from "../levels/LevelComplete";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 interface instructionProps {
   title: string;
@@ -124,8 +125,8 @@ const levels = [
       ],
       flags: [
         { title: "ZF", value: 0 },
-        { title: "SF", value: 0 },
-        { title: "CF", value: 0 },
+        { title: "SF", value: 1 },
+        { title: "CF", value: 1 },
       ],
       program: [
         "CMP AX BX",
@@ -310,6 +311,7 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
   const modalRef = useRef<ModalRef>(null);
   const [level, setLevel] = useState(initLevel ? initLevel : 0);
   const [time] = useState(60);
+  const router=useNavigate()
   const [progress, setProgress] = useState(100);
   const [hint, setHint] = useState("");
   const [solution, setSolution] = useState("");
@@ -340,6 +342,9 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
   const onNextLevel = useCallback(() => {
     setLevel((prev) => prev + 1);
     addInitstate({ level: level + 1 });
+    if(level==10){
+      router("/")
+    }
     modalRef?.current?.close();
   }, [level]);
 

@@ -1,7 +1,6 @@
 import { HelpIcon, LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import { LevelFive } from "@/components/levels/level-five/level-five";
-import { LevelFour } from "@/components/levels/level-four/level-four";
 import ContentFooter from "@/components/footer/ContentFooter";
 import LevelEight from "@/components/levels/level-eight/level-eight";
 import { LevelOne } from "@/components/levels/Level-one/level-one";
@@ -65,7 +64,7 @@ const Home = () => {
       name: "level 4",
       view: <LevelCart title="Binary Multiplication" progressNumber={0} lock />,
       component: (
-        <LevelFour
+        <LevelFive
           goHome={() => setSelectedLevel(0)}
           onComplete={() => setSelectedLevel(5)}
         />

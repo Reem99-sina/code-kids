@@ -186,12 +186,12 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                       direction_dots_true={[
                         {
                           direction: "top",
-                          color: binary["input_2"] == 1 ? "green" : "red",
+                          color: binary["input_1"] == 1 ? "green" : "red",
                           id: ele?.id,
                         },
                         {
                           direction: "bottom",
-                          color: binary["input_1"] == 1 ? "green" : "red",
+                          color: binary["input_2"] == 1 ? "green" : "red",
                           id: ele?.id,
                         },
                         {
@@ -280,12 +280,12 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                 stroke={
                   line?.from?.direction == "bottom" ||
                   line?.to?.direction == "bottom"
-                    ? binary["input_1"] == 1
+                    ? binary["input_2"] == 1
                       ? "green"
                       : "red"
                     : line?.from?.direction == "top" ||
                         line?.to?.direction == "top"
-                      ? binary["input_2"] == 1
+                      ? binary["input_1"] == 1
                         ? "green"
                         : "red"
                       : output({
