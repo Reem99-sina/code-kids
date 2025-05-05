@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TextInput } from "../common/form/text-input.component";
 import CommenSide from "../register/commen-side";
-import {  User } from "lucide-react";
+import { User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../common/button.component";
 import { Modal, ModalRef } from "../common/modal.component";
@@ -79,6 +79,7 @@ const LoginChildren = ({
             label="Name"
             inputProps={{
               placeholder: "Parent's name",
+              autoComplete:"username",
               ...register("username", {
                 required: { value: true, message: "this input required" },
               }),
@@ -95,7 +96,8 @@ const LoginChildren = ({
             label="Password"
             inputProps={{
               placeholder: "Password",
-              type:"password",
+              autoComplete: "password",
+              type: "password",
               ...register("password", {
                 required: { value: true, message: "this input required" },
                 minLength: {
@@ -109,7 +111,6 @@ const LoginChildren = ({
                 ? String(errors?.password?.message)
                 : undefined
             }
-           
           />
         </div>
         <p className="text-grayFour text-base font-normal text-start mt-4">
