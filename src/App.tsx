@@ -28,14 +28,14 @@ function App() {
 
          
           <Route path="/assembly-game" element={<AssemblyGame />} />
-          {/* <Route element={<PrivateRoute />}> */}
+          <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/add-child" element={<AddChild />} />
             <Route path="/home-child" element={<HomeChild />} />
             <Route path="/home" element={<Home />} />
             <Route path="/game" element={<Game />} />
             <Route path="/assembly-game" element={<AssemblyGame />} />
-          {/* </Route> */}
+          </Route>
         </Route>
         <Route
           path="/auth/google/callback"

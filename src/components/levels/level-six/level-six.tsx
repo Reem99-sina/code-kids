@@ -14,9 +14,14 @@ import toast from "react-hot-toast";
 interface LevelSixProps {
   onComplete: () => void;
   goHome: () => void;
+  open: boolean;
 }
 
-export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
+export const LevelSix: React.FC<LevelSixProps> = ({
+  onComplete,
+  goHome,
+  open,
+}) => {
   // const [conductorPressed, setConductorPressed] = useState(false);
   // const [semiconductorPressed, setSemiconductorPressed] = useState(false);
   // const [insulatorPressed, setInsulatorPressed] = useState(false);
@@ -52,10 +57,8 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
     if (CorrectHex == hex) {
       setLevel((prev) => prev + 1);
       formData.setValue("hex", "");
-    }else{
-      toast.error(
-        `Try again!\nCorrect : ${CorrectHex}`
-      );
+    } else {
+      toast.error(`Try again!\nCorrect : ${CorrectHex}`);
     }
     // if (answer === "101") {
     //   modalRef.current?.open();
@@ -71,6 +74,12 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
   useEffect(() => {
     refModal.current?.open();
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      refModal?.current?.open();
+    }
+  }, [open]);
 
   return (
     <div className="flex flex-col">
