@@ -10,9 +10,14 @@ import CommonModal from "@/components/common/common-modal";
 interface LevelOneProps {
   onComplete: () => void;
   goHome: () => void;
+  open: boolean;
 }
 
-export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
+export const LevelOne: React.FC<LevelOneProps> = ({
+  onComplete,
+  goHome,
+  open,
+}) => {
   const refModal = useRef<ModalRef>(null);
   const [conductorPressed, setConductorPressed] = useState(false);
   const [semiconductorPressed, setSemiconductorPressed] = useState(false);
@@ -33,6 +38,11 @@ export const LevelOne: React.FC<LevelOneProps> = ({ onComplete, goHome }) => {
       modalRef.current?.open();
     }
   }, [conductorPressed, semiconductorPressed, insulatorPressed]);
+  useEffect(() => {
+    if (open) {
+      refModal?.current?.open();
+    }
+  }, [open]);
   useEffect(() => {
     refModal?.current?.open();
   }, []);

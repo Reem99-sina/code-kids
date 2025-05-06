@@ -2,7 +2,6 @@ import {
   ArrowLeftIcon,
   Battery,
   BatteryIcon,
-  HelpIcon,
   HomeIcon,
   LightIcon,
   Radio,
@@ -160,9 +159,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete }) => {
           />
         </div>
       </div>
-      <div className="absolute  bottom-0 right-0">
-        <HelpIcon />
-      </div>
+     
       <CommonModal refModal={modalRef} title={"Teach Course"}>
         <div className="relative pt-[56.25%] w-full">
           <iframe

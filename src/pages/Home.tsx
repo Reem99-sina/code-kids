@@ -1,4 +1,4 @@
-import { HelpIcon, LanguageButton } from "@/assets";
+import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import { LevelFive } from "@/components/levels/level-five/level-five";
 import ContentFooter from "@/components/footer/ContentFooter";
@@ -10,9 +10,11 @@ import { LevelTwo } from "@/components/levels/Level-two/level-two";
 import { useState } from "react";
 import LevelSeven from "@/components/levels/level-seven/level-seven";
 import { useNavigate } from "react-router-dom";
+import HelpIconComponent from "@/components/common/help-icon";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
+  const [open, setOpen] = useState(false);
   const router = useNavigate();
 
   const levels = [
@@ -30,6 +32,7 @@ const Home = () => {
         <LevelOne
           onComplete={() => setSelectedLevel(2)}
           goHome={() => setSelectedLevel(0)}
+          open={open}
         />
       ),
     },
@@ -47,6 +50,7 @@ const Home = () => {
         <LevelTwo
           onComplete={() => setSelectedLevel(3)}
           goHome={() => setSelectedLevel(0)}
+          open={open}
         />
       ),
     },
@@ -157,9 +161,7 @@ const Home = () => {
                   </div>
                 )}
               </div>
-              <div className="absolute  -bottom-[2rem] right-0">
-                <HelpIcon />
-              </div>
+              <HelpIconComponent onClick={() => setOpen(!open)} />
             </div>
           </div>
         </div>

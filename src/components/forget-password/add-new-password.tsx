@@ -48,7 +48,7 @@ const AddNewPassword = () => {
       <CommenSide
         title="Reset & Restart Securely"
         desc="Enter a new password to secure your account and get back to learning!"
-        className={"max-w-[700px] min-h-[700px]"}
+        className={"max-w-[700px] min-h-[600px]"}
       />
       <div className="bg-white rounded-3xl px-6 py-5 w-[50%]  shadow-[0px_0px_24px_0px_#FF00B8]">
         <div className="pt-4 px-1 flex flex-col gap-2 items-start justify-start">
