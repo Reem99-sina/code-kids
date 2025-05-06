@@ -25,7 +25,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
-
+          <Route path="/home" element={<Home />} />
          
           <Route path="/assembly-game" element={<AssemblyGame />} />
           <Route element={<PrivateRoute />}>
