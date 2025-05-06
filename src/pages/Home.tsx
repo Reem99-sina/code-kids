@@ -10,6 +10,8 @@ import { LevelTwo } from "@/components/levels/Level-two/level-two";
 import { useState } from "react";
 import LevelSeven from "@/components/levels/level-seven/level-seven";
 import { useNavigate } from "react-router-dom";
+import LevelTen from "@/components/levels/Level-ten/level-ten";
+import LevelEleven from "@/components/levels/Level-eleven/level-eleven";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
@@ -105,6 +107,26 @@ const Home = () => {
       view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
       component: (
         <LevelEight
+          onComplete={() => setSelectedLevel(10)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
+    },
+    {
+      name: "level 10",
+      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
+      component: (
+        <LevelTen
+          onComplete={() => setSelectedLevel(11)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
+    },
+    {
+      name: "level 11",
+      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
+      component: (
+        <LevelEleven
           onComplete={() => router("/game")}
           goHome={() => setSelectedLevel(0)}
         />
