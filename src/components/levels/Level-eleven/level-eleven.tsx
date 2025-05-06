@@ -143,7 +143,7 @@ const LevelEleven: React.FC<LevelElevenProps> = ({onComplete, goHome}) => {
 
   return (
     <>
-      <div className="flex flex-col bg-white rounded bg-white m-5 p-3 min-h-[500px] relative  ">
+      <div className="flex flex-col bg-white rounded  m-5 p-3 min-h-[500px] relative  ">
         <div className="mb-4 flex justify-center">
           <p className=" font-bold text-3xl text-black ">
             Binary Subtraction Using Two’s complement{" "}
