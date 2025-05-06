@@ -78,7 +78,7 @@ const LoginChildren = ({
             className="!rounded-full !py-4 !px-4"
             label="Name"
             inputProps={{
-              placeholder: "Parent's name",
+              placeholder: "Child's name",
               autoComplete:"username",
               ...register("username", {
                 required: { value: true, message: "this input required" },
@@ -113,12 +113,7 @@ const LoginChildren = ({
             }
           />
         </div>
-        <p className="text-grayFour text-base font-normal text-start mt-4">
-          Forget my password?
-          <Link to="" className="text-grayFour">
-            Ask your Parent
-          </Link>
-        </p>
+    
         <Button
           className="rounded-full bg-yellowTwo !text-blackPurple mt-5"
           text="Create My Account"

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import HelpIconComponent from "@/components/common/help-icon";
 import LevelTen from "@/components/levels/Level-ten/level-ten";
 import LevelEleven from "@/components/levels/Level-eleven/level-eleven";
+import { LevelTwelve } from "@/components/levels/Level-twelve/level-twelve";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
@@ -139,6 +140,16 @@ const Home = () => {
       view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
       component: (
         <LevelEleven
+          onComplete={() => setSelectedLevel(12)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
+    },
+    {
+      name: "level 12",
+      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
+      component: (
+        <LevelTwelve
           onComplete={() => router("/game")}
           goHome={() => setSelectedLevel(0)}
         />
