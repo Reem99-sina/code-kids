@@ -85,7 +85,7 @@ const AddForm = ({
           ...edit,
           skills: data
             ?.filter((ele) =>
-              edit?.skills?.map((elem) => elem?.name)?.includes(ele?.name)
+              edit?.skills?.map((elem) => elem?.id)?.includes(ele?.id)
             )
             ?.map((eleme) => eleme?.id),
           name: edit?.fullname,
@@ -137,7 +137,7 @@ const AddForm = ({
     setLoading(true);
     await mutateAsyncEdit(data)
       .then((res) => {
-        if (res.data) {
+        if (!res.status) {
           toast.success(res.message);
         } else {
           toast.error(res.message);
@@ -180,7 +180,11 @@ const AddForm = ({
               >
                 {image ? (
                   <img
-                    src={URL.createObjectURL(image)}
+                    src={
+                      typeof image == "string"
+                        ? image
+                        : URL?.createObjectURL(image)
+                    }
                     alt="image"
                     className="w-16 h-16"
                   />
@@ -287,7 +291,7 @@ const AddForm = ({
                   control={control}
                   rules={{
                     required: {
-                      value:true,
+                      value: true,
                       message: "the avatar is required",
                     },
                   }}

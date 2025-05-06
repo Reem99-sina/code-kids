@@ -10,22 +10,24 @@ interface props {
 
 const CommenSide: FC<props> = ({ title, desc, className }) => {
   return (
-    <div className="relative w-[50%] px-10 min-h-[625px]">
-      <div
-        className={clsx(
-          "pt-14 flex flex-col gap-4 max-w-[430px] text-justify md:pt-28",
-          className
-        )}
-      >
-        <h2 className="text-yellowOne font-black md:text-[3rem] text-xl leading-[140%] tracking-tight">
-          {title}
-        </h2>
-        <p className="font-black md:text-[2rem] text-lg  text-white leading-[140%]">
-          {desc}
-        </p>
-      </div>
-      <div className=" absolute -left-8 bottom-0">
-        <Child />
+    <div className=" bg-gradient-to-b from-[#2E016B]/70 to-[#8F02D1]/70 bg-opacity-80 rounded-3xl w-[50%] py-4 ">
+      <div className="relative w-[100%] px-10 min-h-[600px]">
+        <div
+          className={clsx(
+            " flex flex-col gap-4 max-w-[430px] text-justify ",
+            className
+          )}
+        >
+          <h2 className="text-yellowOne font-black md:text-[3rem] text-xl leading-[140%] tracking-tight">
+            {title}
+          </h2>
+          <p className="font-black md:text-[2rem] text-lg  text-white leading-[140%]">
+            {desc}
+          </p>
+        </div>
+        <div className=" absolute -left-8 bottom-0">
+          <Child />
+        </div>
       </div>
     </div>
   );
