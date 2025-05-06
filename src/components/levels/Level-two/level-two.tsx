@@ -62,7 +62,7 @@ export const LevelTwo = ({
   }, []);
 
   return (
-    <div className="flex flex-col text-white justify-start items-start mt-16 px-6">
+    <div className="flex flex-col text-white justify-start items-start ">
       <h3 className="text-3xl font-bold mb-3">Coding for Kids</h3>
       <h3 className="text-2xl font-bold">
         Chapter 2: Binary Addition, Hexadecimal to binary

@@ -55,7 +55,7 @@ const MainComponent = ({
   }, []);
 
   return (
-    <div className="flex flex-col text-white justify-start items-start  px-6">
+    <div className="flex flex-col text-white justify-start items-start  ">
       <h3 className="text-3xl font-bold mb-3">{title}</h3>
       <h3 className="text-2xl font-bold">{desc}</h3>
       <div className="flex gap-6 w-full">
