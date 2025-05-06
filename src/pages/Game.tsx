@@ -1,5 +1,6 @@
-import { HelpIcon, LanguageButton } from "@/assets";
+import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
+import HelpIconComponent from "@/components/common/help-icon";
 import ContentFooter from "@/components/footer/ContentFooter";
 import LevelEight from "@/components/games/level-eight/level-eight";
 import LevelFive from "@/components/games/level-five/level-five";
@@ -329,7 +330,7 @@ const Game = () => {
               </div>
               {selectedLevel == 0 && (
                 <div className="absolute  -bottom-[2rem] right-0">
-                  <HelpIcon />
+                  <HelpIconComponent />
                 </div>
               )}
             </div>

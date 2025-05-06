@@ -10,9 +10,14 @@ import CommonModal from "@/components/common/common-modal";
 interface LevelFourProps {
   onComplete: () => void;
   goHome: () => void;
+  open: boolean;
 }
 
-export const LevelFour: React.FC<LevelFourProps> = ({ onComplete, goHome }) => {
+export const LevelFour: React.FC<LevelFourProps> = ({
+  onComplete,
+  goHome,
+  open,
+}) => {
   // const [conductorPressed, setConductorPressed] = useState(false);
   // const [semiconductorPressed, setSemiconductorPressed] = useState(false);
   // const [insulatorPressed, setInsulatorPressed] = useState(false);
@@ -43,6 +48,12 @@ export const LevelFour: React.FC<LevelFourProps> = ({ onComplete, goHome }) => {
   useEffect(() => {
     refModal?.current?.open();
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      refModal?.current?.open();
+    }
+  }, [open]);
 
   return (
     <div className="flex flex-col">

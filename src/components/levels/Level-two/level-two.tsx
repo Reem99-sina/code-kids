@@ -26,9 +26,11 @@ import CommonModal from "@/components/common/common-modal";
 export const LevelTwo = ({
   onComplete,
   goHome,
+  open
 }: {
   onComplete: () => void;
   goHome: () => void;
+  open:boolean
 }) => {
   const refModal = useRef<ModalRef>(null);
   const modalRef = useRef<ModalRef>(null);
@@ -56,6 +58,12 @@ export const LevelTwo = ({
       clearInterval(interval);
     };
   }, [time]);
+
+  useEffect(() => {
+    if (open) {
+      modalRef?.current?.open();
+    }
+  }, [open]);
 
   useEffect(() => {
     modalRef?.current?.open();

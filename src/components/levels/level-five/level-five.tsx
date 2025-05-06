@@ -10,13 +10,19 @@ import { FormProvider, useForm } from "react-hook-form";
 import InterInput from "./inter-input";
 
 import CommonModal from "@/components/common/common-modal";
+import toast from "react-hot-toast";
 
 interface LevelFiveProps {
   onComplete: () => void;
   goHome: () => void;
+  open: boolean;
 }
 
-export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
+export const LevelFive: React.FC<LevelFiveProps> = ({
+  onComplete,
+  goHome,
+  open,
+}) => {
   const modalRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
 
@@ -39,6 +45,10 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
       setLevel((prev) => prev + 1);
       formData?.setValue("binary", "");
       formData?.setValue("transistors", "");
+    } else {
+      toast.error(
+        `Try again!\nCorrect : ${binaryString}\nCorrect transistor num: ${numOfTransitor}`
+      );
     }
   };
   useEffect(() => {
@@ -46,6 +56,11 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
       modalRef.current?.open();
     }
   }, [level]);
+  useEffect(() => {
+    if (open) {
+      refModal?.current?.open();
+    }
+  }, [open]);
   useEffect(() => {
     refModal.current?.open();
   }, []);

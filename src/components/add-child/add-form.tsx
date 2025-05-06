@@ -240,7 +240,7 @@ const AddForm = ({
                     required: { value: true, message: "this input required" },
                   }),
                 }}
-                errorMessage={errors?.name?.message}
+                errorMessage={errors?.schoolName?.message}
                 rightIcon={<School className="text-grayOne" />}
               />
               <div className="flex flex-col gap-2 items-start">
