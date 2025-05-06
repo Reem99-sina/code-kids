@@ -9,6 +9,7 @@ import { generateRandomDec } from "@/utils/binary.util";
 import { useForm } from "react-hook-form";
 
 import CommonModal from "@/components/common/common-modal";
+import toast from "react-hot-toast";
 
 interface LevelSixProps {
   onComplete: () => void;
@@ -51,6 +52,10 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
     if (CorrectHex == hex) {
       setLevel((prev) => prev + 1);
       formData.setValue("hex", "");
+    }else{
+      toast.error(
+        `Try again!\nCorrect : ${CorrectHex}`
+      );
     }
     // if (answer === "101") {
     //   modalRef.current?.open();

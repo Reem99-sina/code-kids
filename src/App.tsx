@@ -14,6 +14,7 @@ import LandingPage from "./pages/LandingPage";
 import HomeChild from "./pages/HomeChild";
 import Game from "./pages/Game";
 import AssemblyGame from "./pages/AssemblyGame";
+import PrivateRoute from "./components/common/private-router";
 
 function App() {
   return (
@@ -25,16 +26,21 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
 
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/add-child" element={<AddChild />} />
-          <Route path="/home-child" element={<HomeChild />} />
-
-          <Route path="/home" element={<Home />} />
-          <Route path="/game" element={<Game />} />
+         
           <Route path="/assembly-game" element={<AssemblyGame />} />
-
+          {/* <Route element={<PrivateRoute />}> */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/add-child" element={<AddChild />} />
+            <Route path="/home-child" element={<HomeChild />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/game" element={<Game />} />
+            <Route path="/assembly-game" element={<AssemblyGame />} />
+          {/* </Route> */}
         </Route>
-        <Route path="/auth/google/callback" element={<GoogleCallbackHandler />} />
+        <Route
+          path="/auth/google/callback"
+          element={<GoogleCallbackHandler />}
+        />
       </Routes>
     </div>
   );

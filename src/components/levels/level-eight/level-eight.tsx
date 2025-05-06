@@ -49,7 +49,7 @@ const LevelEight = ({
           check_number: total_carry,
         })
       ) {
-        toast.success("Great job! Keep going!")
+        toast.success("Great job! Keep going!");
         setLevel((prev) => prev + 1);
         formData.setValue("total", "");
         formData.setValue("carry", "");

@@ -11,6 +11,8 @@ import { useState } from "react";
 import LevelSeven from "@/components/levels/level-seven/level-seven";
 import { useNavigate } from "react-router-dom";
 import HelpIconComponent from "@/components/common/help-icon";
+import LevelTen from "@/components/levels/Level-ten/level-ten";
+import LevelEleven from "@/components/levels/Level-eleven/level-eleven";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
@@ -61,6 +63,8 @@ const Home = () => {
         <LevelThree
           onComplete={() => setSelectedLevel(4)}
           goHome={() => setSelectedLevel(0)}
+          open={open}
+
         />
       ),
     },
@@ -71,6 +75,8 @@ const Home = () => {
         <LevelFive
           goHome={() => setSelectedLevel(0)}
           onComplete={() => setSelectedLevel(5)}
+          open={open}
+
         />
       ),
     },
@@ -81,6 +87,8 @@ const Home = () => {
         <LevelFive
           goHome={() => setSelectedLevel(0)}
           onComplete={() => setSelectedLevel(6)}
+          open={open}
+
         />
       ),
     },
@@ -91,6 +99,8 @@ const Home = () => {
         <LevelSix
           onComplete={() => setSelectedLevel(7)}
           goHome={() => setSelectedLevel(0)}
+          open={open}
+
         />
       ),
     },
@@ -109,6 +119,26 @@ const Home = () => {
       view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
       component: (
         <LevelEight
+          onComplete={() => setSelectedLevel(10)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
+    },
+    {
+      name: "level 10",
+      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
+      component: (
+        <LevelTen
+          onComplete={() => setSelectedLevel(11)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
+    },
+    {
+      name: "level 11",
+      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
+      component: (
+        <LevelEleven
           onComplete={() => router("/game")}
           goHome={() => setSelectedLevel(0)}
         />
