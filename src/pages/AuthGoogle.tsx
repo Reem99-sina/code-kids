@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 
 import { useAuth } from "@/hooks/auth.hook";
 import { useLoginWithSocialMutation } from "@/services/profile-service";
-import { useNavigate,
+import {
+  useNavigate,
   //  useParams, useSearchParams
-   } from "react-router-dom";
+} from "react-router-dom";
 import { Spinner } from "@/components/common/spinner.component";
 
 const GoogleCallbackHandler: React.FC = () => {
@@ -31,8 +32,9 @@ const GoogleCallbackHandler: React.FC = () => {
           throw new Error("Failed to login with social");
         }
       });
-    } catch {
-      router("/login");
+    } catch (error) {
+      console.log(error, "error");
+      // router("/login");
     }
   };
 
