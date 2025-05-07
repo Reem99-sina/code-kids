@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TextInput } from "../common/form/text-input.component";
 import CommenSide from "../register/commen-side";
-import { LockKeyhole, User } from "lucide-react";
+import { User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../common/button.component";
 import { Modal, ModalRef } from "../common/modal.component";
@@ -61,7 +61,7 @@ const LoginChildren = ({
         desc={
           "It's great that you're excited to start, but your parent needs to register you first."
         }
-        className={"max-w-[641px] min-h-[700px]"}
+        className={"max-w-[641px] min-h-[600px]"}
       />
       <div className="bg-white rounded-3xl px-6 py-5 w-[50%] min-h-[500px] shadow-[0px_0px_24px_0px_#FF00B8]">
         <div className="pt-4 px-1 flex flex-col gap-2 items-start justify-start">
@@ -78,7 +78,8 @@ const LoginChildren = ({
             className="!rounded-full !py-4 !px-4"
             label="Name"
             inputProps={{
-              placeholder: "Parent's name",
+              placeholder: "Child's name",
+              autoComplete:"username",
               ...register("username", {
                 required: { value: true, message: "this input required" },
               }),
@@ -95,6 +96,8 @@ const LoginChildren = ({
             label="Password"
             inputProps={{
               placeholder: "Password",
+              autoComplete: "password",
+              type: "password",
               ...register("password", {
                 required: { value: true, message: "this input required" },
                 minLength: {
@@ -108,15 +111,9 @@ const LoginChildren = ({
                 ? String(errors?.password?.message)
                 : undefined
             }
-            leftIcon={<LockKeyhole className="text-grayOne" />}
           />
         </div>
-        <p className="text-grayFour text-base font-normal text-start mt-4">
-          Forget my password?
-          <Link to="" className="text-grayFour">
-            Ask your Parent
-          </Link>
-        </p>
+    
         <Button
           className="rounded-full bg-yellowTwo !text-blackPurple mt-5"
           text="Create My Account"
@@ -139,7 +136,7 @@ const LoginChildren = ({
         ref={refModal}
         className="bg-transparent "
         classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
-        onClose={() => navigate("/home-child")}
+        onClose={() => navigate("/")}
       >
         <div className="bg-transparent rounded-t-3xl text-white">
           <div className="rounded-t-3xl  bg-pinkThree flex justify-center py-2">

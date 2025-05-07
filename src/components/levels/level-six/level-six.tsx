@@ -8,12 +8,20 @@ import { TextInput } from "@/components/common/form/text-input.component";
 import { generateRandomDec } from "@/utils/binary.util";
 import { useForm } from "react-hook-form";
 
+import CommonModal from "@/components/common/common-modal";
+import toast from "react-hot-toast";
+
 interface LevelSixProps {
   onComplete: () => void;
   goHome: () => void;
+  open: boolean;
 }
 
-export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
+export const LevelSix: React.FC<LevelSixProps> = ({
+  onComplete,
+  goHome,
+  open,
+}) => {
   // const [conductorPressed, setConductorPressed] = useState(false);
   // const [semiconductorPressed, setSemiconductorPressed] = useState(false);
   // const [insulatorPressed, setInsulatorPressed] = useState(false);
@@ -23,9 +31,10 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
   const hex = formData.watch("hex");
 
   const modalRef = useRef<ModalRef>(null);
+  const refModal = useRef<ModalRef>(null);
 
   const { randomDecimal, binaryString } = useMemo(
-    () => generateRandomDec({ length: level *4, DecNumber: Math.random() }),
+    () => generateRandomDec({ length: level * 4, DecNumber: Math.random() }),
     [level]
   );
 
@@ -47,8 +56,9 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
     const CorrectHex = randomDecimal.toString(16).toUpperCase();
     if (CorrectHex == hex) {
       setLevel((prev) => prev + 1);
-      formData.setValue("hex","")
-
+      formData.setValue("hex", "");
+    } else {
+      toast.error(`Try again!\nCorrect : ${CorrectHex}`);
     }
     // if (answer === "101") {
     //   modalRef.current?.open();
@@ -60,6 +70,16 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
       modalRef.current?.open();
     }
   }, [level]);
+
+  useEffect(() => {
+    refModal.current?.open();
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      refModal?.current?.open();
+    }
+  }, [open]);
 
   return (
     <div className="flex flex-col">
@@ -108,6 +128,16 @@ export const LevelSix: React.FC<LevelSixProps> = ({ onComplete, goHome }) => {
           <LevelComplete level="6" onNextLevel={onComplete} onGoHome={goHome} />
         </Modal>
       </div>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+6+Binary+to+Hex+Heroes.mp4`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </CommonModal>
     </div>
   );
 };

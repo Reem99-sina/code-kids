@@ -49,7 +49,7 @@ const LevelEight = ({
           check_number: total_carry,
         })
       ) {
-        toast.success("Great job! Keep going!")
+        toast.success("Great job! Keep going!");
         setLevel((prev) => prev + 1);
         formData.setValue("total", "");
         formData.setValue("carry", "");
@@ -71,7 +71,7 @@ const LevelEight = ({
   }, [level]);
 
   return (
-    <div className="flex flex-col text-white justify-start items-start mt-16 px-6">
+    <div className="flex flex-col text-white justify-start items-start ">
       <h3 className="text-3xl font-bold mb-3">Coding for Kids</h3>
       <h3 className="text-2xl font-bold">
         Chapter 2: Binary Addition, Hexadecimal to binary

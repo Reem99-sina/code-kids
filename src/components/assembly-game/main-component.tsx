@@ -12,6 +12,7 @@ import { checkRegisterTrue, executeInstruction } from "@/utils/assebly.util";
 import { Modal, ModalRef } from "../common/modal.component";
 import { LevelComplete } from "../levels/LevelComplete";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 interface instructionProps {
   title: string;
@@ -28,6 +29,11 @@ export interface onChangeInstrustion {
   value: string;
 }
 
+interface handleExecuteInterface {
+  program: string[];
+  registers: { title: string; value: number }[];
+  flags: { title: string; value: number }[];
+}
 const levels = [
   {
     name: "level_1",
@@ -87,24 +93,246 @@ const levels = [
       program: ["MOV AX [10]", "SUB AX 2"],
     },
   },
+  {
+    name: "level_3",
+    desc: "Compare AX and BX . if they are equal,set CX to 1 , otherwise set CX to 0",
+    instruction: [
+      "MOV",
+      "ADD",
+      "SUB",
+      "CMP",
+      "JE",
+      "JNE",
+      "JMP",
+      "LABEL",
+      "PRINT",
+    ],
+    registers: [
+      { title: "AX", value: 2 },
+      { title: "BX", value: 3 },
+      { title: "CX", value: 0 },
+    ],
+    flags: [
+      { title: "ZF", value: 0 },
+      { title: "SF", value: 0 },
+      { title: "CF", value: 0 },
+    ],
+    result: {
+      registers: [
+        { title: "AX", value: 2 },
+        { title: "BX", value: 3 },
+        { title: "CX", value: 0 },
+      ],
+      flags: [
+        { title: "ZF", value: 0 },
+        { title: "SF", value: 1 },
+        { title: "CF", value: 1 },
+      ],
+      program: [
+        "CMP AX BX",
+        "JE equal",
+        "MOV CX 0",
+        "JMP end",
+        "equal",
+        "MOV CX 1",
+        "end",
+      ],
+    },
+  },
+  {
+    name: "level_4",
+    desc: "Use BX as a counter, add 2 to AX for each iteration until BX reaches 0",
+    instruction: ["MOV", "ADD", "SUB", "CMP", "JE", "JNE", "JMP", "LABEL"],
+    registers: [
+      { title: "AX", value: 2 },
+      { title: "BX", value: 3 },
+      { title: "CX", value: 0 },
+    ],
+    flags: [
+      { title: "ZF", value: 0 },
+      { title: "SF", value: 0 },
+      { title: "CF", value: 0 },
+    ],
+    result: {
+      registers: [
+        { title: "AX", value: 8 },
+        { title: "BX", value: 0 },
+        { title: "CX", value: 0 },
+      ],
+      flags: [
+        { title: "ZF", value: 1 },
+        { title: "SF", value: 0 },
+        { title: "CF", value: 0 },
+      ],
+      program: ["loop", "CMP BX 0", "ADD AX 2", "SUB BX 1", "JMP loop", "end"],
+    },
+  },
+  {
+    name: "level_5",
+    desc: "Push AX and BX to the stack , then pop them in reverse order into BX and AX",
+    instruction: ["MOV", "PUSH", "POP"],
+    registers: [
+      { title: "AX", value: 5 },
+      { title: "BX", value: 10 },
+      { title: "CX", value: 0 },
+      { title: "SP", value: 65535 },
+    ],
+    flags: [
+      { title: "ZF", value: 0 },
+      { title: "SF", value: 0 },
+      { title: "CF", value: 0 },
+    ],
+    result: {
+      registers: [
+        { title: "AX", value: 10 },
+        { title: "BX", value: 5 },
+        { title: "CX", value: 0 },
+        { title: "SP", value: 65535 },
+      ],
+      flags: [
+        { title: "ZF", value: 0 },
+        { title: "SF", value: 0 },
+        { title: "CF", value: 0 },
+      ],
+      program: ["PUSH AX", "PUSH BX", "POP AX", "POP BX"],
+    },
+  },
+  {
+    name: "level_6",
+    desc: "Perform AND operation between AX and BX , store in CX",
+    instruction: ["MOV", "AND", "OR", "XOR"],
+    registers: [
+      { title: "AX", value: 12 },
+      { title: "BX", value: 10 },
+      { title: "CX", value: 0 },
+    ],
+    flags: [
+      { title: "ZF", value: 0 },
+      { title: "SF", value: 0 },
+      { title: "CF", value: 0 },
+    ],
+    result: {
+      registers: [
+        { title: "AX", value: 12 },
+        { title: "BX", value: 10 },
+        { title: "CX", value: 8 },
+      ],
+      flags: [
+        { title: "ZF", value: 0 },
+        { title: "SF", value: 0 },
+        { title: "CF", value: 0 },
+      ],
+      program: ["MOV CX AX", "AND CX BX"],
+    },
+  },
+  {
+    name: "level_7",
+    desc: "Load values from three consecutive memory locations starting at address in BX,sum them in AX",
+    instruction: ["MOV", "ADD", "LOAD", "STORE"],
+    registers: [
+      { title: "AX", value: 5 },
+      { title: "BX", value: 100 },
+      { title: "CX", value: 0 },
+    ],
+    memory: [
+      { address: "100", value: 5 },
+      { address: "101", value: 10 },
+      { address: "102", value: 15 },
+    ],
+    flags: [
+      { title: "ZF", value: 0 },
+      { title: "SF", value: 0 },
+      { title: "CF", value: 0 },
+    ],
+    result: {
+      registers: [
+        { title: "AX", value: 30 },
+        { title: "BX", value: 100 },
+        { title: "CX", value: 15 },
+      ],
+      flags: [
+        { title: "ZF", value: 0 },
+        { title: "SF", value: 0 },
+        { title: "CF", value: 0 },
+      ],
+      program: [
+        "LOAD AX [BX]",
+        "LOAD CX [101]",
+        "ADD AX CX",
+        "LOAD CX [102]",
+        "ADD AX CX",
+      ],
+    },
+  },
+  {
+    name: "level_8",
+    desc: "Compare AX and BX,set CX to: 1 if AX > BX , -1 if AX < BX ,0 if equal ",
+    instruction: ["MOV", "CMP", "JG", "JL", "JMP", "LABEL"],
+    registers: [
+      { title: "AX", value: 5 },
+      { title: "BX", value: 10 },
+      { title: "CX", value: 0 },
+    ],
+
+    flags: [
+      { title: "ZF", value: 0 },
+      { title: "SF", value: 0 },
+      { title: "CF", value: 0 },
+    ],
+    result: {
+      registers: [
+        { title: "AX", value: 5 },
+        { title: "BX", value: 10 },
+        { title: "CX", value: -1 },
+      ],
+      flags: [
+        { title: "ZF", value: 0 },
+        { title: "SF", value: 1 },
+        { title: "CF", value: 1 },
+      ],
+      program: [
+        "CMP AX BX",
+        "JG greater",
+        "JL less",
+        "MOV CX 0",
+        "JMP end",
+        "greater",
+        "MOV CX 1",
+        "JMP end",
+        "less",
+        "MOV CX -1",
+        "end",
+      ],
+    },
+  },
 ];
 
 const MainComponent = ({ initLevel }: { initLevel?: number }) => {
   const modalRef = useRef<ModalRef>(null);
   const [level, setLevel] = useState(initLevel ? initLevel : 0);
   const [time] = useState(60);
+  const router=useNavigate()
   const [progress, setProgress] = useState(100);
   const [hint, setHint] = useState("");
   const [solution, setSolution] = useState("");
   const [instruction, setInstruction] = useState<instructionProps[]>(
-    levels[level]?.instruction?.map((ele) => ({
-      title: ele,
-      operand_1: undefined,
-      operand_2: undefined,
-    }))
+    levels[level]?.instruction?.map((ele) =>
+      ele?.startsWith("J")
+        ? {
+            title: ele,
+            operand_1: undefined,
+          }
+        : {
+            title: ele,
+            operand_1: undefined,
+            operand_2: undefined,
+          }
+    )
   );
   const [program, setProgram] = useState<string[]>([]);
-  const [memory, setMemory] = useState<MemoyProps[]>([]);
+  const [memory, setMemory] = useState<MemoyProps[]>(
+    levels[level]?.memory || []
+  );
 
   const [register, setRegisters] = useState(levels[level]?.registers);
   const [flags, setFlags] = useState(levels[level]?.flags);
@@ -114,6 +342,9 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
   const onNextLevel = useCallback(() => {
     setLevel((prev) => prev + 1);
     addInitstate({ level: level + 1 });
+    if(level==10){
+      router("/")
+    }
     modalRef?.current?.close();
   }, [level]);
 
@@ -124,26 +355,41 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
     setInstruction(
       levels[level]?.instruction?.map((ele) => ({
         title: ele,
-        operand_1: undefined,
-        operand_2: undefined,
       }))
     );
+    setMemory(levels[level]?.memory || []);
   };
 
-  const handleExecute = useCallback(() => {
-    program.map((ele) => {
-      executeInstruction({
-        instruction: ele,
-        setRegisters: setRegisters,
-        register: register,
-        memory: levels[level]?.memory,
-        setMemory: setMemory,
-      });
+  const handleExecute = ({
+    program,
+    registers,
+    flags,
+  }: handleExecuteInterface) => {
+    const index = 0;
+    const resultRegisters = [...registers.map((r) => ({ ...r }))];
+    const resultFlags = [...flags.map((f) => ({ ...f }))];
+    const resultMemory = memory ? [...memory.map((f) => ({ ...f }))] : [];
+
+    executeInstruction({
+      index,
+      program,
+      resultFlags,
+      resultRegisters,
+      setMemory,
+      memory: resultMemory,
     });
-  }, [program]);
+    setRegisters(resultRegisters);
+    setFlags(resultFlags);
+    setMemory(resultMemory);
+
+    return {
+      registers: resultRegisters,
+      flags: resultFlags,
+    };
+  };
 
   return (
-    <div className="flex flex-col text-white justify-start items-start mt-16 px-6">
+    <div className="flex flex-col text-white justify-start items-start ">
       <h3 className="text-3xl font-bold mb-3">Coding for Kids</h3>
       <h3 className="text-2xl font-bold">
         Chapter 2: Binary Addition, Hexadecimal to binary
@@ -191,7 +437,7 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
                 const type = instruction?.find((ele) => ele?.title == value);
                 setProgram((prev) => [
                   ...prev,
-                  `${type?.title} ${type?.operand_1} ${type?.operand_2}`,
+                  `${type?.title == "LABEL" ? "" : type?.title} ${type?.operand_1} ${type?.operand_2 ? type?.operand_2 : ""}`,
                 ]);
               }}
               onProgress={(value) => {
@@ -214,7 +460,7 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
             <RegisterComponent Registers={register} flags={flags} />
           </InstProgrRegisComponent>
         </div>
-        <div className="bg-[url('/memory.png')] bg-cover bg-no-repeat min-h-[257px] w-full my-5 flex items-center px-5">
+        <div className="bg-[url('/memory.png')] bg-cover bg-no-repeat min-h-[257px]  w-full my-5 flex items-center px-5 flex-col pt-[10%]">
           {memory?.map((ele) => (
             <div
               key={ele?.address}
@@ -229,7 +475,9 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
           <Button
             text="Execute Code"
             className="!bg-blueThree !text-white !text-xs !whitespace-nowrap"
-            onClick={handleExecute}
+            onClick={() =>
+              handleExecute({ program, registers: register, flags })
+            }
           />
           <Button
             text="Submit Solution"
@@ -239,8 +487,14 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
                 trueRegister: levels[level]?.result?.registers,
                 userRegister: register,
               });
+              const checkFlags = levels[level]?.result?.flags
+                ? checkRegisterTrue({
+                    trueRegister: levels[level]?.result?.flags,
+                    userRegister: flags,
+                  })
+                : true;
 
-              if (result) {
+              if (result && checkFlags) {
                 modalRef?.current?.open();
                 // setLevel((prev) => prev + 1);
               } else {

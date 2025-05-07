@@ -6,11 +6,19 @@ import { IntroductionSection } from "@/components/landing-page/IntroductionSecti
 import { LearnSmarter } from "@/components/landing-page/learn-Smarter-section";
 import { SmartLearningSection } from "@/components/landing-page/smart-learning-section";
 import { StartTheirJourney } from "@/components/landing-page/start-their-journey-section";
+import { useUser } from "@/hooks/user.hooks";
+import Dashboard from "./Dashboard";
+import HomeChild from "./HomeChild";
 
 const LandingPage = () => {
-  return (
+  const { user } = useUser();
+
+  return user?.userType == "parent" ? (
+    <Dashboard />
+  ) : user?.userType == "child" ? (
+    <HomeChild />
+  ) : (
     <div className="flex flex-col bg-white">
-      
       <section className="bg-[url('/welcome-section-background.png')] bg-no-repeat  bg-cover bg-bottom w-full h-full">
         <IntroductionSection />
       </section>
@@ -34,7 +42,7 @@ const LandingPage = () => {
           <StartTheirJourney />
         </div>
       </section>
-      <ContentFooter/>
+      <ContentFooter />
     </div>
   );
 };

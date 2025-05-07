@@ -2,7 +2,7 @@ import { GoogleColor } from "@/assets";
 import { FC, useState } from "react";
 import DividerWithText from "../common/line-text-component";
 import { TextInput } from "../common/form/text-input.component";
-import { LockKeyhole, Mail, User } from "lucide-react";
+import {  Mail, User } from "lucide-react";
 import { Button } from "../common/button.component";
 import { useRegisterMutation } from "@/services/profile-service";
 import { IUserRegisterRequest } from "@/types/user.type";
@@ -96,6 +96,7 @@ const AccountParent: FC<props> = ({ onComplete }) => {
           label="Password"
           inputProps={{
             placeholder: "Password",
+            type:"password",
             ...register("password", {
               required: { value: true, message: "this input required" },
               minLength: {
@@ -105,7 +106,7 @@ const AccountParent: FC<props> = ({ onComplete }) => {
             }),
           }}
           errorMessage={errors?.password?.message}
-          leftIcon={<LockKeyhole className="text-grayOne" />}
+         
         />
       </div>
       <Button

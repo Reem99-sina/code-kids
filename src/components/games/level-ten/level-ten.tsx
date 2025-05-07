@@ -17,14 +17,16 @@ import { LampOff, LampOn } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import { LevelComplete } from "@/components/levels/LevelComplete";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 interface LevelEightProps {
   onComplete: () => void;
   goHome: () => void;
 }
 
-const LevelTen: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
+const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
   const modalRef = useRef<ModalRef>(null);
+  const router=useNavigate()
   const [binary, setBinary] = useState({ input_1: 0, input_2: 0 });
   const constraintsRef = useRef<HTMLDivElement>(null);
   const rect = constraintsRef?.current?.getBoundingClientRect();
@@ -789,7 +791,7 @@ const LevelTen: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
         />
       </div>
       <Modal ref={modalRef}>
-        <LevelComplete level="10" onNextLevel={onComplete} onGoHome={goHome} />
+        <LevelComplete level="10" onNextLevel={()=>router("/assembly-game")} onGoHome={goHome} />
       </Modal>
     </>
   );

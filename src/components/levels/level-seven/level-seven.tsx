@@ -8,6 +8,7 @@ import { Button } from "@/components/common/button.component";
 import { FormProvider, useForm } from "react-hook-form";
 import { generateRandomDec } from "@/utils/binary.util";
 import InterInput from "../level-five/inter-input";
+import toast from "react-hot-toast";
 
 const LevelSeven = ({
   onComplete,
@@ -49,6 +50,10 @@ const LevelSeven = ({
     if (binaryString == binary) {
       setLevel((prev) => prev + 1);
       formData.setValue("binary","")
+    }else{
+      toast.error(
+        `Try again!\nCorrect : ${binaryString}`
+      );
     }
     // if (answer === "101") {
     //   modalRef.current?.open();

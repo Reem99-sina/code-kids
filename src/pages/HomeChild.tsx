@@ -4,19 +4,25 @@ import ContentFooter from "@/components/footer/ContentFooter";
 import HomeChildPart from "@/components/home-child/home";
 import MyCourse from "@/components/home-child/my-course";
 import RewardsComponent from "@/components/home-child/rewards";
+import { useUser } from "@/hooks/user.hooks";
 
 import clsx from "clsx";
 import { useState } from "react";
 
+
 const HomeChild = () => {
   const [type, setType] = useState<"home" | "course" | "reward">("home");
+  const { user } = useUser();
 
   return (
     <div className="bg-white">
       <div className="bg-[url('/header-child-home.png')] text-white bg-center bg-cover w-full min-h-[500px] flex flex-col justify-end ">
         <div className="container mx-auto flex items-center">
-          <div className="flex items-center">
-            <ChildWelcome />
+          <div className="flex items-center relative justify-center">
+            <ChildWelcome className="" />
+            <h3 className="absolute text-3xl font-bold text-purpleSeven top-[5%] w-[70%]">
+              Welcome back, {user?.username}
+            </h3>
           </div>
           <div className="flex items-center gap-8">
             <div

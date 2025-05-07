@@ -1,7 +1,8 @@
-import { HideEye, MandatoryIcon, ShowEye } from "@/assets";
+import {MandatoryIcon } from "@/assets";
 import clsx from "clsx";
 import React, { FC, ReactNode, useState } from "react";
 import ErrorInputComponent from "./error-input.component";
+import { LockKeyhole, LockKeyholeOpen } from "lucide-react";
 
 interface Props {
   errorMessage?: string;
@@ -62,7 +63,7 @@ export const TextInput: FC<Props> = ({
           }
         >
           {inputProps.type === "password" &&
-            (showPassword ? <HideEye /> : <ShowEye />)}
+            (showPassword ? <LockKeyhole className="text-grayOne" /> : <LockKeyholeOpen  className="text-grayOne" />)}
           {leftIcon ? leftIcon : null}
         </div>
         

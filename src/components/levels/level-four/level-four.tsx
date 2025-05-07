@@ -1,22 +1,29 @@
 import { HomeIcon } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
+import CommonModal from "@/components/common/common-modal";
 
 interface LevelFourProps {
   onComplete: () => void;
   goHome: () => void;
+  open: boolean;
 }
 
-export const LevelFour: React.FC<LevelFourProps> = ({ onComplete, goHome }) => {
+export const LevelFour: React.FC<LevelFourProps> = ({
+  onComplete,
+  goHome,
+  open,
+}) => {
   // const [conductorPressed, setConductorPressed] = useState(false);
   // const [semiconductorPressed, setSemiconductorPressed] = useState(false);
   // const [insulatorPressed, setInsulatorPressed] = useState(false);
   // const [progress, setProgress] = useState(0);
   const [answer, setAnswer] = useState("");
+  const refModal = useRef<ModalRef>(null);
   const modalRef = useRef<ModalRef>(null);
 
   // useEffect(() => {
@@ -38,6 +45,15 @@ export const LevelFour: React.FC<LevelFourProps> = ({ onComplete, goHome }) => {
       modalRef.current?.open();
     }
   };
+  useEffect(() => {
+    refModal?.current?.open();
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      refModal?.current?.open();
+    }
+  }, [open]);
 
   return (
     <div className="flex flex-col">
@@ -93,7 +109,16 @@ export const LevelFour: React.FC<LevelFourProps> = ({ onComplete, goHome }) => {
           <LevelComplete level="4" onNextLevel={onComplete} onGoHome={goHome} />
         </Modal>
       </div>
-      
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+4+Fun+Binary+Adventure.mp4`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </CommonModal>
     </div>
   );
 };

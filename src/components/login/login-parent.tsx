@@ -2,7 +2,7 @@ import { GoogleColor } from "@/assets";
 import CommenSide from "../register/commen-side";
 import DividerWithText from "../common/line-text-component";
 import { TextInput } from "../common/form/text-input.component";
-import { LockKeyhole, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../common/button.component";
@@ -55,7 +55,7 @@ const LoginParent = () => {
         desc={
           "Quick login flow for parents with clear steps and child-safe design"
         }
-        className={"max-w-[641px] min-h-[700px]"}
+        className={"max-w-[641px] min-h-[600px]"}
       />
       <div className="bg-white rounded-3xl px-6 py-5 w-[50%] min-h-[500px] shadow-[0px_0px_24px_0px_#FF00B8]">
         <div className="pt-4 px-1 flex flex-col gap-2 items-start justify-start">
@@ -65,8 +65,7 @@ const LoginParent = () => {
           </p>
           <div
             onClick={() => {
-              window.location.href =
-                "http://34.226.217.99:8080/auth/google";
+              window.location.href = "http://34.226.217.99:8080/auth/google";
             }}
             className="cursor-pointer rounded-full w-full py-2 flex justify-center items-center gap-4 border-2  border-[#EFF0F6] my-3"
           >
@@ -84,6 +83,7 @@ const LoginParent = () => {
             label="Email"
             inputProps={{
               type: "email",
+              autoComplete: "email",
               placeholder: "Email address",
               ...register("email", {
                 required: { value: true, message: "this input required" },
@@ -105,6 +105,9 @@ const LoginParent = () => {
             label="Password"
             inputProps={{
               placeholder: "Password",
+              type: "password",
+              autoComplete: "password",
+
               ...register("password", {
                 required: { value: true, message: "this input required" },
                 minLength: {
@@ -118,7 +121,6 @@ const LoginParent = () => {
                 ? String(errors?.password?.message)
                 : undefined
             }
-            leftIcon={<LockKeyhole className="text-grayOne" />}
           />
         </div>
         <div className="flex items-center justify-between mt-4 text-grayFour">
@@ -126,7 +128,9 @@ const LoginParent = () => {
             <Checkbox className="bg-yellowTwo text-black" />
             <p className="text-sm">Remember me</p>
           </div>
-          <Link to="/forget-password" className="text-base text-grayFour">Forget my password?</Link>
+          <Link to="/forget-password" className="text-base text-grayFour">
+            Forget my password?
+          </Link>
         </div>
         <Button
           className="rounded-full bg-yellowTwo !text-blackPurple mt-5"

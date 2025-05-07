@@ -3,8 +3,11 @@ import { CustomPagination } from "../common/pagination.component";
 import { courses } from "../home-parent/section-three";
 import Card from "./card";
 import { Button } from "../common/button.component";
+import { useNavigate } from "react-router-dom";
 
 const MyCourse = () => {
+  const route = useNavigate();
+  
   return (
     <>
       <div className="bg-[url('/courses.png')] bg-no-repeat bg-cover w-full min-h-[500px]  bg-white ">
@@ -18,10 +21,20 @@ const MyCourse = () => {
                 </p>
               </div>
               <div className="flex items-center gap-4 flex-wrap ">
-                {courses?.slice(0, 3)?.map((ele) => (
+                {courses?.slice(0, 3)?.map((ele, index) => (
                   <div
                     className=" bg-[url('/cart.png')] bg-no-repeat bg-cover w-[355px]"
                     key={ele?.title}
+                    onClick={() => {
+                    
+                      if (index == 0) {
+                        route("/home");
+                      } else if (index == 1) {
+                        route("/game");
+                      } else {
+                        route("/assembly-game");
+                      }
+                    }}
                   >
                     <div className="pt-[10rem] px-[2rem] pb-[4rem]">
                       <Card key={ele?.title} {...ele} />

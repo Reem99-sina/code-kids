@@ -1,5 +1,6 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
+import HelpIconComponent from "@/components/common/help-icon";
 import ContentFooter from "@/components/footer/ContentFooter";
 import LevelEight from "@/components/games/level-eight/level-eight";
 import LevelFive from "@/components/games/level-five/level-five";
@@ -65,7 +66,7 @@ const Game = () => {
           <MainComponent
             title="Level 2: OR Gate Challenge"
             desc="Use an OR gate to light up the lamp with either input."
-            operation="and"
+            operation="or"
             data={dataOrItems}
           >
             <LevelTwo
@@ -89,7 +90,7 @@ const Game = () => {
           <MainComponent
             title="Level 3: NOT Gate Illumination"
             desc="Connect a NOT gate to light up the lamp when the inputs is off."
-            operation="and"
+            operation="not"
             data={dataNotItems}
           >
             <LevelThree
@@ -134,7 +135,7 @@ const Game = () => {
           />
         ),
         component: (
-          <div className="pt-10">
+          <div className="">
             <MainComponent
               title="Level 5: NAND Gate Usage"
               desc="Use the NAND gate to light up the lamp."
@@ -160,7 +161,7 @@ const Game = () => {
           />
         ),
         component: (
-          <div className="pt-10">
+          <div className="">
             <MainComponent
               title="Level 6: NAND to AND Coversation"
               desc="Create an AND gate using only NAND gates."
@@ -186,7 +187,7 @@ const Game = () => {
           />
         ),
         component: (
-          <div className="pt-10">
+          <div className="">
             <MainComponent
               title="Level 7: OR from NAND"
               desc="Create an OR gate using only NAND gates."
@@ -212,7 +213,7 @@ const Game = () => {
           />
         ),
         component: (
-          <div className="pt-10">
+          <div className="">
             <MainComponent
               title="Level 8: NOT from NAND"
               desc="Create a NOT gate using a single NAND gate"
@@ -238,7 +239,7 @@ const Game = () => {
           />
         ),
         component: (
-          <div className="pt-10">
+          <div className="">
             <MainComponent
               title="Level 9: NOR from NAND"
               desc="Create a NOR gate using only NAND gates. NOR is true only when both inputs are false"
@@ -264,7 +265,7 @@ const Game = () => {
           />
         ),
         component: (
-          <div className="pt-10">
+          <div className="">
             <MainComponent
               title="Level 10: NAND to XOR Conversion"
               desc="Create an XOR gate using only NAND gates."
@@ -284,46 +285,55 @@ const Game = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center min-h-screen w-full bg-[url('/home-background.png')] bg-[length:100%_100%] bg-no-repeat bg-center">
+      <div className="flex flex-col justify-center items-center bg-white min-h-auto w-full bg-[url('/home-bg-without.png')] bg-cover bg-no-repeat bg-top ">
         <div className=" flex w-[90%] min-h-[600px] flex-col ">
-          {selectedLevel === 0 && (
-            <div className="flex justify-start flex-col items-center px-6 w-full">
-              <div className="w-full items-center flex justify-between">
-                <p className="text-[31px] font-bold text-[#FFFFFF]">
-                  Arena of Champions
-                </p>
+          <div className="relative border-2 border-dashed border-[#FF00F5] rounded-3xl p-7 mt-5">
+            <div className=" bg-gradient-to-b from-[#2E016B]/70 to-[#8F02D1]/70 bg-opacity-80 rounded-3xl p-6">
+              {selectedLevel === 0 && (
+                <div className="flex justify-start flex-col items-center px-6 w-full">
+                  <div className="w-full items-center flex justify-between">
+                    <p className="text-[31px] font-bold text-[#FFFFFF]">
+                      Arena of Champions
+                    </p>
 
-                <div>
-                  <LanguageButton />
-                </div>
-              </div>
-              <div className="w-full justify-start flex-col text-start flex">
-                <p className="font-bold text-2xl text-[#FFFFFF]">
-                  Coding for Kids
-                </p>
-                <p className="font-normal text-xl text-[#FFFFFF]">
-                  Come learn and explore how to make your dreams come true
-                </p>
-              </div>
-            </div>
-          )}
-          <div className="p-6 w-full flex">
-            {selectedLevel === 0 ? (
-              <div className="flex flex-wrap gap-4 w-full min-w-full">
-                {levels.map((level, index) => (
-                  <div
-                    key={index + 1}
-                    onClick={() => setSelectedLevel(index + 1)}
-                  >
-                    {level.view}
+                    <div>
+                      <LanguageButton />
+                    </div>
                   </div>
-                ))}
+                  <div className="w-full justify-start flex-col text-start flex">
+                    <p className="font-bold text-2xl text-[#FFFFFF]">
+                      Coding for Kids
+                    </p>
+                    <p className="font-normal text-xl text-[#FFFFFF]">
+                      Come learn and explore how to make your dreams come true
+                    </p>
+                  </div>
+                </div>
+              )}
+              <div className="p-6 w-full flex">
+                {selectedLevel === 0 ? (
+                  <div className="flex flex-wrap gap-4 w-full min-w-full">
+                    {levels.map((level, index) => (
+                      <div
+                        key={index + 1}
+                        onClick={() => setSelectedLevel(index + 1)}
+                      >
+                        {level.view}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div key={selectedLevel} className="w-full">
+                    {levels[selectedLevel - 1]?.component}
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="w-full">
-                {levels[selectedLevel - 1]?.component}
-              </div>
-            )}
+              {selectedLevel == 0 && (
+                <div className="absolute  -bottom-[2rem] right-0">
+                  <HelpIconComponent />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

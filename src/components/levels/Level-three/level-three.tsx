@@ -2,7 +2,6 @@ import {
   ArrowLeftIcon,
   Battery,
   BatteryIcon,
-  HelpIcon,
   HomeIcon,
   LightIcon,
   Radio,
@@ -12,12 +11,14 @@ import CardElement from "@/components/common/card-element";
 import ProgressBar from "@/components/common/ProgressBar";
 import TransistorComponent from "@/components/common/transistor-component";
 import clsx from "clsx";
-
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { ModalRef } from "@/components/common/modal.component";
+import CommonModal from "@/components/common/common-modal";
 
 interface LevelThreeProps {
   onComplete: () => void;
   goHome: () => void;
+  open:boolean
 }
 
 interface DragComProps {
@@ -47,7 +48,9 @@ const helpTools = [
   },
 ];
 
-const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete }) => {
+const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete ,open}) => {
+  const modalRef = useRef<ModalRef>(null);
+
   const [appear, setAppear] = useState(false);
   const [progress, setProgress] = useState(1);
   const [componentDrag, setComponentDrag] = useState<DragComProps[]>([]);
@@ -78,6 +81,16 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete }) => {
     ]);
   };
 
+  useEffect(() => {
+    modalRef?.current?.open();
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      modalRef?.current?.open();
+    }
+  }, [open]);
+  
   return (
     <div className="flex items-start gap-5">
       <div className="bg-white rounded-lg py-5 px-3 flex flex-col gap-4 min-h-[600px] relative ">
@@ -153,9 +166,17 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete }) => {
           />
         </div>
       </div>
-      <div className="absolute  bottom-0 right-0">
-        <HelpIcon />
-      </div>
+     
+      <CommonModal refModal={modalRef} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </CommonModal>
     </div>
   );
 };

@@ -12,6 +12,7 @@ export interface ResponseChildParentAdd {
   school_name?: string;
   skills?: {
     name: string;
+    id:number
     image: string;
   }[];
   socket_id?: null | number;

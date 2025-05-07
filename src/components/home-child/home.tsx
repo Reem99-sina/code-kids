@@ -5,6 +5,7 @@ import Project from "./project";
 import Task from "./task";
 import { ExploreCard } from "../home-parent/feed-card";
 import { defaultDataExplore } from "../home-parent/section-four";
+import { useNavigate } from "react-router-dom";
 
 const settingsFeed: Settings = {
   dots: false,
@@ -37,6 +38,8 @@ const settingsFeed: Settings = {
   ],
 };
 const HomeChildPart = () => {
+  const route = useNavigate();
+
   return (
     <>
       <div className="bg-[url('/courses.png')] bg-no-repeat bg-cover w-full min-h-[500px]  bg-white ">
@@ -47,10 +50,19 @@ const HomeChildPart = () => {
               <p className="text-[#626262] text-2xl cursor-pointer">See all</p>
             </div>
             <div className="flex items-center gap-4 flex-wrap ">
-              {courses?.slice(0, 3)?.map((ele) => (
+              {courses?.slice(0, 3)?.map((ele, index) => (
                 <div
                   className=" bg-[url('/cart.png')] bg-no-repeat bg-cover w-[355px]"
                   key={ele?.title}
+                  onClick={() => {
+                    if (index == 0) {
+                      route("/home");
+                    } else if (index == 1) {
+                      route("/game");
+                    } else {
+                      route("/assembly-game");
+                    }
+                  }}
                 >
                   <div className="pt-[10rem] px-[2rem] pb-[4rem]">
                     <Card key={ele?.title} {...ele} />

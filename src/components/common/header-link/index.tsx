@@ -9,15 +9,15 @@ const Parentlinks = [
   },
   {
     title: "My Kids",
-    href: "/",
+    href: "/my-kids",
   },
   {
     title: "Courses",
-    href: "/",
+    href: "/courses",
   },
   {
     title: "Mentors",
-    href: "/",
+    href: "/mentors",
   },
 ];
 
@@ -36,15 +36,15 @@ const HeaderLinks: React.FC = () => {
             },
             {
               title: "Courses",
-              href: "/courses",
+              href: "/Courses",
             },
             {
               title: "Mentors",
-              href: "/mentors",
+              href: "/Mentors",
             },
             {
               title: "Projects",
-              href: "/projects",
+              href: "/Projects",
             },
             {
               title: "Partners",

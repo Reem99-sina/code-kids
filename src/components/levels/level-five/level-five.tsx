@@ -9,13 +9,23 @@ import { generateRandomDec } from "@/utils/binary.util";
 import { FormProvider, useForm } from "react-hook-form";
 import InterInput from "./inter-input";
 
+import CommonModal from "@/components/common/common-modal";
+import toast from "react-hot-toast";
+
 interface LevelFiveProps {
   onComplete: () => void;
   goHome: () => void;
+  open: boolean;
 }
 
-export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
+export const LevelFive: React.FC<LevelFiveProps> = ({
+  onComplete,
+  goHome,
+  open,
+}) => {
   const modalRef = useRef<ModalRef>(null);
+  const refModal = useRef<ModalRef>(null);
+
   const [level, setLevel] = useState(1);
 
   const formData = useForm();
@@ -33,9 +43,12 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
 
     if (binaryString == binary && transistor == numOfTransitor) {
       setLevel((prev) => prev + 1);
-      formData?.setValue("binary","")
-      formData?.setValue("transistors","")
-
+      formData?.setValue("binary", "");
+      formData?.setValue("transistors", "");
+    } else {
+      toast.error(
+        `Try again!\nCorrect : ${binaryString}\nCorrect transistor num: ${numOfTransitor}`
+      );
     }
   };
   useEffect(() => {
@@ -43,6 +56,14 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
       modalRef.current?.open();
     }
   }, [level]);
+  useEffect(() => {
+    if (open) {
+      refModal?.current?.open();
+    }
+  }, [open]);
+  useEffect(() => {
+    refModal.current?.open();
+  }, []);
 
   return (
     <>
@@ -113,6 +134,16 @@ export const LevelFive: React.FC<LevelFiveProps> = ({ onComplete, goHome }) => {
           </Modal>
         </div>
       </div>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+5+Decimal+to+Binary+Blastoff.mp4`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </CommonModal>
     </>
   );
 };
