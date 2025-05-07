@@ -14,6 +14,7 @@ import HelpIconComponent from "@/components/common/help-icon";
 import LevelTen from "@/components/levels/Level-ten/level-ten";
 import LevelEleven from "@/components/levels/Level-eleven/level-eleven";
 import { LevelTwelve } from "@/components/levels/Level-twelve/level-twelve";
+import LEvelThirteen from "@/components/levels/Level-thirteen/level-thirteen";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
@@ -151,6 +152,16 @@ const Home = () => {
       component: (
         <LevelTwelve
           onComplete={() => router("/game")}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
+    },
+    {
+      name: "level 13",
+      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
+      component: (
+        <LEvelThirteen
+          onComplete={() => setSelectedLevel(14)}
           goHome={() => setSelectedLevel(0)}
         />
       ),
