@@ -180,3 +180,4 @@ export { default as VerticalLightLine } from "./vertical-light-line.svg?react";
 export { default as HorizontalLightLine } from "./horizontal-light-line.svg?react";
 export { default as VerticalDarkLine } from "./vertical-dark-line.svg?react";
 export { default as HorizontalDarkLine } from "./horizontal-dark-line.svg?react";
+export { default as Xor } from "./xor.svg?react";

@@ -26,7 +26,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/home" element={<Home />} />
-         
+          <Route path="/game" element={<Game />} />
+
           <Route path="/assembly-game" element={<AssemblyGame />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />

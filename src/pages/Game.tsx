@@ -3,6 +3,7 @@ import { LevelCart } from "@/components/cards/level-cart";
 import HelpIconComponent from "@/components/common/help-icon";
 import ContentFooter from "@/components/footer/ContentFooter";
 import LevelEight from "@/components/games/level-eight/level-eight";
+import LevelEleven from "@/components/games/level-eleven/level-eleven";
 import LevelFive from "@/components/games/level-five/level-five";
 import LevelFour from "@/components/games/level-four/level-four";
 import LevelNine from "@/components/games/level-nine/level-nine";
@@ -273,6 +274,32 @@ const Game = () => {
               data={dataXorItems}
             >
               <LevelTen
+                onComplete={() => setSelectedLevel(10)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 11",
+        view: (
+          <LevelCart
+            title="  XOR Gate Challenge"
+            description="Use the new XOR gate to complete the circuit."
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="">
+            <MainComponent
+              title="Level 11: XOR Gate Challenge"
+              desc="Use the new XOR gate to complete the circuit."
+              operation="and"
+              data={dataXorItems}
+            >
+              <LevelEleven
                 onComplete={() => setSelectedLevel(10)}
                 goHome={() => setSelectedLevel(0)}
               />
