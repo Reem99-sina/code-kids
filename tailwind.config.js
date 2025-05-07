@@ -85,5 +85,7 @@ export default {
       },
     },
   },
+  /*eslint-disable @typescript-eslint/no-require-imports*/
+  /*eslint-disable no-undef*/
   plugins: [require("tailwindcss-animate")],
 };
