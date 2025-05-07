@@ -1,22 +1,23 @@
-import { LanguageButton } from "@/assets";
-import { LevelCart } from "@/components/cards/level-cart";
-import { LevelFive } from "@/components/levels/level-five/level-five";
+import {LanguageButton} from "@/assets";
+import {LevelCart} from "@/components/cards/level-cart";
+import {LevelFive} from "@/components/levels/level-five/level-five";
 import ContentFooter from "@/components/footer/ContentFooter";
 import LevelEight from "@/components/levels/level-eight/level-eight";
-import { LevelOne } from "@/components/levels/Level-one/level-one";
-import { LevelSix } from "@/components/levels/level-six/level-six";
+import {LevelOne} from "@/components/levels/Level-one/level-one";
+import {LevelSix} from "@/components/levels/level-six/level-six";
 import LevelThree from "@/components/levels/Level-three/level-three";
-import { LevelTwo } from "@/components/levels/Level-two/level-two";
-import { useState } from "react";
+import {LevelTwo} from "@/components/levels/Level-two/level-two";
+import {useState} from "react";
 import LevelSeven from "@/components/levels/level-seven/level-seven";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import HelpIconComponent from "@/components/common/help-icon";
 import LevelTen from "@/components/levels/Level-ten/level-ten";
 import LevelEleven from "@/components/levels/Level-eleven/level-eleven";
-import { LevelTwelve } from "@/components/levels/Level-twelve/level-twelve";
+import {LevelTwelve} from "@/components/levels/Level-twelve/level-twelve";
 import LEvelThirteen from "@/components/levels/Level-thirteen/level-thirteen";
 import LevelFourteen from "@/components/levels/Level-fourteen/level-fourteen";
 import LevelFifteen from "@/components/levels/Level-fifteen/level-fifteen";
+import LevelSixteen from "@/components/levels/Level-sixteen/level-sixteen";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
@@ -68,7 +69,6 @@ const Home = () => {
           onComplete={() => setSelectedLevel(4)}
           goHome={() => setSelectedLevel(0)}
           open={open}
-
         />
       ),
     },
@@ -80,7 +80,6 @@ const Home = () => {
           goHome={() => setSelectedLevel(0)}
           onComplete={() => setSelectedLevel(5)}
           open={open}
-
         />
       ),
     },
@@ -92,7 +91,6 @@ const Home = () => {
           goHome={() => setSelectedLevel(0)}
           onComplete={() => setSelectedLevel(6)}
           open={open}
-
         />
       ),
     },
@@ -104,7 +102,6 @@ const Home = () => {
           onComplete={() => setSelectedLevel(7)}
           goHome={() => setSelectedLevel(0)}
           open={open}
-
         />
       ),
     },
@@ -188,6 +185,16 @@ const Home = () => {
         />
       ),
     },
+    {
+      name: "level 16",
+      view: <LevelCart title="level 16" progressNumber={0} lock />,
+      component: (
+        <LevelSixteen
+          onComplete={() => setSelectedLevel(16)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
+    },
   ];
 
   return (
@@ -223,8 +230,7 @@ const Home = () => {
                     {levels.map((level, index) => (
                       <div
                         key={index + 1}
-                        onClick={() => setSelectedLevel(index + 1)}
-                      >
+                        onClick={() => setSelectedLevel(index + 1)}>
                         {level.view}
                       </div>
                     ))}
