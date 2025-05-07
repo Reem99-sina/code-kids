@@ -9,6 +9,7 @@ import {
   NottIcon,
   OrOff,
   OrOn,
+  Xor
 } from "@/assets";
 
 import InputBinaryComponent from "@/components/games/input-binary-component";
@@ -180,6 +181,12 @@ export const eachElement = [
     title: "not",
     Icon: NottIcon,
     Reverse: NotOntIcon,
+  },
+  {
+    id: 7,
+    title: "xor",
+    Icon: Xor,
+    Reverse: Xor,
   },
 ];
 
