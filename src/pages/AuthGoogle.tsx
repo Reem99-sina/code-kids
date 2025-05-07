@@ -23,19 +23,18 @@ const GoogleCallbackHandler: React.FC = () => {
   }, []);
 
   const fetchUserCredentials = async () => {
-    try {
-      await loginWithSocial().then((response) => {
+    await loginWithSocial()
+      .then((response) => {
         if (response?.data) {
           authenticate(response?.data);
           router("/");
         } else {
           throw new Error("Failed to login with social");
         }
+      })
+      .catch((err) => {
+        console.log(err, "err");
       });
-    } catch (error) {
-      console.log(error, "error");
-      // router("/login");
-    }
   };
 
   return (

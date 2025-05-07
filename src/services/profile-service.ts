@@ -14,7 +14,7 @@ import {
   VerifyResendCodeRequest,
 } from "@/types/user.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 
 export const useUserQuery = ({ id }: { id?: number }) => {
   const { api } = useFetch();
@@ -114,7 +114,7 @@ export const useAddChildMutation = () => {
 
 export const useLoginWithSocialMutation = () => {
   const { api } = useFetch();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
 
   return useMutation<
     IResponse<{
