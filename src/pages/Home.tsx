@@ -18,6 +18,7 @@ import LEvelThirteen from "@/components/levels/Level-thirteen/level-thirteen";
 import LevelFourteen from "@/components/levels/Level-fourteen/level-fourteen";
 import LevelFifteen from "@/components/levels/Level-fifteen/level-fifteen";
 import LevelSixteen from "@/components/levels/Level-sixteen/level-sixteen";
+import LevelSeventeen from "@/components/levels/Level-seventeen/level-seventeen";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
@@ -180,7 +181,7 @@ const Home = () => {
       view: <LevelCart title="level 15" progressNumber={0} lock />,
       component: (
         <LevelFifteen
-          onComplete={() => setSelectedLevel(15)}
+          onComplete={() => setSelectedLevel(16)}
           goHome={() => setSelectedLevel(0)}
         />
       ),
@@ -190,7 +191,17 @@ const Home = () => {
       view: <LevelCart title="level 16" progressNumber={0} lock />,
       component: (
         <LevelSixteen
-          onComplete={() => setSelectedLevel(16)}
+          onComplete={() => setSelectedLevel(17)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
+    },
+    {
+      name: "level 17",
+      view: <LevelCart title="level 17" progressNumber={0} lock />,
+      component: (
+        <LevelSeventeen
+          onComplete={() => setSelectedLevel(18)}
           goHome={() => setSelectedLevel(0)}
         />
       ),
