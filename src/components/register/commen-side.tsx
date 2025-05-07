@@ -14,7 +14,7 @@ const CommenSide: FC<props> = ({ title, desc, className }) => {
       <div className="relative w-[100%] px-10 min-h-[600px]">
         <div
           className={clsx(
-            " flex flex-col gap-4 max-w-[430px] text-justify ",
+            " flex flex-col gap-4 max-w-[430px] text-start ",
             className
           )}
         >
