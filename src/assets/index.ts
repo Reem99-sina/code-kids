@@ -165,7 +165,7 @@ export { default as HorizontalLine } from "./horizontal-dash-line.svg?react";
 export { default as VerticalLine } from "./vertical-line.svg?react";
 export { default as Diode } from "./diode.svg?react";
 export { default as Ellipse } from "./Ellipse.svg?react";
-export { default as Vector } from "./Player1.svg?react";
+export { default as Vector } from "./player1.svg?react";
 export { default as Ground } from "./ground.svg?react";
 export { default as BoxFrame } from "./box.svg?react";
 export { default as OrGate } from "./or-gate.svg?react";
