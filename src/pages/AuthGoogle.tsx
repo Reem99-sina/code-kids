@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 
 import { useAuth } from "@/hooks/auth.hook";
 import { useLoginWithSocialMutation } from "@/services/profile-service";
-import { useNavigate,
+import {
+  useNavigate,
   //  useParams, useSearchParams
-   } from "react-router-dom";
+} from "react-router-dom";
 import { Spinner } from "@/components/common/spinner.component";
 
 const GoogleCallbackHandler: React.FC = () => {
@@ -22,18 +23,18 @@ const GoogleCallbackHandler: React.FC = () => {
   }, []);
 
   const fetchUserCredentials = async () => {
-    try {
-      await loginWithSocial().then((response) => {
+    await loginWithSocial()
+      .then((response) => {
         if (response?.data) {
           authenticate(response?.data);
           router("/");
         } else {
           throw new Error("Failed to login with social");
         }
+      })
+      .catch((err) => {
+        console.log(err, "err");
       });
-    } catch {
-      router("/login");
-    }
   };
 
   return (
