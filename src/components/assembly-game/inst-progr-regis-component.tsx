@@ -6,6 +6,7 @@ import { TextInput } from "../common/form/text-input.component";
 import { X } from "lucide-react";
 
 const InstProgrRegisComponent = ({ children }: { children: ReactNode }) => {
+
   return <div className="  flex gap-4">{children}</div>;
 };
 
@@ -174,6 +175,7 @@ const ProgramComponent = ({
   programs: string[];
   onDelete: (props: string) => void;
 }) => {
+
   return (
     <div className=" bg-pinkLightFour p-6 rounded-2xl flex flex-col gap-5 min-h-[420px] text-start flex-1">
       <h3 className="text-2xl font-bold">Program</h3>
@@ -204,6 +206,7 @@ const RegisterComponent = ({
   Registers: { title: string; value: number }[];
   flags: { title: string; value: number }[];
 }) => {
+  
   return (
     <div className=" bg-pinkLightFour p-6 rounded-2xl flex flex-col gap-5 min-h-[420px] text-start flex-[0.5]">
       <h3 className="text-2xl font-bold">Registers</h3>

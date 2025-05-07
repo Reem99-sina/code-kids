@@ -21,6 +21,7 @@ export const CoursesCard: React.FC<CourseProps> = ({
   ageRange,
   duration,
 }) => {
+  
   return (
     <div className="max-w-[312px] min-w-[312px]  bg-white rounded-2xl shadow-lg overflow-hidden">
       <img src={image} alt={title} className="w-full h-48 object-cover" />

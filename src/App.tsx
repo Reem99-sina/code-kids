@@ -17,6 +17,7 @@ import AssemblyGame from "./pages/AssemblyGame";
 import PrivateRoute from "./components/common/private-router";
 
 function App() {
+  
   return (
     <div className="flex flex-col h-full w-full bg-blackPurple">
       <Routes>

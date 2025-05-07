@@ -18,6 +18,7 @@ const ChildCard = ({
   const [isloading, setLoading] = useState(false);
 
   const Icon = useMemo(() => {
+    
     return avatars?.find((ele) => ele?.id == child?.avatarId)?.icon;
   }, [child]);
 
