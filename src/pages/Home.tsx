@@ -19,6 +19,7 @@ import LevelFourteen from "@/components/levels/Level-fourteen/level-fourteen";
 import LevelFifteen from "@/components/levels/Level-fifteen/level-fifteen";
 import LevelSixteen from "@/components/levels/Level-sixteen/level-sixteen";
 import LevelSeventeen from "@/components/levels/Level-seventeen/level-seventeen";
+import LevelEighteen from "@/components/levels/Level-eighteen/level-eighteen";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
@@ -151,7 +152,7 @@ const Home = () => {
       view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
       component: (
         <LevelTwelve
-          onComplete={() => router("/game")}
+          onComplete={() => setSelectedLevel(13)}
           goHome={() => setSelectedLevel(0)}
         />
       ),
@@ -202,6 +203,16 @@ const Home = () => {
       component: (
         <LevelSeventeen
           onComplete={() => setSelectedLevel(18)}
+          goHome={() => setSelectedLevel(0)}
+        />
+      ),
+    },
+    {
+      name: "level 18",
+      view: <LevelCart title="level 18" progressNumber={0} lock />,
+      component: (
+        <LevelEighteen
+          onComplete={() => router("/game")}
           goHome={() => setSelectedLevel(0)}
         />
       ),
