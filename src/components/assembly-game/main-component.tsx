@@ -1,6 +1,6 @@
 import { AppearIcon, ClockYellow } from "@/assets";
 import ProgressBar from "../common/ProgressBar";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import GoalComponent from "./goal-component";
 import InstProgrRegisComponent, {
   InstructionComponent,
@@ -13,6 +13,7 @@ import { Modal, ModalRef } from "../common/modal.component";
 import { LevelComplete } from "../levels/LevelComplete";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import ModalReviewResult from "../levels/Level-two/modal-review-result";
 
 interface instructionProps {
   title: string;
@@ -309,10 +310,15 @@ const levels = [
 
 const MainComponent = ({ initLevel }: { initLevel?: number }) => {
   const modalRef = useRef<ModalRef>(null);
+  const refModal = useRef<ModalRef>(null);
   const [level, setLevel] = useState(initLevel ? initLevel : 0);
-  const [time] = useState(60);
-  const router=useNavigate()
-  const [progress, setProgress] = useState(100);
+  const [time, setTime] = useState(60);
+  const [message] = useState({
+    title: "",
+    desc: "",
+  });
+  const router = useNavigate();
+  const [progress, setProgress] = useState(0);
   const [hint, setHint] = useState("");
   const [solution, setSolution] = useState("");
   const [instruction, setInstruction] = useState<instructionProps[]>(
@@ -342,8 +348,8 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
   const onNextLevel = useCallback(() => {
     setLevel((prev) => prev + 1);
     addInitstate({ level: level + 1 });
-    if(level==10){
-      router("/")
+    if (level == 10) {
+      router("/");
     }
     modalRef?.current?.close();
   }, [level]);
@@ -358,6 +364,11 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
       }))
     );
     setMemory(levels[level]?.memory || []);
+    setProgress(0)
+    setHint("")
+    setHintsUsed(0)
+    setSolution("")
+    setTime(60)
   };
 
   const handleExecute = ({
@@ -381,12 +392,34 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
     setRegisters(resultRegisters);
     setFlags(resultFlags);
     setMemory(resultMemory);
-
+    const resultReg = checkRegisterTrue({
+      trueRegister: levels[level]?.result?.registers,
+      userRegister: resultRegisters,
+    });
+    if (resultReg) {
+      setProgress((prev)=>prev+100)
+    }
+    
     return {
       registers: resultRegisters,
       flags: resultFlags,
     };
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (time > 0) {
+        setTime((prev) => prev - 1);
+      } else {
+        refModal?.current?.open();
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [time]);
 
   return (
     <div className="flex flex-col text-white justify-start items-start ">
@@ -447,7 +480,7 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
                 } else if (value == 70) {
                   setSolution(levels[level]?.result?.program?.join("\n"));
                 }
-                setProgress((prev) => (prev > 0 ? prev - value : 0));
+                setProgress((prev) => prev - value);
               }}
             />
             <ProgramComponent
@@ -460,11 +493,16 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
             <RegisterComponent Registers={register} flags={flags} />
           </InstProgrRegisComponent>
         </div>
-        <div className="bg-[url('/memory.png')] bg-cover bg-no-repeat min-h-[257px]  w-full my-5 flex items-center px-5 flex-col pt-[10%]">
+        <div className="border-2 rounded-xl border-[#F05A29] text-[#F05A29] min-h-[257px]  w-full my-5 flex items-start px-5 flex-col ">
+          <div className="text-xl font-bold flex items-center w-full text-start p-5">
+            <p className="flex-1">Address</p>
+            <p className="flex-1">value</p>
+          </div>
+
           {memory?.map((ele) => (
             <div
               key={ele?.address}
-              className="bg-[#DBEAFE] w-full text-start flex items-center px-3 py-2 rounded-[1px]"
+              className="bg-[#DBEAFE] w-full text-start flex items-center px-3 py-2 rounded-[1px] text-black"
             >
               <p className="flex-1">{ele?.address}</p>
               <p className="flex-1">{ele?.value}</p>
@@ -528,6 +566,21 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
             setLevel(0);
             addInitstate({ level: 0 });
             modalRef?.current?.close();
+          }}
+        />
+      </Modal>
+      <Modal
+        ref={refModal}
+        className="bg-transparent "
+        // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        // onClose={() => navigate("/")}
+      >
+        <ModalReviewResult
+          title={message?.title}
+          desc={message?.desc}
+          onClick={() => {
+            refModal?.current?.close();
+            setTime(60);
           }}
         />
       </Modal>

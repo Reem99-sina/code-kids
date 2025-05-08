@@ -32,8 +32,9 @@ const GoogleCallbackHandler: React.FC = () => {
           throw new Error("Failed to login with social");
         }
       })
-      .catch((err) => {
-        console.log(err, "err");
+      .catch(() => {
+        router("/login")
+        // console.log(err, "err");
       });
   };
 
