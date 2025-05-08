@@ -166,7 +166,6 @@ const LevelEleven: React.FC<LevelEightProps> = ({goHome}) => {
 
   const validateConnections = () => {
     const connections = [...lines];
-    console.log(lines);
 
     const xorGate = boxes.find((box) => box.title === "xor");
 
@@ -187,10 +186,8 @@ const LevelEleven: React.FC<LevelEightProps> = ({goHome}) => {
     const inputsToAnd = connections.filter(
       (line) => line?.to.id === xorGate?.id
     );
-    console.log(inputsToAnd);
 
     const andToLamp = connections.find((line) => line?.to.id === lamp?.id);
-    console.log(andToLamp);
 
     if (inputsToAnd.length > 1 && andToLamp) {
       modalRef.current?.open();
