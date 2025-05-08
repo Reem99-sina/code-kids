@@ -16,6 +16,7 @@ import IconDots from "../icon-dots";
 import {LampOff, LampOn} from "@/assets";
 import {Modal, ModalRef} from "@/components/common/modal.component";
 import {LevelComplete} from "@/components/levels/LevelComplete";
+import toast from "react-hot-toast";
 import {useNavigate} from "react-router-dom";
 
 interface LevelEightProps {
@@ -34,6 +35,11 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
   const [lines, setLines] = useState<(LineDirection | undefined)[]>([]); // Final lines
   const [startDot, setStartDot] = useState<dotInfo | null>(null); // Starting dot
   const [mousePos, setMousePos] = useState<mouseMove | null>(null); // For live line
+
+  const onClose = () => {
+    setBoxes([]);
+    setLines([]);
+  };
 
   const handleDotClick = ({
     dot,
@@ -79,8 +85,8 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
     return boxes.filter((ele) => ele?.title == "input");
   }, [boxes]);
 
-  const hasNand = useMemo(() => {
-    return boxes.filter((ele) => ele?.title == "nand");
+  const hasAnd = useMemo(() => {
+    return boxes.filter((ele) => ele?.title == "and");
   }, [boxes]);
 
   const lineColor = useMemo(() => {
@@ -99,7 +105,7 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                 ? useOutput({
                     input_1: binary["input_1"],
                     input_2: binary["input_2"],
-                    operation: "nand",
+                    operation: "and",
                   }) == 1
                   ? "green"
                   : "red"
@@ -108,14 +114,14 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                       input_1: useOutput({
                         input_1: binary["input_1"],
                         input_2: binary["input_2"],
-                        operation: "nand",
+                        operation: "and",
                       }),
                       input_2: useOutput({
                         input_1: binary["input_1"],
                         input_2: binary["input_2"],
-                        operation: "nand",
+                        operation: "and",
                       }),
-                      operation: "nand",
+                      operation: "and",
                     }) == 1
                     ? "green"
                     : "red"
@@ -125,7 +131,7 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                   ? useOutput({
                       input_1: binary["input_1"],
                       input_2: binary["input_2"],
-                      operation: "nand",
+                      operation: "and",
                     }) == 1
                     ? "green"
                     : "red"
@@ -134,14 +140,14 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                         input_1: useOutput({
                           input_1: binary["input_1"],
                           input_2: binary["input_2"],
-                          operation: "nand",
+                          operation: "and",
                         }),
                         input_2: useOutput({
                           input_1: binary["input_1"],
                           input_2: binary["input_2"],
-                          operation: "nand",
+                          operation: "and",
                         }),
-                        operation: "nand",
+                        operation: "and",
                       }) == 1
                       ? "green"
                       : "red"
@@ -157,8 +163,53 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                   : "red"
             : "red";
   }, [binary]);
+  const output = ({input_1}: {input_1: number}) => {
+    return input_1 == 1 ? 0 : 1;
+  };
 
-  const validateConnections = () => {};
+  const validateConnections = () => {
+    const connections = [...lines];
+
+    const andGate = boxes.find(
+      (box) => box.title === "and" && box?.repeat == 0
+    );
+
+    const andGate2 = boxes.find(
+      (box) => box.title === "and" && box?.repeat == 1
+    );
+
+    const notGate = boxes.find((box) => box.title === "not");
+
+    const lamp = boxes.find((box) => box.title === "lamp-off");
+    const result = useOutput({
+      input_1: binary["input_1"],
+      input_2: binary["input_2"],
+      operation: "xor",
+    });
+
+    if (!lamp || result == 0 || (!andGate && !andGate2 && !notGate)) {
+      toast.error("Missing And gate or Lamp.");
+      onClose();
+
+      return;
+    }
+
+    const inputsToAnd = connections.filter(
+      (line) => line?.to.id === andGate?.id
+    );
+    const inputsToAnd2 = connections.filter(
+      (line) => line?.to.id === andGate2?.id
+    );
+
+    const andToLamp = connections.find((line) => line?.to.id === lamp?.id);
+
+    if (inputsToAnd.length>1 && andToLamp && inputsToAnd2.length>1) {
+      modalRef.current?.open();
+    } else {
+      toast.error("❌ Incorrect logic, try again.");
+      onClose();
+    }
+  };
 
   const hasLine = useMemo(() => {
     return ({dot, direction}: {dot: BoxInterface; direction: string}) => {
@@ -241,6 +292,33 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                         handleDotClick({dot, event, box: ele})
                       }
                     />
+                  ) : ele?.title === "not" ? (
+                    <IconDots
+                      direction_dots_true={[
+                        {
+                          direction: "center",
+                          id: ele?.id,
+                          side: "left",
+                          color: binary["input_1"] == 1 ? "green" : "red",
+                        },
+                        {
+                          direction: "center",
+                          id: ele?.id,
+                          side: "right",
+                          color: (() => {
+                            let result = binary["input_1"];
+                            for (let i = 0; i <= (ele?.repeat || 0); i++) {
+                              result = output({input_1: result});
+                            }
+
+                            return result == 1 ? "green" : "red";
+                          })(),
+                        },
+                      ]}
+                      onClick={({dot, event}) =>
+                        handleDotClick({dot, event, box: ele})
+                      }
+                    />
                   ) : ele?.title == "xor" ? (
                     <IconDots
                       direction_dots_true={[
@@ -292,7 +370,7 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                         handleDotClick({dot, event, box: ele})
                       }
                     />
-                  ) : ele?.repeat == 0 && ele?.title == "nand" ? (
+                  ) : ele?.repeat == 0 && ele?.title == "and" ? (
                     <IconDots
                       direction_dots_true={[
                         {
@@ -332,7 +410,7 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                                     ?.from?.input as keyof typeof binary) ||
                                     "input_2"
                                 ],
-                              operation: "nand",
+                              operation: "and",
                             }) == 1
                               ? "green"
                               : "red",
@@ -343,7 +421,7 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                         handleDotClick({dot, event, box: ele})
                       }
                     />
-                  ) : ele?.repeat == 1 && ele?.title == "nand" ? (
+                  ) : ele?.repeat == 1 && ele?.title == "and" ? (
                     <IconDots
                       direction_dots_true={[
                         {
@@ -383,7 +461,7 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                                     ?.from?.input as keyof typeof binary) ||
                                     "input_2"
                                 ],
-                              operation: "nand",
+                              operation: "and",
                             }) == 1
                               ? "green"
                               : "red",
@@ -394,119 +472,7 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
                         handleDotClick({dot, event, box: ele})
                       }
                     />
-                  ) : ele?.repeat == 2 && ele?.title == "nand" ? (
-                    <IconDots
-                      direction_dots_true={[
-                        {
-                          direction: "top",
-                          color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "bottom",
-                          color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "center",
-                          color:
-                            useOutput({
-                              input_1: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              input_2: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                      ]}
-                      onClick={({dot, event}) =>
-                        handleDotClick({dot, event, box: ele})
-                      }
-                    />
-                  ) : ele?.repeat == 3 && ele?.title == "nand" ? (
-                    <IconDots
-                      direction_dots_true={[
-                        {
-                          direction: "top",
-                          color:
-                            useOutput({
-                              input_1: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              input_2: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "bottom",
-                          color:
-                            useOutput({
-                              input_1: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              input_2: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "center",
-                          color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: "xor",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                      ]}
-                      onClick={({dot, event}) =>
-                        handleDotClick({dot, event, box: ele})
-                      }
-                    />
-                  ) : (
+                  )  : (
                     <IconDots
                       direction_dots_true={[
                         {
@@ -714,7 +680,11 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
           onClick={() => {
             setBoxes((prev) => [
               ...prev,
-              {...eachElement[0], id: generateUniqueId()},
+              {
+                ...eachElement[0],
+                id: generateUniqueId(),
+                repeat: hasAnd?.length,
+              },
             ]);
           }}
         />
@@ -792,7 +762,7 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
             setBoxes((prev) => [
               ...prev,
               {
-                ...eachElement[5],
+                ...eachElement[7],
                 id: generateUniqueId(),
               },
             ]);
@@ -808,7 +778,7 @@ const LevelTwelve: React.FC<LevelEightProps> = ({goHome}) => {
               {
                 ...eachElement[4],
                 id: generateUniqueId(),
-                repeat: hasNand?.length,
+                repeat: hasAnd?.length,
               },
             ]);
           }}

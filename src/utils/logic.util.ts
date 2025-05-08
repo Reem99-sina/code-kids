@@ -235,8 +235,8 @@ export const eachElement = [
   {
     id: 8,
     title: "Nor",
-    Icon: Xor,
-    Reverse: Xor,
+    Icon: NottIcon,
+    Reverse: NotOntIcon,
   },
 ];
 

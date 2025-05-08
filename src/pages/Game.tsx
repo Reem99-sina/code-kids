@@ -310,11 +310,11 @@ const Game = () => {
         ),
       },
       {
-        name: "level 11",
+        name: "level 12",
         view: (
           <LevelCart
-            title="  XOR Gate Challenge"
-            description="Use the new XOR gate to complete the circuit."
+            title=" Bit Combination Lock"
+            description="Create an XOR gate using only AND gates."
             levelActive
             progressNumber={0}
           />
@@ -322,8 +322,8 @@ const Game = () => {
         component: (
           <div className="">
             <MainComponent
-              title="Level 11: XOR Gate Challenge"
-              desc="Use the new XOR gate to complete the circuit."
+              title="Level 12: 3- Bit Combination Lock"
+              desc="Create an XOR gate using only NAND gates."
               operation="and"
               data={dataItems}
             >
