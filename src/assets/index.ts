@@ -181,3 +181,15 @@ export { default as HorizontalLightLine } from "./horizontal-light-line.svg?reac
 export { default as VerticalDarkLine } from "./vertical-dark-line.svg?react";
 export { default as HorizontalDarkLine } from "./horizontal-dark-line.svg?react";
 export { default as Xor } from "./xor.svg?react";
+
+export { default as MyKidsIcon } from "./my-kids.svg?react";
+export { default as CuteLittleGirl } from "./cute-little-girl.svg?react";
+export { default as ELearning } from "./e-learning.svg?react";
+export { default as Coding } from "./coding.svg?react";
+export { default as Business } from "./business.svg?react";
+export { default as Steam } from "./steam.svg?react";
+export { default as Creative } from "./creative.svg?react";
+export { default as LifeSkills } from "./life-skills.svg?react";
+export { default as Culture } from "./culture.svg?react";
+export { default as Mentors } from "./mentors.svg?react";
+

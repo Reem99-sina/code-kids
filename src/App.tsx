@@ -15,6 +15,10 @@ import HomeChild from "./pages/HomeChild";
 import Game from "./pages/Game";
 import AssemblyGame from "./pages/AssemblyGame";
 import PrivateRoute from "./components/common/private-router";
+import MyKids from "./pages/MyKids";
+import MyCourses from "./pages/my-courses";
+import Mentors from "./pages/Mentors";
+import CoursesDetail from "./pages/CoursesDetail";
 
 function App() {
   return (
@@ -31,11 +35,16 @@ function App() {
           <Route path="/assembly-game" element={<AssemblyGame />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/my-kids" element={<MyKids />} />
+            <Route path="/courses" element={<MyCourses />} />
+            <Route path="/course/:id" element={<CoursesDetail />} />
+
             <Route path="/add-child" element={<AddChild />} />
             <Route path="/home-child" element={<HomeChild />} />
             <Route path="/home" element={<Home />} />
             <Route path="/game" element={<Game />} />
             <Route path="/assembly-game" element={<AssemblyGame />} />
+            <Route path="/mentors"element={<Mentors/>}/>
           </Route>
         </Route>
         <Route
