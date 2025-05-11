@@ -146,6 +146,50 @@ export const dataXorItems = [
   },
 ];
 
+export const dataItems = [
+  {
+    input_1: 0,
+    input_2: 0,
+    output: 0,
+  },
+  {
+    input_1: 0,
+    input_2: 1,
+    output: 1,
+  },
+  {
+    input_1: 0,
+    input_2: 0,
+    output: 1,
+  },
+  {
+    input_1: 0,
+    input_2: 1,
+    output: 0,
+  },
+  {
+    input_1: 1,
+    input_2: 0,
+    output: 1,
+  },
+  {
+    input_1: 1,
+    input_2: 1,
+    output: 1,
+  },
+  {
+    input_1: 1,
+    input_2: 0,
+    output: 0,
+  },
+ {
+    input_1: 1,
+    input_2: 1,
+    output: 0,
+  },
+];
+
+
 export const eachElement = [
   {
     id: 1,
@@ -187,6 +231,12 @@ export const eachElement = [
     title: "xor",
     Icon: Xor,
     Reverse: Xor,
+  },
+  {
+    id: 8,
+    title: "Nor",
+    Icon: NottIcon,
+    Reverse: NotOntIcon,
   },
 ];
 
