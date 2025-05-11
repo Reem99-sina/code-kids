@@ -30,7 +30,7 @@ const MainHeader = () => {
         <div
           className={clsx(
             "  py-3 flex items-center justify-around w-full gap-5 px-3",
-            (pathname == "/add-child" || pathname == "/") 
+            (pathname == "/add-child" || (pathname == "/"&& user?.userType!="parent")) 
               ? "absolute top-0 z-10"
               : ""
           )}
