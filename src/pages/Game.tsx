@@ -11,6 +11,7 @@ import LevelOne from "@/components/games/level-one/level-one";
 import LevelSeven from "@/components/games/level-seven/level-seven";
 import LevelSix from "@/components/games/level-six/level-six";
 import LevelTen from "@/components/games/level-ten/level-ten";
+import LevelThirteen from "@/components/games/level-thirteen/level-thirteen";
 import LevelThree from "@/components/games/level-three/level-three";
 import LevelTwelve from "@/components/games/level-twelve/level-twelve";
 import LevelTwo from "@/components/games/level-two/levels-two";
@@ -328,6 +329,32 @@ const Game = () => {
               data={dataItems}
             >
               <LevelTwelve
+                onComplete={() => setSelectedLevel(10)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 13",
+        view: (
+          <LevelCart
+            title=" Level 13: Half Adder Circuit"
+            description="Create a full adder circuit using XOR, AND, and OR gates. The circuit should output the sum and carry of three."
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="">
+            <MainComponent
+              title="Half Adder Circuit"
+              desc="Create a full adder circuit using XOR, AND, and OR gates. The circuit should output the sum and carry of three. "
+              operation="and"
+              data={dataItems}
+            >
+              <LevelThirteen
                 onComplete={() => setSelectedLevel(10)}
                 goHome={() => setSelectedLevel(0)}
               />
