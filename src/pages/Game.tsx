@@ -6,6 +6,7 @@ import LevelEight from "@/components/games/level-eight/level-eight";
 import LevelEleven from "@/components/games/level-eleven/level-eleven";
 import LevelFive from "@/components/games/level-five/level-five";
 import LevelFour from "@/components/games/level-four/level-four";
+import LevelFourteen from "@/components/games/level-fourteen/level-fourteen";
 import LevelNine from "@/components/games/level-nine/level-nine";
 import LevelOne from "@/components/games/level-one/level-one";
 import LevelSeven from "@/components/games/level-seven/level-seven";
@@ -355,6 +356,32 @@ const Game = () => {
               data={dataItems}
             >
               <LevelThirteen
+                onComplete={() => setSelectedLevel(10)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 14",
+        view: (
+          <LevelCart
+            title=" Level 14: Full adder circuit"
+            description="Create a full adder circuit using XOR, AND, and OR gates. The circuit should output the sum and carry of three."
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="">
+            <MainComponent
+              title="Full adder circuit"
+              desc="Create a full adder circuit using XOR, AND, and OR gates. The circuit should output the sum and carry of three. "
+              operation="and"
+              data={dataItems}
+            >
+              <LevelFourteen
                 onComplete={() => setSelectedLevel(10)}
                 goHome={() => setSelectedLevel(0)}
               />
