@@ -37,7 +37,7 @@ const RecommededCourse = ({
   return (
     <div
       className={clsx(
-        " min-w-[280px] rounded-3xl mx-4 my-2 bg-white hover:bg-hoverCard  hover:shadow-[0px_0px_6px_0px_#FF0084] hover:border-[1px_solid_#FF1D92] ",
+        "min-w-[280px] rounded-3xl mx-4 my-2 bg-white hover:bg-hoverCard  hover:shadow-[0px_0px_6px_0px_#FF0084] hover:border-[1px_solid_#FF1D92] ",
         className
       )}
       onClick={()=>router("/course/1")}

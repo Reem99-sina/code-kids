@@ -192,4 +192,7 @@ export { default as Creative } from "./creative.svg?react";
 export { default as LifeSkills } from "./life-skills.svg?react";
 export { default as Culture } from "./culture.svg?react";
 export { default as Mentors } from "./mentors.svg?react";
+export { default as StarHalf } from "./star-half.svg?react";
+export { default as StarRating } from "./star-rating.svg?react";
+
 

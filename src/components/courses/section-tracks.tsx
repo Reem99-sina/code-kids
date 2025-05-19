@@ -248,7 +248,7 @@ const SectionTracks = () => {
           {courses?.map((ele, index) => (
             <RecommededCourse
               {...ele}
-              className="bg-[#FDF2FF]"
+              className="!bg-[#FDF2FF] hover:!bg-hoverCard"
               key={ele?.title + index}
             />
           ))}

@@ -132,7 +132,7 @@ export const LevelSix: React.FC<LevelSixProps> = ({
         <div className="relative pt-[56.25%] w-full">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+6+Binary+to+Hex+Heroes.mp4`}
+            src={`https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+6+Binary+to+Hex+Heroes.mp4`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>

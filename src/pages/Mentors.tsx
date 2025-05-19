@@ -179,7 +179,7 @@ const filterData: FilterSection[] = [
   },
 ];
 
-const mentors = [
+export const mentors = [
   {
     title: "Introduction to Web Development",
     desc: "Learn the basics of HTML, CSS, and JavaScript.",

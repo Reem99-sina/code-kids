@@ -46,6 +46,7 @@ export const colors = {
   grayTwo: "#F3F3F3",
   grayThree: "#FCFCFC",
   grayFour: "#666666",
+  grayCommon:"#4E5566",
 
   textSecondary: "#6F6C90",
   textThird: "#424249",
@@ -60,5 +61,6 @@ export const colors = {
   yellowFunf:"#FFD93D",
   orangeLight:"#FFA500",
   greenTwo:"#008000",
-  redTwo:"#FF0000"
+  redTwo:"#FF0000",
+  orangeThree:"#FF6636"
 };
