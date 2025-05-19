@@ -31,20 +31,21 @@ function App() {
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/home" element={<Home />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/mentors" element={<Mentors />} />
 
           <Route path="/assembly-game" element={<AssemblyGame />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/my-kids" element={<MyKids />} />
             <Route path="/courses" element={<MyCourses />} />
             <Route path="/course/:id" element={<CoursesDetail />} />
+
+            <Route path="/my-kids" element={<MyKids />} />
 
             <Route path="/add-child" element={<AddChild />} />
             <Route path="/home-child" element={<HomeChild />} />
             <Route path="/home" element={<Home />} />
             <Route path="/game" element={<Game />} />
             <Route path="/assembly-game" element={<AssemblyGame />} />
-            <Route path="/mentors"element={<Mentors/>}/>
           </Route>
         </Route>
         <Route
