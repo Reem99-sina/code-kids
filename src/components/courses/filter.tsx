@@ -47,7 +47,7 @@ const Filter = ({ children,filterData }: props) => {
     <div className="container mx-auto py-8 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="border rounded-full text-[#FF6636] flex items-center p-3 gap-3">
+          <div className="border rounded-full text-orangeThree flex items-center p-3 gap-3">
             <Menu />
             <p>Filters</p>
           </div>
@@ -61,7 +61,7 @@ const Filter = ({ children,filterData }: props) => {
             />
           </div>
         </div>
-        <div className=" flex items-center gap-6 text-[#4E5566] capitalize font-bold">
+        <div className=" flex items-center gap-6 text-grayCommon capitalize font-bold">
           <p>sorting:</p>
           <Select
             options={[{ label: "Trending", value: "Trending" }]}
@@ -77,7 +77,7 @@ const Filter = ({ children,filterData }: props) => {
         <div className="font-bold">
           <p>Suggestion:</p>
         </div>
-        <div className="font-bold text-[#4E5566]">
+        <div className="font-bold text-grayCommon">
           <p>
             <span className="text-black">3,145,684</span> results find for
             "ui/ux design"
