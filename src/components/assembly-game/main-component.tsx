@@ -364,11 +364,11 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
       }))
     );
     setMemory(levels[level]?.memory || []);
-    setProgress(0)
-    setHint("")
-    setHintsUsed(0)
-    setSolution("")
-    setTime(60)
+    setProgress(0);
+    setHint("");
+    setHintsUsed(0);
+    setSolution("");
+    setTime(60);
   };
 
   const handleExecute = ({
@@ -397,9 +397,9 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
       userRegister: resultRegisters,
     });
     if (resultReg) {
-      setProgress((prev)=>prev+100)
+      setProgress((prev) => prev + 100);
     }
-    
+
     return {
       registers: resultRegisters,
       flags: resultFlags,

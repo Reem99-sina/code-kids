@@ -24,6 +24,7 @@ const MainHeader = () => {
   const { user } = useUser();
   const { pathname } = useLocation();
 
+
   return (
     <>
       <div className={clsx("flex items-center justify-center bg-transparent ")}>
