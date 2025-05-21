@@ -22,10 +22,7 @@ export const LevelSix: React.FC<LevelSixProps> = ({
   goHome,
   open,
 }) => {
-  // const [conductorPressed, setConductorPressed] = useState(false);
-  // const [semiconductorPressed, setSemiconductorPressed] = useState(false);
-  // const [insulatorPressed, setInsulatorPressed] = useState(false);
-  // const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
   const formData = useForm();
   const hex = formData.watch("hex");
@@ -38,24 +35,12 @@ export const LevelSix: React.FC<LevelSixProps> = ({
     [level]
   );
 
-  // useEffect(() => {
-  //   const activeCount =
-  //     Number(conductorPressed) +
-  //     Number(semiconductorPressed) +
-  //     Number(insulatorPressed);
-
-  //   const newProgress = Math.round((activeCount / 3) * 100);
-  //   setProgress(newProgress);
-
-  //   if (newProgress === 100 && answer === "101") {
-  //     modalRef.current?.open();
-  //   }
-  // }, [conductorPressed, semiconductorPressed, insulatorPressed, answer]);
-
   const handleCheckAnswer = () => {
     const CorrectHex = randomDecimal.toString(16).toUpperCase();
     if (CorrectHex == hex) {
       setLevel((prev) => prev + 1);
+      setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
+
       formData.setValue("hex", "");
     } else {
       toast.error(`Try again!\nCorrect : ${CorrectHex}`);
@@ -94,7 +79,7 @@ export const LevelSix: React.FC<LevelSixProps> = ({
         <p className="font-bold text-5xl text-[#FF1D92]">{binaryString}</p>
         <p className="text-[#0E0226] font-normal text-xl">Your Progress</p>
         <div className="flex w-[80%]">
-          <ProgressBar progress={0} />
+          <ProgressBar progress={progress} />
         </div>
         <div className="min-w-[894px] min-h-[182px] flex items-center flex-col bg-[#FFE5F3] gap-2 rounded-lg">
           <div className="pt-5">
@@ -125,7 +110,17 @@ export const LevelSix: React.FC<LevelSixProps> = ({
           </div>
         </div>
         <Modal ref={modalRef}>
-          <LevelComplete level="6" onNextLevel={onComplete} onGoHome={goHome} />
+          <LevelComplete
+            level="6"
+            onNextLevel={() => {
+              if (progress >= 100) {
+                onComplete();
+              } else {
+                modalRef?.current?.open();
+              }
+            }}
+            onGoHome={goHome}
+          />
         </Modal>
       </div>
       <CommonModal refModal={refModal} title={"Teach Course"}>
