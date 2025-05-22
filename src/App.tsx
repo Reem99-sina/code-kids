@@ -29,16 +29,16 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/game" element={<Game />} />
+
           <Route path="/mentors" element={<Mentors />} />
+          <Route path="/courses" element={<MyCourses />} />
+          <Route path="/course/:id" element={<CoursesDetail />} />
 
           <Route path="/assembly-game" element={<AssemblyGame />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/courses" element={<MyCourses />} />
-            <Route path="/course/:id" element={<CoursesDetail />} />
-
+            <Route path="/home" element={<Home />} />
+            <Route path="/game" element={<Game />} />
             <Route path="/my-kids" element={<MyKids />} />
 
             <Route path="/add-child" element={<AddChild />} />

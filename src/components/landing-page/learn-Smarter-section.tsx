@@ -2,7 +2,7 @@ import { CoursesCard } from "../cards/courses-card";
 
 export const LearnSmarter = () => {
   return (
-    <div className="w-full h-screen items-end mt-9 ">
+    <div className="w-full h-screen items-end my-10 ">
       <div className="flex items-center justify-between p-10">
         <span className="text-4xl font-bold text-[#001D1D]">
           You're not alone — Learn with expert guides!
@@ -56,7 +56,7 @@ export const LearnSmarter = () => {
         </div>
       </div>
       <div>
-        <p className="font-bold text-4xl text-[#001D1D]">
+        <p className="font-bold text-4xl text-[#001D1D] mt-9">
           {" "}
           Schools & Partners We’re Proud Of
         </p>
@@ -69,7 +69,7 @@ export const LearnSmarter = () => {
           generation.{" "}
         </p>
       </div>
-      <div className="w-full">
+      <div className="w-full mb-9">
         <img
           src={"/LearnSmarter-img.png"}
           className="w-full h-full rounded-lg object-cover"
