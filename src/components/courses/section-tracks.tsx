@@ -204,7 +204,7 @@ const filterData: FilterSection[] = [
 
 const SectionTracks = () => {
   const { data } = useTracksQuery();
-  const [track, setTrack] = useState<number | undefined>();
+  const [track, setTrack] = useState<number | undefined|string>();
   const findImage = useMemo(() => {
     return (ele: trackInterface) =>
       tracks?.find((elem) => elem?.name.includes(ele?.name));
@@ -221,26 +221,47 @@ const SectionTracks = () => {
           </h3>
         </div>
         <div className="flex items-center justify-center gap-4">
-          {data?.map((ele) => (
-            <div
-              className="text-white capitalize font-bold cursor-pointer"
-              onClick={() => setTrack(ele?.id)}
-              key={ele?.id}
-            >
-              <div
-                className={clsx(
-                  "hover:bg-[url('@/assets/select-vector.png')] bg-[url('@/assets/Vector.png')] bg-cover bg-no-repeat",
-                  "p-12",
-                  track == ele?.id
-                    ? "bg-[url('@/assets/select-vector.png')] "
-                    : "bg-[url('@/assets/Vector.png')]"
-                )}
-              >
-                {findImage(ele)?.image}
-              </div>
-              <p>{ele?.name}</p>
-            </div>
-          ))}
+          {data && data?.length > 0
+            ? data?.map((ele) => (
+                <div
+                  className="text-white capitalize font-bold cursor-pointer"
+                  onClick={() => setTrack(ele?.id)}
+                  key={ele?.id}
+                >
+                  <div
+                    className={clsx(
+                      "hover:bg-[url('@/assets/select-vector.png')] bg-[url('@/assets/Vector.png')] bg-cover bg-no-repeat",
+                      "p-12",
+                      track == ele?.id
+                        ? "bg-[url('@/assets/select-vector.png')] "
+                        : "bg-[url('@/assets/Vector.png')]"
+                    )}
+                  >
+                    {findImage(ele)?.image}
+                  </div>
+                  <p>{ele?.name}</p>
+                </div>
+              ))
+            : tracks?.map((ele) => (
+                <div
+                  className="text-white capitalize font-bold cursor-pointer"
+                  onClick={() => setTrack(ele?.name)}
+                  key={ele?.name}
+                >
+                  <div
+                    className={clsx(
+                      "hover:bg-[url('@/assets/select-vector.png')] bg-[url('@/assets/Vector.png')] bg-cover bg-no-repeat",
+                      "p-12",
+                      track == ele?.name
+                        ? "bg-[url('@/assets/select-vector.png')] "
+                        : "bg-[url('@/assets/Vector.png')]"
+                    )}
+                  >
+                    {ele?.image}
+                  </div>
+                  <p>{ele?.name}</p>
+                </div>
+              ))}
         </div>
       </div>
       <Filter filterData={filterData}>

@@ -2,7 +2,7 @@ import { CoursesCard } from "../cards/courses-card";
 
 export const CoursesSection = () => {
   return (
-    <div className="w-full h-screen items-end mt-9 ">
+    <div className="w-full h-screen items-end mt-20 ">
       <div className="flex items-center justify-between p-10">
         <span className="text-4xl font-bold text-[#001D1D]">Courses</span>
         <span className="text-2xl font-bold text-[#626262] cursor-pointer">

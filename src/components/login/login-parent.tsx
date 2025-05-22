@@ -12,6 +12,7 @@ import { IUserLoginParentRequest } from "@/types/user.type";
 import toast from "react-hot-toast";
 import { useAuth } from "@/hooks/auth.hook";
 import { useState } from "react";
+import { config } from "@/config";
 
 const LoginParent = () => {
   const [isLoading, setLoading] = useState(false);
@@ -65,7 +66,7 @@ const LoginParent = () => {
           </p>
           <div
             onClick={() => {
-              window.location.href = "http://34.226.217.99:8080/auth/google";
+              window.location.href = config.NEXT_PUBLIC_BASE_URL+"/auth/google";
             }}
             className="cursor-pointer rounded-full w-full py-2 flex justify-center items-center gap-4 border-2  border-[#EFF0F6] my-3"
           >

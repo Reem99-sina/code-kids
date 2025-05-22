@@ -4,7 +4,7 @@ import StudentCard from "../cards/StudentCard";
 export const FutureLeadersSection = () => {
   return (
     <div className="w-full h-screen items-end relative ">
-      <div className="flex items-center justify-between p-10">
+      <div className="flex items-center justify-between px-10">
         <span className="text-4xl font-bold text-[#001D1D]">
           Future leaders
         </span>
@@ -41,8 +41,8 @@ export const FutureLeadersSection = () => {
         </div>
       </div>
       <div className="absolute bg-[url('/future-leaders.png')] b  bottom-1  z-[-1] bg-cover w-full  h-[500px]"></div>
-      <div className="items-center  flex gap-4 mt-8    w-full">
-        <div className="flex gap-7 flex-col p-3 w-full">
+      <div className="items-center  flex gap-4 my-10    w-full">
+        <div className="flex gap-7 flex-col px-5 py-3 w-full">
           <div className="flex w-full">
             <p className="text-[39px] text-[#001D1D] font-bold">
               Student projects in action

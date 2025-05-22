@@ -25,7 +25,7 @@ const LandingPage = () => {
       <section className="bg-[url('/categories-background.png')] bg-no-repeat   bg-[length:100%_100%]  bg-center w-full h-full">
         <DigitalLearning />
       </section>
-      <section className="bg-[url('/courses-section-background.png')] bg-no-repeat  bg-cover bg-center w-full h-full">
+      <section className="bg-[url('/courses-section-background.png')] bg-no-repeat  bg-cover bg-top w-full h-full">
         <CoursesSection />
       </section>
       <section className="bg-[url('/SmartLearningBg.png')] bg-no-repeat  bg-cover bg-center w-full h-full">

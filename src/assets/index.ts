@@ -195,5 +195,6 @@ export { default as Mentors } from "./mentors.svg?react";
 export { default as StarHalf } from "./star-half.svg?react";
 export { default as StarRating } from "./star-rating.svg?react";
 export { default as ChildRight } from "./child-right.svg?react";
+export { default as Hint } from "./hint.svg?react";
 
 

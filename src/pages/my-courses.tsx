@@ -1,10 +1,14 @@
 import SectionThree from "@/components/common/section-three";
+import SectionNoUser from "@/components/courses/section-no-user";
 import SectionOne from "@/components/courses/section-one";
 import SectionTracks from "@/components/courses/section-tracks";
 import ContentFooter from "@/components/footer/ContentFooter";
+import { useUser } from "@/hooks/user.hooks";
 
 const MyCourses = () => {
-  return (
+  const { user } = useUser();
+  
+  return user ? (
     <div className="bg-white h-auto">
       <div className="bg-white h-auto">
         <SectionOne />
@@ -15,6 +19,8 @@ const MyCourses = () => {
         <ContentFooter />
       </div>
     </div>
+  ) : (
+    <SectionNoUser />
   );
 };
 

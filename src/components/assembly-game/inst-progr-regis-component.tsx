@@ -88,12 +88,12 @@ const InstructionComponent = ({
                     onChange({
                       operation: open,
                       key: "operand_1",
-                      value: event?.target?.value,
+                      value: event?.target?.value.toUpperCase(),
                     });
 
                     setOperands((prev) => ({
                       ...prev,
-                      operand_1: event?.target?.value,
+                      operand_1: event?.target?.value.toUpperCase(),
                     }));
                   },
                 }}
@@ -110,11 +110,11 @@ const InstructionComponent = ({
                     onChange({
                       operation: open,
                       key: "operand_1",
-                      value: event?.target?.value,
+                      value: event?.target?.value?.toUpperCase(),
                     });
                     setOperands((prev) => ({
                       ...prev,
-                      operand_1: event?.target?.value,
+                      operand_1: event?.target?.value?.toUpperCase(),
                     }));
                   },
                 }}
@@ -129,11 +129,11 @@ const InstructionComponent = ({
                     onChange({
                       operation: open,
                       key: "operand_2",
-                      value: event?.target?.value,
+                      value: event?.target?.value?.toUpperCase(),
                     });
                     setOperands((prev) => ({
                       ...prev,
-                      operand_2: event?.target?.value,
+                      operand_2: event?.target?.value?.toUpperCase(),
                     }));
                   },
                 }}
