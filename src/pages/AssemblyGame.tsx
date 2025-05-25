@@ -1,7 +1,6 @@
 import { LanguageButton } from "@/assets";
 import MainComponent from "@/components/assembly-game/main-component";
 import { LevelCart } from "@/components/cards/level-cart";
-import ContentFooter from "@/components/footer/ContentFooter";
 
 import { useMemo, useState } from "react";
 
@@ -169,8 +168,6 @@ const AssemblyGame = () => {
           </div>
         </div>
       </div>
-
-      <ContentFooter />
     </>
   );
 };

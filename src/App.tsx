@@ -19,6 +19,9 @@ import MyKids from "./pages/MyKids";
 import MyCourses from "./pages/my-courses";
 import Mentors from "./pages/Mentors";
 import CoursesDetail from "./pages/CoursesDetail";
+import AboutUs from "./pages/AboutUs";
+import ContactUs from "./pages/ContactUs";
+import ContentFooter from "./components/footer/ContentFooter";
 
 function App() {
   return (
@@ -31,6 +34,9 @@ function App() {
           <Route path="/forget-password" element={<ForgetPassword />} />
 
           <Route path="/mentors" element={<Mentors />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+
           <Route path="/courses" element={<MyCourses />} />
           <Route path="/course/:id" element={<CoursesDetail />} />
 
@@ -53,6 +59,9 @@ function App() {
           element={<GoogleCallbackHandler />}
         />
       </Routes>
+      <div>
+        <ContentFooter />
+      </div>
     </div>
   );
 }

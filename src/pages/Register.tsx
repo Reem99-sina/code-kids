@@ -1,4 +1,3 @@
-import ContentFooter from "@/components/footer/ContentFooter";
 
 import RegisterParent from "@/components/register/register-parent";
 import StepOne from "@/components/register/step-one";
@@ -20,7 +19,6 @@ const Register = () => {
         </div>
       </div>
 
-      <ContentFooter />
     </div>
   );
 };

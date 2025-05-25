@@ -1,7 +1,6 @@
 import { Dinosaur } from "@/assets";
 import { TextInput } from "../common/form/text-input.component";
 import { Search } from "lucide-react";
-import ContentFooter from "../footer/ContentFooter";
 import EmptyComponent from "../common/empty-component";
 
 const SectionNoUser = () => {
@@ -36,7 +35,6 @@ We’re always adding new content — your perfect course might be just around t
           />
        
       </div>
-      <ContentFooter />
     </div>
   );
 };

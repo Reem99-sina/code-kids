@@ -1,6 +1,6 @@
 import SectionThree from "@/components/common/section-three";
 import Filter from "@/components/courses/filter";
-import ContentFooter from "@/components/footer/ContentFooter";
+
 import MentorCard from "@/components/mentors/mentor-card";
 import SectionOne from "@/components/mentors/section-one";
 import { FilterSection } from "@/types/track.type";
@@ -235,9 +235,7 @@ const Mentors = () => {
         </Filter>
         <SectionThree title="Every course your child takes today is a step toward a brighter future — you're building that future with love and purpose." />
       </div>
-      <div>
-        <ContentFooter />
-      </div>
+    
     </div>
   );
 };

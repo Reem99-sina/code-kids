@@ -2,7 +2,6 @@ import { Add, Dinosaur, Earth } from "@/assets";
 import AddForm from "@/components/add-child/add-form";
 import ChildCard from "@/components/add-child/child-card";
 import { Button } from "@/components/common/button.component";
-import ContentFooter from "@/components/footer/ContentFooter";
 import { useState } from "react";
 import { useParentQuery } from "@/services/parent-service";
 import { ResponseChildParentAdd } from "@/types/parent.type";
@@ -79,7 +78,7 @@ const AddChild = () => {
           </div>
         </div>
       )}
-      <ContentFooter />
+
     </div>
   );
 };
