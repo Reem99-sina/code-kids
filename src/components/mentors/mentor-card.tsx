@@ -32,7 +32,7 @@ const MentorCard = ({
       </div>
       <div className="flex-1 flex flex-col items-start gap-2">
         <h3 className="font-bold text-black">{title}</h3>
-        <p className=" text-[#6E7485]">{desc}</p>
+        <p className=" text-descText">{desc}</p>
         <div className="flex gap-1 items-center text-xs">
           <Star />
           <p>{star ? star : ""}</p>

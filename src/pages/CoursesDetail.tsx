@@ -7,7 +7,6 @@ import {
   StarHalf,
   StarRating,
 } from "@/assets";
-import ContentFooter from "@/components/footer/ContentFooter";
 import {
   Accordion,
   AccordionContent,
@@ -698,9 +697,7 @@ const CoursesDetail = () => {
           </div>
         </div>
       </div>
-      <div>
-        <ContentFooter />
-      </div>
+   
     </div>
   );
 };

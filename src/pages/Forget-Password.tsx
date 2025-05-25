@@ -1,4 +1,4 @@
-import ContentFooter from "@/components/footer/ContentFooter";
+
 import AddNewPassword from "@/components/forget-password/add-new-password";
 import EnterEmail from "@/components/forget-password/enter-email";
 import ResendCode from "@/components/forget-password/resend-code";
@@ -21,7 +21,7 @@ const ForgetPassword = () => {
         </div>
       </div>
 
-      <ContentFooter />
+
     </div>
   );
 };

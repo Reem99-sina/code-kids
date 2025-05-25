@@ -1,7 +1,6 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import HelpIconComponent from "@/components/common/help-icon";
-import ContentFooter from "@/components/footer/ContentFooter";
 import LevelEight from "@/components/games/level-eight/level-eight";
 import LevelEleven from "@/components/games/level-eleven/level-eleven";
 import LevelFive from "@/components/games/level-five/level-five";
@@ -446,7 +445,7 @@ const Game = () => {
           </div>
         </div>
       </div>
-      <ContentFooter />
+   
     </>
   );
 };

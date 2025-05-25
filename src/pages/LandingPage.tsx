@@ -1,4 +1,4 @@
-import ContentFooter from "@/components/footer/ContentFooter";
+
 import { CoursesSection } from "@/components/landing-page/courses-section";
 import { DigitalLearning } from "@/components/landing-page/digital-learning-section";
 import { FutureLeadersSection } from "@/components/landing-page/future-leaders-section";
@@ -42,7 +42,7 @@ const LandingPage = () => {
           <StartTheirJourney />
         </div>
       </section>
-      <ContentFooter />
+
     </div>
   );
 };

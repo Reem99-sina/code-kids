@@ -197,4 +197,19 @@ export { default as StarRating } from "./star-rating.svg?react";
 export { default as ChildRight } from "./child-right.svg?react";
 export { default as Hint } from "./hint.svg?react";
 
+export { default as Netflix } from "./netflix.svg?react";
+export { default as Youtube } from "./youtube.svg?react";
+export { default as GoogleAbout } from "./google-about.svg?react";
+export { default as Lenovo } from "./lenovo.svg?react";
+export { default as Slack } from "./slack.svg?react";
+export { default as Verizon } from "./verizon.svg?react";
+export { default as Lexmark } from "./lexmark.svg?react";
+export { default as Microsoft } from "./microsoft.svg?react";
+export { default as Users } from "./Users.svg?react";
+export { default as Notebook } from "./Notebook.svg?react";
+export { default as StackFiles } from "./StackFiles.svg?react";
+export { default as CircleWavyCheck } from "./CircleWavyCheck.svg?react";
+export { default as FlyBoy } from "./fly-boy.svg?react";
+export { default as PaperPlaneRight } from "./PaperPlaneRight.svg?react";
+
 

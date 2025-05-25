@@ -1,4 +1,4 @@
-import ContentFooter from "@/components/footer/ContentFooter";
+
 import LoginChildren from "@/components/login/login-children";
 import LoginParent from "@/components/login/login-parent";
 import StepOne from "@/components/register/step-one";
@@ -23,7 +23,6 @@ const Login = () => {
         </div>
       </div>
 
-      <ContentFooter />
     </div>
   );
 };
