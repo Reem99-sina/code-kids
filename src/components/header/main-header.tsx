@@ -24,14 +24,17 @@ const MainHeader = () => {
   const { user } = useUser();
   const { pathname } = useLocation();
 
-
   return (
     <>
       <div className={clsx("flex items-center justify-center bg-transparent ")}>
         <div
           className={clsx(
             "  py-3 flex items-center justify-around w-full gap-5 px-3",
-            (pathname == "/add-child" || (pathname == "/"&& user?.userType!="parent")) 
+            pathname == "/add-child" ||
+              (pathname == "/" && user?.userType != "parent") ||
+              pathname == "/terms-of-use" ||
+              pathname == "/faq" ||
+              pathname == "/privacy-policy"
               ? "absolute top-0 z-10"
               : ""
           )}

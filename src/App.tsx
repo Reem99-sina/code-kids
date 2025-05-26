@@ -22,6 +22,9 @@ import CoursesDetail from "./pages/CoursesDetail";
 import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import ContentFooter from "./components/footer/ContentFooter";
+import Faq from "./pages/Faq";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfUse from "./pages/TermsOfUse";
 
 function App() {
   return (
@@ -36,7 +39,9 @@ function App() {
           <Route path="/mentors" element={<Mentors />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
-
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/courses" element={<MyCourses />} />
           <Route path="/course/:id" element={<CoursesDetail />} />
 

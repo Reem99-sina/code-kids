@@ -193,8 +193,8 @@ export const mentors = [
       "This course provides a beginner-friendly introduction to building websites using modern web technologies. By the end, students will be able to create responsive pages and understand core web development principles.",
   },
   {
-    title: "Introduction to Web Development",
-    desc: "Learn the basics of HTML, CSS, and JavaScript.",
+    title: "Learn Python",
+    desc: "Learn the basics of python.",
     star: "4.2",
     rating: "422",
     students: 1245,
@@ -235,7 +235,6 @@ const Mentors = () => {
         </Filter>
         <SectionThree title="Every course your child takes today is a step toward a brighter future — you're building that future with love and purpose." />
       </div>
-    
     </div>
   );
 };

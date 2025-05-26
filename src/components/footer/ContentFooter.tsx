@@ -28,11 +28,11 @@ const links = [
   },
   {
     title: "Privacy Policy",
-    href: "/",
+    href: "/privacy-policy",
   },
   {
     title: "Terms of Use",
-    href: "/",
+    href: "/terms-of-use",
   },
 ];
 
@@ -70,8 +70,14 @@ const ContentFooter = () => {
           </div>
           <div className=" flex flex-col max-w-[420px] gap-2">
             <h3 className="text-2xl text-yellowThree">Help</h3>
-
-            <p className="text-xl font-black">FAQs`</p>
+            <Link
+              to={"/faq"}
+              className={clsx(
+                "text-white flex  items-center gap-x-3   rounded-es-lg rounded-ss-lg text-xl"
+              )}
+            >
+              <p className="text-xl font-black">FAQs`</p>
+            </Link>
             <Link
               to={"/contact-us"}
               className={clsx(
