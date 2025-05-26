@@ -211,5 +211,6 @@ export { default as StackFiles } from "./StackFiles.svg?react";
 export { default as CircleWavyCheck } from "./CircleWavyCheck.svg?react";
 export { default as FlyBoy } from "./fly-boy.svg?react";
 export { default as PaperPlaneRight } from "./PaperPlaneRight.svg?react";
+export { default as ArrowGreen } from "./arrow-drop-down-green.svg?react";
 
 

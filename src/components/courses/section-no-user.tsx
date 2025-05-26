@@ -24,16 +24,17 @@ const SectionNoUser = () => {
       </div>
       <div className="container mx-auto items-start justify-start text-start flex flex-col">
         <h3 className="font-bold text-lg">Courses</h3>
-        <p className="text-[#706E76] mb-8 text-sm">01 items found out of 5255 courses</p>
-        
-         <EmptyComponent
-            title="😕 Oops! We couldn’t find what you’re looking for."
-            desc=" Try adjusting your keywords or explore our recommended courses below.
+        <p className="text-[#706E76] mb-8 text-sm">
+          01 items found out of 5255 courses
+        </p>
+
+        <EmptyComponent
+          title="😕 Oops! We couldn’t find what you’re looking for."
+          desc=" Try adjusting your keywords or explore our recommended courses below.
 We’re always adding new content — your perfect course might be just around the corner!"
-            title_button="Request a Course"
-            onClick={() => {}}
-          />
-       
+          title_button="Request a Course"
+          onClick={() => {}}
+        />
       </div>
     </div>
   );
