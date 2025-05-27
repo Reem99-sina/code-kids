@@ -2,7 +2,7 @@ import { FamilyIcon, ShieldIcon, SleepyFaceIcon } from "@/assets";
 
 export const DigitalLearning = () => {
   return (
-    <div className="w-full h-screen items-end mt-10 ">
+    <div className="w-full  items-end mt-10 ">
       <p className="font-bold text-4xl text-[#001D1D]">
         Is your child spending screen time without real <br />
         learning?

@@ -1,4 +1,3 @@
-
 import LoginChildren from "@/components/login/login-children";
 import LoginParent from "@/components/login/login-parent";
 import StepOne from "@/components/register/step-one";
@@ -17,12 +16,9 @@ const Login = () => {
         <div className=" border-2 border-dashed border-[#FF00F5] rounded-3xl p-7 mt-5 flex justify-start items-center  gap-20">
           {!type && <StepOne onChange={(value: string) => setType(value)} />}
           {type == "parent" && <LoginParent />}
-          {type == "child" && (
-            <LoginChildren goToParent={(value: string) => setType(value)} />
-          )}
+          {type == "child" && <LoginChildren />}
         </div>
       </div>
-
     </div>
   );
 };

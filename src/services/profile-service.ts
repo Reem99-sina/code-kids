@@ -192,7 +192,7 @@ export const useResendCode = () => {
     ResendCodeRequest
   >({
     mutationFn: (data) => {
-      return api.put("/auth/parent/resend-code", data);
+      return api.put("/auth/parent/resend-code/verify-email", data);
     },
   });
 };

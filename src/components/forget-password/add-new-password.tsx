@@ -1,4 +1,4 @@
-import { LockKeyhole } from "lucide-react";
+
 import { TextInput } from "../common/form/text-input.component";
 import CommenSide from "../register/commen-side";
 import { useForm } from "react-hook-form";
@@ -92,7 +92,7 @@ const AddNewPassword = () => {
                 ? String(errors?.repeate_password?.message)
                 : undefined
             }
-            leftIcon={<LockKeyhole className="text-grayOne" />}
+            
           />
         </div>
         <div className="pt-16 pb-10">
