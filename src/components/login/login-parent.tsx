@@ -1,4 +1,4 @@
-import { GoogleColor } from "@/assets";
+// import { GoogleColor } from "@/assets";
 import CommenSide from "../register/commen-side";
 import DividerWithText from "../common/line-text-component";
 import { TextInput } from "../common/form/text-input.component";
@@ -12,7 +12,7 @@ import { IUserLoginParentRequest } from "@/types/user.type";
 import toast from "react-hot-toast";
 import { useAuth } from "@/hooks/auth.hook";
 import { useState } from "react";
-import { config } from "@/config";
+// import { config } from "@/config";
 
 const LoginParent = () => {
   const [isLoading, setLoading] = useState(false);
@@ -64,7 +64,7 @@ const LoginParent = () => {
           <p className="text-lg font-normal text-textSecondary">
             One decision today can shape your child’s tomorrow
           </p>
-          <div
+          {/* <div
             onClick={() => {
               window.location.href = config.NEXT_PUBLIC_BASE_URL+"/auth/google";
             }}
@@ -75,7 +75,7 @@ const LoginParent = () => {
               className="text-sm font-black text-textThird !w-auto !bg-transparent"
               text="Continue with Google"
             />
-          </div>
+          </div> */}
           <DividerWithText text="or Login with Email" />
         </div>
         <div className="flex items-start gap-2 flex-col w-full mt-6">
