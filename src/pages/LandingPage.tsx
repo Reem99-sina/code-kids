@@ -30,8 +30,8 @@ const LandingPage = () => {
         <RealLearning className="absolute right-0 top-0" />
       </section>
       <section>
-        <div className="bg-[url('@/assets/bg-track.png')] bg-cover bg-no-repeat min-h-[526px] h-full mt-[7%] flex flex-col justify-center items-center">
-          <div className="container mx-auto">
+        <div className=" min-h-[526px] h-full flex flex-col justify-center items-center w-full">
+          <div className="w-full">
             <h3 className="text-white font-bold !text-start w-full text-3xl">
               Tracks
             </h3>

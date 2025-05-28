@@ -1,6 +1,12 @@
 import { Button } from "@/components/common/button.component";
+import { useRef } from "react";
+import { ModalRef } from "../common/modal.component";
+import WhichTypeOfParent from "../common/which-type-of-parent";
+
 
 export const IntroductionSection = () => {
+  const refModal = useRef<ModalRef>(null);
+
   return (
     <div className="w-full h-screen items-end ">
       <div className="container max-auto  mt-6 items-start justify-start flex p-4">
@@ -23,11 +29,13 @@ export const IntroductionSection = () => {
                 <Button
                   text="Start Now"
                   className="max-w-[170px] rounded-[50px] mt-1"
+                  onClick={() => refModal?.current?.open()}
                 />
               </div>
             </div>
           </div>
         </div>
+        <WhichTypeOfParent refModal={refModal} />
       </div>
     </div>
   );

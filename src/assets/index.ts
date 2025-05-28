@@ -213,5 +213,8 @@ export { default as FlyBoy } from "./fly-boy.svg?react";
 export { default as PaperPlaneRight } from "./PaperPlaneRight.svg?react";
 export { default as ArrowGreen } from "./arrow-drop-down-green.svg?react";
 export { default as RealLearning } from "./real-learning.svg?react";
+export { default as Mom } from "./mom.svg?react";
+export { default as Location } from "./location.svg?react";
+export { default as Mobile } from "./mobil.svg?react";
 
 
