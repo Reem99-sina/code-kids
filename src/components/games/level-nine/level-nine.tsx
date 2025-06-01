@@ -387,10 +387,17 @@ const LevelNine: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
                           direction: "center",
                           color:
                             useOutput({
-                              input_1: binary[(hasLine({ dot: ele, direction: "top" })?.from
-                                ?.input as keyof typeof binary) || "input_2"],
-                              input_2: binary[(hasLine({ dot: ele, direction: "bottom" })?.from
-                                ?.input as keyof typeof binary) || "input_2"],
+                              input_1:
+                                binary[
+                                  (hasLine({ dot: ele, direction: "top" })?.from
+                                    ?.input as keyof typeof binary) || "input_2"
+                                ],
+                              input_2:
+                                binary[
+                                  (hasLine({ dot: ele, direction: "bottom" })
+                                    ?.from?.input as keyof typeof binary) ||
+                                    "input_2"
+                                ],
                               operation: "nand",
                             }) == 1
                               ? "green"
@@ -740,27 +747,6 @@ const LevelNine: React.FC<LevelEightProps> = ({ onComplete, goHome }) => {
         </div>
       </div>
       <div className="flex items-center gap-3 flex-wrap">
-        <Button
-          text="Create AND Gate"
-          className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[0], id: generateUniqueId() },
-            ]);
-          }}
-        />
-        <Button
-          text="Create QR Gate"
-          className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[1], id: generateUniqueId() },
-            ]);
-          }}
-        />
-
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
