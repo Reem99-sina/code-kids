@@ -4,6 +4,7 @@ import {
   CC,
   FacebookFooter,
   InstagremFooter,
+  Logo,
   Visa,
 } from "@/assets";
 import clsx from "clsx";
@@ -42,7 +43,7 @@ const ContentFooter = () => {
       <div className=" w-full">
         <div className="flex items-center gap-24 text-white text-start mt-16">
           <div className=" flex flex-col max-w-[420px] gap-2">
-            <h3 className="text-4xl">Logo</h3>
+            <Logo/>
             <p className="text-xl font-normal">
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has been the industry's
