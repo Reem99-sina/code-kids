@@ -17,10 +17,7 @@ const LevelSeven = ({
   onComplete: () => void;
   goHome: () => void;
 }) => {
-  // const [conductorPressed, setConductorPressed] = useState(false);
-  // const [semiconductorPressed, setSemiconductorPressed] = useState(false);
-  // const [insulatorPressed, setInsulatorPressed] = useState(false);
-  // const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
   const formData = useForm();
   const binary = formData.watch("binary");
@@ -32,28 +29,14 @@ const LevelSeven = ({
     [level]
   );
 
-  // useEffect(() => {
-  //   const activeCount =
-  //     Number(conductorPressed) +
-  //     Number(semiconductorPressed) +
-  //     Number(insulatorPressed);
-
-  //   const newProgress = Math.round((activeCount / 3) * 100);
-  //   setProgress(newProgress);
-
-  //   if (newProgress === 100 && answer === "101") {
-  //     modalRef.current?.open();
-  //   }
-  // }, [conductorPressed, semiconductorPressed, insulatorPressed, answer]);
-
   const handleCheckAnswer = () => {
     if (binaryString == binary) {
-      setLevel((prev) => prev + 1);
-      formData.setValue("binary","")
-    }else{
-      toast.error(
-        `Try again!\nCorrect : ${binaryString}`
-      );
+      setLevel((prev) => (prev < 4 ? prev + 1 : 4));
+      setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
+
+      formData.setValue("binary", "");
+    } else {
+      toast.error(`Try again!\nCorrect : ${binaryString}`);
     }
     // if (answer === "101") {
     //   modalRef.current?.open();
@@ -81,7 +64,7 @@ const LevelSeven = ({
         </p>
         <p className="text-[#0E0226] font-normal text-xl">Your Progress</p>
         <div className="flex w-[80%]">
-          <ProgressBar progress={0} />
+          <ProgressBar progress={progress} />
         </div>
         <div className="min-w-[894px] min-h-[182px] flex items-center flex-col bg-[#FFE5F3] gap-2 rounded-lg">
           <div className="pt-6">
@@ -112,7 +95,17 @@ const LevelSeven = ({
           </div>
         </div>
         <Modal ref={modalRef}>
-          <LevelComplete level="6" onNextLevel={onComplete} onGoHome={goHome} />
+          <LevelComplete
+            level="6"
+            onNextLevel={() => {
+              if (progress >= 100) {
+                onComplete();
+              } else {
+                modalRef?.current?.open();
+              }
+            }}
+            onGoHome={goHome}
+          />
         </Modal>
       </div>
     </div>

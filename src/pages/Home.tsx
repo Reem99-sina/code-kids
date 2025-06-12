@@ -1,7 +1,6 @@
 import {LanguageButton} from "@/assets";
 import {LevelCart} from "@/components/cards/level-cart";
 import {LevelFive} from "@/components/levels/level-five/level-five";
-import ContentFooter from "@/components/footer/ContentFooter";
 import LevelEight from "@/components/levels/level-eight/level-eight";
 import {LevelOne} from "@/components/levels/Level-one/level-one";
 import {LevelSix} from "@/components/levels/level-six/level-six";
@@ -268,7 +267,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <ContentFooter />
+
     </>
   );
 };

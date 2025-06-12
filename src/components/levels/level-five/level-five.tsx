@@ -27,6 +27,7 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
   const refModal = useRef<ModalRef>(null);
 
   const [level, setLevel] = useState(1);
+  const [progress, setProgress] = useState(0);
 
   const formData = useForm();
   const transistor = formData.watch("transistors");
@@ -43,6 +44,8 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
 
     if (binaryString == binary && transistor == numOfTransitor) {
       setLevel((prev) => prev + 1);
+      setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
+
       formData?.setValue("binary", "");
       formData?.setValue("transistors", "");
     } else {
@@ -79,7 +82,7 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
           <p className="font-bold text-3xl text-[#FF1D92]">{randomDecimal}</p>
           <p className="text-[#0E0226] font-normal text-xl">Your Progress</p>
           <div className="flex w-[80%]">
-            <ProgressBar progress={0} />
+            <ProgressBar progress={progress} />
           </div>
           <div className="min-w-[894px] min-h-[182px] flex items-center flex-col bg-[#FFE5F3] gap-2 rounded-lg">
             <div>
@@ -128,7 +131,13 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
           <Modal ref={modalRef}>
             <LevelComplete
               level="5"
-              onNextLevel={onComplete}
+              onNextLevel={() => {
+                if (progress >= 100) {
+                  onComplete();
+                } else {
+                  modalRef?.current?.open();
+                }
+              }}
               onGoHome={goHome}
             />
           </Modal>
@@ -138,7 +147,7 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
         <div className="relative pt-[56.25%] w-full">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+5+Decimal+to+Binary+Blastoff.mp4`}
+            src={`https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+5+Decimal+to+Binary+Blastoff.mp4`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>

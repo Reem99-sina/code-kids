@@ -28,6 +28,7 @@ export const colors = {
   pinkFour:"#FF00B8",
   pinkLightThree:"#FBE7FF",
   pinkLightFour:"#FFE9F4",
+  pinkDark:"#DB2282",
 
   yellowOne: "#EFBB00",
   yellowTwo: "#FCD90D",
@@ -41,11 +42,13 @@ export const colors = {
   blueLightOne: "#00FFFF",
   blueLightThree:"#C9FFF5",
   blueThree:"#3B82F7",
+  blue_400:"#60A5FA",
 
   grayOne: "#A0A3BD",
   grayTwo: "#F3F3F3",
   grayThree: "#FCFCFC",
   grayFour: "#666666",
+  grayCommon:"#4E5566",
 
   textSecondary: "#6F6C90",
   textThird: "#424249",
@@ -60,5 +63,8 @@ export const colors = {
   yellowFunf:"#FFD93D",
   orangeLight:"#FFA500",
   greenTwo:"#008000",
-  redTwo:"#FF0000"
+  redTwo:"#FF0000",
+  orangeThree:"#FF6636",
+  descText:"#6E7485",
+  orangeAbout:"#EE5906"
 };

@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TextInput } from "../common/form/text-input.component";
 import CommenSide from "../register/commen-side";
-import { User } from "lucide-react";
+import { User, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../common/button.component";
 import { Modal, ModalRef } from "../common/modal.component";
@@ -12,11 +12,7 @@ import { useAuth } from "@/hooks/auth.hook";
 import { IUserLoginChildRequest } from "@/types/user.type";
 import toast from "react-hot-toast";
 
-const LoginChildren = ({
-  goToParent,
-}: {
-  goToParent: (value: string) => void;
-}) => {
+const LoginChildren = () => {
   const refModal = useRef<ModalRef>(null);
 
   const [isLoading, setLoading] = useState(false);
@@ -79,7 +75,7 @@ const LoginChildren = ({
             label="Name"
             inputProps={{
               placeholder: "Child's name",
-              autoComplete:"username",
+              autoComplete: "username",
               ...register("username", {
                 required: { value: true, message: "this input required" },
               }),
@@ -113,19 +109,19 @@ const LoginChildren = ({
             }
           />
         </div>
-    
+
         <Button
           className="rounded-full bg-yellowTwo !text-blackPurple mt-5"
-          text="Create My Account"
+          text="Login"
           onClick={handleSubmit(onSubmit)}
           isLoading={isLoading}
         />
         <p className="text-grayFour text-base font-normal text-center mt-4">
-          Forget my password?
+          Don’t have account
           <Link
-            to=""
+            to="/register"
             className="text-purpleFour"
-            onClick={() => goToParent("parent")}
+          
           >
             {" "}
             Ask your Parent
@@ -139,8 +135,16 @@ const LoginChildren = ({
         onClose={() => navigate("/")}
       >
         <div className="bg-transparent rounded-t-3xl text-white">
-          <div className="rounded-t-3xl  bg-pinkThree flex justify-center py-2">
-            <h3 className="font-black text-2xl">Successfully Logged</h3>
+          <div className="rounded-t-3xl  bg-pinkThree flex justify-end py-2">
+            <h3 className="font-black text-2xl w-full text-center">
+              Successfully Logged
+            </h3>
+            <div
+              className=" text-white rounded-full p-2 cursor-pointer "
+              onClick={() => navigate("/")}
+            >
+              <X className="text-4xl font-black" />
+            </div>
           </div>
           <div className="bg-purpleFive pt-6 flex justify-center flex-col text-center px-16">
             <p className="text-xl">Awesome! Let's learn something new today!</p>

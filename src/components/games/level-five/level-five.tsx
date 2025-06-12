@@ -179,12 +179,12 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                       direction_dots_true={[
                         {
                           direction: "top",
-                          color: binary["input_2"] == 1 ? "green" : "red",
+                          color: binary["input_1"] == 1 ? "green" : "red",
                           id: ele?.id,
                         },
                         {
                           direction: "bottom",
-                          color: binary["input_1"] == 1 ? "green" : "red",
+                          color: binary["input_2"] == 1 ? "green" : "red",
                           id: ele?.id,
                         },
                         {

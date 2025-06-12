@@ -1,6 +1,6 @@
 import SectionThree from "@/components/common/section-three";
 import Filter from "@/components/courses/filter";
-import ContentFooter from "@/components/footer/ContentFooter";
+
 import MentorCard from "@/components/mentors/mentor-card";
 import SectionOne from "@/components/mentors/section-one";
 import { FilterSection } from "@/types/track.type";
@@ -179,7 +179,7 @@ const filterData: FilterSection[] = [
   },
 ];
 
-const mentors = [
+export const mentors = [
   {
     title: "Introduction to Web Development",
     desc: "Learn the basics of HTML, CSS, and JavaScript.",
@@ -193,8 +193,8 @@ const mentors = [
       "This course provides a beginner-friendly introduction to building websites using modern web technologies. By the end, students will be able to create responsive pages and understand core web development principles.",
   },
   {
-    title: "Introduction to Web Development",
-    desc: "Learn the basics of HTML, CSS, and JavaScript.",
+    title: "Learn Python",
+    desc: "Learn the basics of python.",
     star: "4.2",
     rating: "422",
     students: 1245,
@@ -234,9 +234,6 @@ const Mentors = () => {
           </div>
         </Filter>
         <SectionThree title="Every course your child takes today is a step toward a brighter future — you're building that future with love and purpose." />
-      </div>
-      <div>
-        <ContentFooter />
       </div>
     </div>
   );

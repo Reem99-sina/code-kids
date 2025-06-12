@@ -18,7 +18,7 @@ import CommonModal from "@/components/common/common-modal";
 interface LevelThreeProps {
   onComplete: () => void;
   goHome: () => void;
-  open:boolean
+  open: boolean;
 }
 
 interface DragComProps {
@@ -48,11 +48,16 @@ const helpTools = [
   },
 ];
 
-const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete ,open}) => {
+const LevelThree: React.FC<LevelThreeProps> = ({
+  goHome,
+  onComplete,
+  open,
+}) => {
   const modalRef = useRef<ModalRef>(null);
 
   const [appear, setAppear] = useState(false);
   const [progress, setProgress] = useState(1);
+
   const [componentDrag, setComponentDrag] = useState<DragComProps[]>([]);
 
   const onDrag = ({
@@ -63,6 +68,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete ,open}) => {
     component: string;
   }) => {
     e.dataTransfer.setData("componentType", String(component));
+    setProgress((prev) => (prev < 100 && prev + 33 <= 100 ? prev + 33 : 100));
   };
 
   const handleDragOver = (event: React.DragEvent) => {
@@ -90,7 +96,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete ,open}) => {
       modalRef?.current?.open();
     }
   }, [open]);
-  
+
   return (
     <div className="flex items-start gap-5">
       <div className="bg-white rounded-lg py-5 px-3 flex flex-col gap-4 min-h-[600px] relative ">
@@ -162,16 +168,22 @@ const LevelThree: React.FC<LevelThreeProps> = ({ goHome, onComplete ,open}) => {
           <Button
             text="Check Answer"
             className="!max-w-[220px] !rounded-[50px]"
-            onClick={onComplete}
+            onClick={() => {
+              if (progress == 100) {
+                onComplete();
+              } else {
+                modalRef?.current?.open();
+              }
+            }}
           />
         </div>
       </div>
-     
+
       <CommonModal refModal={modalRef} title={"Teach Course"}>
         <div className="relative pt-[56.25%] w-full">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src={`https://codeforkids-project.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4`}
+            src={`https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
