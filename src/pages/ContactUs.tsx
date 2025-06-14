@@ -1,11 +1,11 @@
-import { PaperPlaneRight } from "@/assets";
-import { Button } from "@/components/common/button.component";
-import { TextInput } from "@/components/common/form/text-input.component";
+import {PaperPlaneRight} from "@/assets";
+import {Button} from "@/components/common/button.component";
+import {TextInput} from "@/components/common/form/text-input.component";
 import PaperComponent from "@/components/common/paper-component";
 import SectionThree from "@/components/common/section-three";
-import { TextArea } from "@/components/common/text-area-input.component";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import {TextArea} from "@/components/common/text-area-input.component";
+import {useState} from "react";
+import {useForm} from "react-hook-form";
 
 interface Location {
   latitude: number | null;
@@ -16,9 +16,9 @@ interface Location {
 const ContactUs = () => {
   const {
     register,
-    formState: { errors },
+    formState: {errors},
   } = useForm();
-  
+
   const [location] = useState<Location>({
     latitude: 34.0522,
     longitude: -118.2437,
@@ -43,15 +43,11 @@ Tell us what you think and help us grow better, together 💌"
               Will you be in Los Angeles or any other branches any time soon?
               Stop by the office! We'd love to meet.
             </p>
-            <div className="flex justify-between">
-              <h3 className="text-purpleSix font-bold text-lg">Address</h3>
-              <p className="w-[50%] ">1702 Olympic Boulevard Santa Monica, CA 90404</p>
-            </div>
+
             <div className="flex justify-between items-start">
               <h3 className="text-purpleSix font-bold text-lg">Phone Number</h3>
               <div>
-                <p>(480) 555-0103</p>
-                <p>(219) 555-0114</p>
+                <p>(+20) 01011921907</p>
               </div>
             </div>
             <div className="flex justify-between items-start">
@@ -59,8 +55,9 @@ Tell us what you think and help us grow better, together 💌"
                 Email address
               </h3>
               <div>
-                <p>help.eduguard@gmail.com</p>
-                <p>career.eduguard@gamil.com</p>
+                <a href="mailto:Maged@valoro.xyz" className="text-black">
+                  Maged@valoro.xyz
+                </a>
               </div>
             </div>
           </div>
@@ -77,7 +74,7 @@ Tell us what you think and help us grow better, together 💌"
                   inputProps={{
                     placeholder: "First Name",
                     ...register("name", {
-                      required: { value: true, message: "this input required" },
+                      required: {value: true, message: "this input required"},
                     }),
                   }}
                   errorMessage={
@@ -90,7 +87,7 @@ Tell us what you think and help us grow better, together 💌"
                   inputProps={{
                     placeholder: "Last Name",
                     ...register("last_name", {
-                      required: { value: true, message: "this input required" },
+                      required: {value: true, message: "this input required"},
                     }),
                   }}
                   errorMessage={
@@ -106,7 +103,7 @@ Tell us what you think and help us grow better, together 💌"
                 inputProps={{
                   placeholder: "Email",
                   ...register("email", {
-                    required: { value: true, message: "this input required" },
+                    required: {value: true, message: "this input required"},
                   }),
                 }}
                 errorMessage={
@@ -119,7 +116,7 @@ Tell us what you think and help us grow better, together 💌"
                 inputProps={{
                   placeholder: "Subject",
                   ...register("subject", {
-                    required: { value: true, message: "this input required" },
+                    required: {value: true, message: "this input required"},
                   }),
                 }}
                 errorMessage={
@@ -134,7 +131,7 @@ Tell us what you think and help us grow better, together 💌"
                 inputProps={{
                   placeholder: "Message",
                   ...register("message", {
-                    required: { value: true, message: "this input required" },
+                    required: {value: true, message: "this input required"},
                   }),
                 }}
                 errorMessage={
@@ -161,10 +158,9 @@ Tell us what you think and help us grow better, together 💌"
         scrolling="no"
         marginHeight={0}
         marginWidth={0}
-        src={`https://www.openstreetmap.org/export/embed.html?bbox=${location.longitude??0 - 0.5},${location.latitude ?? 0 - 0.5},${location.longitude ?? 0 + 0.5},${location.latitude ?? 0 + 0.5}&layer=mapnik&marker=${location.latitude},${location.longitude}`}
-        style={{ border: "1px solid black", borderRadius: "8px" }}
-        title="OpenStreetMap Embed"
-      ></iframe>
+        src={`https://www.openstreetmap.org/export/embed.html?bbox=${location.longitude ?? 0 - 0.5},${location.latitude ?? 0 - 0.5},${location.longitude ?? 0 + 0.5},${location.latitude ?? 0 + 0.5}&layer=mapnik&marker=${location.latitude},${location.longitude}`}
+        style={{border: "1px solid black", borderRadius: "8px"}}
+        title="OpenStreetMap Embed"></iframe>
       <SectionThree
         title_button="Start Now"
         title="With one simple step, you can help your child grow, learn, and build a future to be proud of. Believe in them — and get started today!"

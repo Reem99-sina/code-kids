@@ -1,9 +1,10 @@
 import SectionOne from "@/components/about-us/section-one";
 import SectionTwo from "@/components/about-us/section-two";
-import team1 from "@/assets/team1.png";
-import team2 from "@/assets/team2.png";
-import team3 from "@/assets/team3.png";
-import team4 from "@/assets/team4.png";
+import Yasser from "@/assets/yasser.png";
+
+import Ahmed from "@/assets/ahmed.jpeg";
+import photo from "@/assets/default-profile.jpg";
+
 import SectionThree from "@/components/common/section-three";
 import { FlyBoy } from "@/assets";
 import SeactionThree from "@/components/about-us/seaction-three";
@@ -34,25 +35,31 @@ const AboutUs = () => {
       <div className="container mx-auto mt-8">
         <h3 className="font-bold text-4xl text-start pb-9">Meet the team</h3>
         <div className="flex gap-4">
+      
           <Teams
-            image={team1}
-            title="Devon Lane"
-            desc="Founder & Learning Designer"
+            image={photo}
+            title=" Maged"
+            desc="Founder"
+          />
+              <Teams
+            image={photo}
+            title="Toka"
+            desc="Founder "
           />
           <Teams
-            image={team2}
-            title="Devon Lane"
-            desc="Founder & Learning Designer"
+            image={photo}
+            title="Mohamed"
+            desc="Instructor"
           />
           <Teams
-            image={team3}
-            title="Devon Lane"
-            desc="Founder & Learning Designer"
+            image={Yasser}
+            title="Yasser"
+            desc="Instructor"
           />
-          <Teams
-            image={team4}
-            title="Devon Lane"
-            desc="Founder & Learning Designer"
+            <Teams
+            image={Ahmed}
+            title="Ahmed"
+            desc="Instructor"
           />
         </div>
       </div>
