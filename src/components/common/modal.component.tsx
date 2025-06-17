@@ -40,8 +40,10 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
         open={isVisible}
         onOpenChange={(open) => {
           setIsVisible(open);
-          if (!open&&onClose) {
+          if (!open && onClose) {
             onClose();
+          } else {
+            setIsVisible(true);
           }
         }}
       >

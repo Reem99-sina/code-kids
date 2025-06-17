@@ -46,7 +46,7 @@ export const TransmitCard: React.FC<TransmitCardProps> = ({
                     style={{ backgroundColor: conductorColor }}
                   />
                   <p className="text-xs font-medium text-gray-700 mt-1">
-                    Conductor
+                    {label}
                   </p>
                 </div>
 
