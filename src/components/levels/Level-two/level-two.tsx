@@ -16,12 +16,13 @@ import {
 } from "@/assets";
 import ProgressBar from "@/components/common/ProgressBar";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import EachMaterial from "./each-material";
+import EachMaterial, { EachMaterialHandle } from "./each-material";
 import EachCollector from "./each-collector";
 import { Button } from "@/components/common/button.component";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ModalReviewResult from "./modal-review-result";
 import CommonModal from "@/components/common/common-modal";
+import { LevelComplete } from "../LevelComplete";
 
 interface materialInfo {
   title: string;
@@ -44,6 +45,7 @@ export const LevelTwo = ({
 }) => {
   const refModal = useRef<ModalRef>(null);
   const modalRef = useRef<ModalRef>(null);
+  const modalResultRef = useRef<ModalRef>(null);
 
   const [time, setTime] = useState(60);
   const [message, setMessage] = useState({
@@ -58,7 +60,7 @@ export const LevelTwo = ({
     },
   ]);
   const [progress, setProgress] = useState(0);
-
+  const materialRefs = useRef<Record<string, EachMaterialHandle | null>>({});
   const constraintsRef = useRef<HTMLDivElement[]>([]);
   const divConstraintsRef = useRef<HTMLDivElement | null>(null);
 
@@ -68,7 +70,17 @@ export const LevelTwo = ({
         setTime((prev) => prev - 1);
       } else {
         refModal?.current?.open();
-        setMessage((prev) => ({ ...prev, title: "Time Out" }));
+        setMessage((prev) => ({
+          ...prev,
+          title: "Time Out",
+          desc: "Time ran out or incorrect sorting.",
+        }));
+        setResult([{ title: "", result: [] }]);
+        Object.values(materialRefs.current).forEach((ref) => {
+          ref?.resetPosition();
+        });
+        setProgress(0);
+        setTime(60);
         clearInterval(interval);
       }
     }, 1000);
@@ -120,6 +132,9 @@ export const LevelTwo = ({
         <div className=" flex items-center gap-4 flex-wrap w-[60%] justify-center">
           {materials?.map((ele) => (
             <EachMaterial
+              ref={(el) => {
+                materialRefs.current[ele.title] = el;
+              }}
               {...ele}
               constraintsRef={
                 constraintsRef?.current[
@@ -138,8 +153,7 @@ export const LevelTwo = ({
                   title: "Game Over! ",
                   desc: "Time ran out or incorrect sorting.",
                 });
-                setTime(60);
-                setResult([]);
+
                 refModal?.current?.open();
               }}
               category={ele?.category}
@@ -184,8 +198,12 @@ export const LevelTwo = ({
             className="!max-w-[220px] !rounded-[50px] whitespace-nowrap !px-9"
             onClick={() => {
               if (progress >= 100) {
-                onComplete();
+                modalResultRef?.current?.open();
               } else {
+                setMessage({
+                  title: "Game Over! ",
+                  desc: "Time ran out or incorrect sorting.",
+                });
                 refModal?.current?.open();
               }
             }}
@@ -194,7 +212,7 @@ export const LevelTwo = ({
       </div>
       <Modal
         ref={refModal}
-        className="bg-transparent "
+        className="bg-transparent"
         // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
         // onClose={() => navigate("/")}
       >
@@ -203,9 +221,11 @@ export const LevelTwo = ({
           desc={message?.desc}
           onClick={() => {
             refModal?.current?.close();
-            setTime(60);
           }}
         />
+      </Modal>
+      <Modal ref={modalResultRef}>
+        <LevelComplete level="2" onNextLevel={onComplete} onGoHome={goHome} />
       </Modal>
       <CommonModal refModal={modalRef} title={"Teach Course"}>
         <div className="relative pt-[56.25%] w-full">

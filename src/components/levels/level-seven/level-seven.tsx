@@ -34,7 +34,7 @@ const LevelSeven = ({
       setLevel((prev) => (prev < 4 ? prev + 1 : 4));
       setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
 
-      formData.setValue("binary", "");
+      formData.setValue("binary", Array(binaryString?.length+4).fill(0));
     } else {
       toast.error(`Try again!\nCorrect : ${binaryString}`);
     }

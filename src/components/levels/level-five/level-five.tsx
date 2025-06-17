@@ -44,9 +44,10 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
 
     if (binaryString == binary && transistor == numOfTransitor) {
       setLevel((prev) => prev + 1);
+    
       setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
 
-      formData?.setValue("binary", "");
+      formData?.setValue("binary", Array(level+2).fill(0));
       formData?.setValue("transistors", "");
     } else {
       toast.error(

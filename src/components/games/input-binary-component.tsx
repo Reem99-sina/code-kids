@@ -11,7 +11,6 @@ const InputBinaryComponent = ({
 
   return (
     <div
-    
       className={clsx(
         value == 0 ? "bg-redTwo" : "bg-greenTwo",
         "text-white px-3 py-2 rounded-md"

@@ -12,8 +12,10 @@ import ProgressBar from "@/components/common/ProgressBar";
 import TransistorComponent from "@/components/common/transistor-component";
 import clsx from "clsx";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { ModalRef } from "@/components/common/modal.component";
+import { Modal, ModalRef } from "@/components/common/modal.component";
 import CommonModal from "@/components/common/common-modal";
+import { LevelComplete } from "../LevelComplete";
+import ModalReviewResult from "../Level-two/modal-review-result";
 
 interface LevelThreeProps {
   onComplete: () => void;
@@ -54,12 +56,18 @@ const LevelThree: React.FC<LevelThreeProps> = ({
   open,
 }) => {
   const modalRef = useRef<ModalRef>(null);
+  const modalResultRef = useRef<ModalRef>(null);
+  const refModal = useRef<ModalRef>(null);
 
   const [appear, setAppear] = useState(false);
   const [progress, setProgress] = useState(1);
-
-  const [componentDrag, setComponentDrag] = useState<DragComProps[]>([]);
-
+  const [componentDrag, setComponentDrag] = useState<
+    Record<string, DragComProps>
+  >({});
+  const [message, setMessage] = useState({
+    title: "",
+    desc: "",
+  });
   const onDrag = ({
     e,
     component,
@@ -68,7 +76,6 @@ const LevelThree: React.FC<LevelThreeProps> = ({
     component: string;
   }) => {
     e.dataTransfer.setData("componentType", String(component));
-    setProgress((prev) => (prev < 100 && prev + 33 <= 100 ? prev + 33 : 100));
   };
 
   const handleDragOver = (event: React.DragEvent) => {
@@ -79,12 +86,34 @@ const LevelThree: React.FC<LevelThreeProps> = ({
     return helpTools.find((ele) => ele?.title == title)?.component;
   };
 
-  const onDrop = (e: React.DragEvent) => {
+  const onDrop = (e: React.DragEvent, dropZoneTitle: string) => {
+    e.preventDefault();
     const componentType = e.dataTransfer.getData("componentType");
-    setComponentDrag((prev) => [
+    const component = getElement({ title: componentType });
+
+    if (!component) return;
+
+    setComponentDrag((prev) => ({
       ...prev,
-      { title: componentType, component: getElement({ title: componentType }) },
-    ]);
+      [dropZoneTitle]: { title: componentType, component },
+    }));
+  };
+  const checkLight = () => {
+    const open =
+      Object.keys(componentDrag)?.every(
+        (key) => componentDrag[key]?.title == key
+      ) && Object.keys(componentDrag)?.length == 3;
+    if (open) {
+      setProgress(100);
+      modalResultRef?.current?.open();
+    } else {
+      setMessage({
+        title: "Game Over! ",
+        desc: "Time ran out or incorrect sorting.",
+      });
+      setComponentDrag({});
+      refModal?.current?.open();
+    }
   };
 
   useEffect(() => {
@@ -133,7 +162,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({
           <ProgressBar progress={progress} />
         </div>
         <div className="flex gap-7 w-[80%]">
-          {helpTools?.map((ele, index) => (
+          {helpTools?.map((ele) => (
             <CardElement
               title={ele?.title}
               desc={
@@ -144,16 +173,16 @@ const LevelThree: React.FC<LevelThreeProps> = ({
               )}
               buttonText={ele?.title == "Transistor" ? "Power" : undefined}
               onButtonClick={
-                ele?.title == "Transistor" ? () => setProgress(100) : undefined
+                ele?.title == "Transistor" ? () => checkLight() : undefined
               }
               key={ele?.title}
             >
               <div
                 className="w-full h-[100px] flex justify-center items-center"
-                onDrop={onDrop}
+                onDrop={(e) => onDrop(e, ele.title)} // 👈 حدد اسم الخانة
                 onDragOver={handleDragOver}
               >
-                {componentDrag[index]?.component}
+                {componentDrag[ele.title]?.component}
               </div>
             </CardElement>
           ))}
@@ -169,10 +198,10 @@ const LevelThree: React.FC<LevelThreeProps> = ({
             text="Check Answer"
             className="!max-w-[220px] !rounded-[50px]"
             onClick={() => {
-              if (progress == 100) {
-                onComplete();
+              if (progress >= 100) {
+                modalResultRef?.current?.open();
               } else {
-                modalRef?.current?.open();
+                checkLight();
               }
             }}
           />
@@ -189,6 +218,23 @@ const LevelThree: React.FC<LevelThreeProps> = ({
           ></iframe>
         </div>
       </CommonModal>
+      <Modal ref={modalResultRef}>
+        <LevelComplete level="3" onNextLevel={onComplete} onGoHome={goHome} />
+      </Modal>
+      <Modal
+        ref={refModal}
+        className="bg-transparent"
+        // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        // onClose={() => navigate("/")}
+      >
+        <ModalReviewResult
+          title={message?.title}
+          desc={message?.desc}
+          onClick={() => {
+            refModal?.current?.close();
+          }}
+        />
+      </Modal>
     </div>
   );
 };

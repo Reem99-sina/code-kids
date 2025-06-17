@@ -37,7 +37,8 @@ export const LevelSix: React.FC<LevelSixProps> = ({
 
   const handleCheckAnswer = () => {
     const CorrectHex = randomDecimal.toString(16).toUpperCase();
-    if (CorrectHex == hex) {
+
+    if (CorrectHex == hex?.toUpperCase()) {
       setLevel((prev) => prev + 1);
       setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
 
@@ -90,6 +91,7 @@ export const LevelSix: React.FC<LevelSixProps> = ({
               <TextInput
                 inputProps={{
                   placeholder: "Type your answer here",
+                  style: { textTransform: "uppercase" },
                   ...formData?.register("hex"),
                 }}
               />

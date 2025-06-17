@@ -15,7 +15,7 @@ const CommonModal = ({ refModal, children, title }: CommonProps) => {
       className="bg-transparent "
       size="xl"
       // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
-      // onClose={() => navigate("/")}
+ 
     >
       <div className="bg-transparent rounded-3xl text-white">
         <div className="rounded-t-3xl  bg-pinkThree flex justify-end  py-2 items-center ">

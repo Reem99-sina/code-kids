@@ -20,6 +20,7 @@ export const LearningCard: React.FC<LearningCardProps> = ({
   lesson,
   onClick,
 }) => {
+  
   return (
     <div className="flex bg-white shadow-lg rounded-xl p-4 max-w-md">
       <img

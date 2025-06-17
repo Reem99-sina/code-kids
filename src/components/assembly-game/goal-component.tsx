@@ -7,6 +7,7 @@ const GoalComponent = ({
   message: string;
   title: string;
 }) => {
+  
   return (
     <div className=" bg-blueLightThree px-6 rounded-lg py-2 flex gap-6 w-full items-center">
       <Goal />

@@ -27,6 +27,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 
 function App() {
+  
   return (
     <div className="flex flex-col h-full w-full bg-blackPurple">
       <Routes>
