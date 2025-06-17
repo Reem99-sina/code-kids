@@ -1,6 +1,5 @@
 import { ChildWelcome, Courses, Home, LineTriangular, Rewards } from "@/assets";
 import { Line } from "@/components/common/line.component";
-import ContentFooter from "@/components/footer/ContentFooter";
 import HomeChildPart from "@/components/home-child/home";
 import MyCourse from "@/components/home-child/my-course";
 import RewardsComponent from "@/components/home-child/rewards";
@@ -88,9 +87,7 @@ const HomeChild = () => {
           </div>
         </div>
       </div>
-      <div>
-        <ContentFooter />
-      </div>
+ 
     </div>
   );
 };

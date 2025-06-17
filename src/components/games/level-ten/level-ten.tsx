@@ -725,27 +725,7 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
         </div>
       </div>
       <div className="flex items-center gap-3 flex-wrap">
-        <Button
-          text="Create AND Gate"
-          className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[0], id: generateUniqueId() },
-            ]);
-          }}
-        />
-        <Button
-          text="Create QR Gate"
-          className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[1], id: generateUniqueId() },
-            ]);
-          }}
-        />
-
+        
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"

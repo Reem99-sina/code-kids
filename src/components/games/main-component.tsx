@@ -59,7 +59,7 @@ const MainComponent = ({
       <h3 className="text-3xl font-bold mb-3">{title}</h3>
       <h3 className="text-2xl font-bold">{desc}</h3>
       <div className="flex gap-6 w-full">
-        <div className="bg-white  min-h-[500px] rounded-lg py-5 text-black flex flex-col gap-4 mt-6 relative pt-8 px-6 h-full">
+        <div className="bg-white  min-h-[500px] rounded-lg py-5 text-black flex flex-col gap-4 mt-6 relative pt-8 px-6 h-auto">
           <h3 className="font-bold text-2xl">Truth Table</h3>
           <Line className="border-pinkOne border-2" />
 

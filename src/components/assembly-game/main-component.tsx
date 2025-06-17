@@ -1,6 +1,6 @@
-import { AppearIcon, ClockYellow } from "@/assets";
+import { AppearIcon, ClockYellow, Hint } from "@/assets";
 import ProgressBar from "../common/ProgressBar";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import GoalComponent from "./goal-component";
 import InstProgrRegisComponent, {
   InstructionComponent,
@@ -13,6 +13,7 @@ import { Modal, ModalRef } from "../common/modal.component";
 import { LevelComplete } from "../levels/LevelComplete";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import ModalReviewResult from "../levels/Level-two/modal-review-result";
 
 interface instructionProps {
   title: string;
@@ -53,7 +54,7 @@ const levels = [
         { title: "AX", value: 5 },
         { title: "BX", value: 5 },
       ],
-      program: ["MOV BX AX"],
+      program: ["MOV AX BX"],
     },
   },
   {
@@ -74,7 +75,7 @@ const levels = [
         { title: "AX", value: 5 },
         { title: "BX", value: 2 },
       ],
-      program: ["ADD BX AX"],
+      program: ["ADD AX BX"],
     },
   },
   {
@@ -130,12 +131,12 @@ const levels = [
       ],
       program: [
         "CMP AX BX",
-        "JE equal",
+        "JE EQUAL ",
         "MOV CX 0",
-        "JMP end",
-        "equal",
+        "JMP END ",
+        " EQUAL ",
         "MOV CX 1",
-        "end",
+        " END ",
       ],
     },
   },
@@ -164,7 +165,15 @@ const levels = [
         { title: "SF", value: 0 },
         { title: "CF", value: 0 },
       ],
-      program: ["loop", "CMP BX 0", "ADD AX 2", "SUB BX 1", "JMP loop", "end"],
+      program: [
+        " LOOP ",
+        "CMP BX 0",
+        "JE END ",
+        "ADD AX 2",
+        "SUB BX 1",
+        "JMP LOOP ",
+        " END ",
+      ],
     },
   },
   {
@@ -194,7 +203,7 @@ const levels = [
         { title: "SF", value: 0 },
         { title: "CF", value: 0 },
       ],
-      program: ["PUSH AX", "PUSH BX", "POP AX", "POP BX"],
+      program: ["PUSH AX ", "PUSH BX ", "POP AX ", "POP BX "],
     },
   },
   {
@@ -292,16 +301,16 @@ const levels = [
       ],
       program: [
         "CMP AX BX",
-        "JG greater",
-        "JL less",
+        "JG GREATER ",
+        "JL LESS ",
         "MOV CX 0",
-        "JMP end",
-        "greater",
+        "JMP END ",
+        " GREATER ",
         "MOV CX 1",
-        "JMP end",
-        "less",
+        "JMP END ",
+        " LESS ",
         "MOV CX -1",
-        "end",
+        " END ",
       ],
     },
   },
@@ -309,10 +318,15 @@ const levels = [
 
 const MainComponent = ({ initLevel }: { initLevel?: number }) => {
   const modalRef = useRef<ModalRef>(null);
+  const refModal = useRef<ModalRef>(null);
   const [level, setLevel] = useState(initLevel ? initLevel : 0);
-  const [time] = useState(60);
-  const router=useNavigate()
-  const [progress, setProgress] = useState(100);
+  const [time, setTime] = useState(60);
+  const [message, setMessage] = useState({
+    title: "",
+    desc: "",
+  });
+  const router = useNavigate();
+  const [progress, setProgress] = useState(0);
   const [hint, setHint] = useState("");
   const [solution, setSolution] = useState("");
   const [instruction, setInstruction] = useState<instructionProps[]>(
@@ -342,8 +356,8 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
   const onNextLevel = useCallback(() => {
     setLevel((prev) => prev + 1);
     addInitstate({ level: level + 1 });
-    if(level==10){
-      router("/")
+    if (level == 10) {
+      router("/");
     }
     modalRef?.current?.close();
   }, [level]);
@@ -358,7 +372,38 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
       }))
     );
     setMemory(levels[level]?.memory || []);
+    setProgress(0);
+    setHint("");
+    setHintsUsed(0);
+    setSolution("");
+    setTime(60);
   };
+
+  const progressAddOrRemove = useCallback(
+    ({
+      type,
+      programSingle,
+    }: {
+      type: "add" | "remove";
+      programSingle: string;
+    }) => {
+      const programs = levels[level]?.result?.program;
+
+      if (type == "add") {
+        const programLenght = program.length;
+        const checkIfRight = programs.includes(programSingle);
+        if (checkIfRight) {
+          setProgress(
+            Number((((programLenght + 1) / programs.length) * 100).toFixed(0))
+          );
+        }
+      } else {
+        const newlength = program.filter((ele) => ele != programSingle).length;
+        setProgress(Number(((newlength / programs.length) * 100).toFixed(0)));
+      }
+    },
+    [program]
+  );
 
   const handleExecute = ({
     program,
@@ -381,12 +426,39 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
     setRegisters(resultRegisters);
     setFlags(resultFlags);
     setMemory(resultMemory);
+    const resultReg = checkRegisterTrue({
+      trueRegister: levels[level]?.result?.registers,
+      userRegister: resultRegisters,
+    });
+
+    if (resultReg) {
+      setProgress(100);
+    }
 
     return {
       registers: resultRegisters,
       flags: resultFlags,
     };
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (time > 0) {
+        setTime((prev) => prev - 1);
+      } else {
+        refModal?.current?.open();
+        setMessage({
+          title: "Game Over! ",
+          desc: "Time ran out or incorrect sorting.",
+        });
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [time]);
 
   return (
     <div className="flex flex-col text-white justify-start items-start ">
@@ -407,17 +479,20 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
 
         <GoalComponent title="Goal" message={levels[level]?.desc} />
         {hint && (
-          <div className="bg-yellow-100  text-yellow-700 p-4 mb-4 w-full text-start rounded-lg">
-            <p className="font-bold">Hint:</p>
-            <p>{hint}</p>
-            <p className="text-sm mt-2">
-              Hints used: {hintsUsed}/{maxHints}
-            </p>
+          <div className="bg-yellow-100   p-4 mb-4 w-full text-center rounded-lg flex gap-3">
+            <Hint />
+            <div className="flex flex-col items-start justify-start">
+              <p className="font-bold">Hint:</p>
+              <p>{hint}</p>
+              <p className="text-sm ">
+                Hints used: {hintsUsed}/{maxHints}
+              </p>
+            </div>
           </div>
         )}
 
         {solution && (
-          <div className="bg-blue-100  text-blue-700 p-4 mb-4  w-full text-start rounded-lg">
+          <div className="bg-blue-100   p-4 mb-4  w-full text-start rounded-lg">
             <p className="font-bold">Solution:</p>
             <pre className=" text-sm whitespace-pre-line">{solution}</pre>
           </div>
@@ -435,10 +510,12 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
               }
               onClick={(value: string) => {
                 const type = instruction?.find((ele) => ele?.title == value);
-                setProgram((prev) => [
-                  ...prev,
-                  `${type?.title == "LABEL" ? "" : type?.title} ${type?.operand_1} ${type?.operand_2 ? type?.operand_2 : ""}`,
-                ]);
+                const programSingle = `${type?.title == "LABEL" ? "" : type?.title} ${type?.operand_1} ${type?.operand_2 ? type?.operand_2 : ""}`;
+                setProgram([...program, programSingle]);
+                progressAddOrRemove({
+                  type: "add",
+                  programSingle: programSingle,
+                });
               }}
               onProgress={(value) => {
                 if (value == 5) {
@@ -447,24 +524,30 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
                 } else if (value == 70) {
                   setSolution(levels[level]?.result?.program?.join("\n"));
                 }
-                setProgress((prev) => (prev > 0 ? prev - value : 0));
+                setProgress((prev) => prev - value);
               }}
             />
             <ProgramComponent
               onDelete={(ele) => {
                 setProgram((prev) => prev?.filter((elem) => elem != ele));
                 setRegisters(levels[level]?.registers);
+                progressAddOrRemove({ type: "remove", programSingle: ele });
               }}
               programs={program}
             />
             <RegisterComponent Registers={register} flags={flags} />
           </InstProgrRegisComponent>
         </div>
-        <div className="bg-[url('/memory.png')] bg-cover bg-no-repeat min-h-[257px]  w-full my-5 flex items-center px-5 flex-col pt-[10%]">
+        <div className="border-2 rounded-xl border-[#F05A29] text-[#F05A29] min-h-[257px]  w-full my-5 flex items-start px-5 flex-col ">
+          <div className="text-xl font-bold flex items-center w-full text-start p-5">
+            <p className="flex-1">Address</p>
+            <p className="flex-1">value</p>
+          </div>
+
           {memory?.map((ele) => (
             <div
               key={ele?.address}
-              className="bg-[#DBEAFE] w-full text-start flex items-center px-3 py-2 rounded-[1px]"
+              className="bg-[#DBEAFE] w-full text-start flex items-center px-3 py-2 rounded-[1px] text-black"
             >
               <p className="flex-1">{ele?.address}</p>
               <p className="flex-1">{ele?.value}</p>
@@ -514,8 +597,12 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
             text="Next Level"
             className="!bg-[#AD72F6] !text-white !text-xs !whitespace-nowrap"
             onClick={() => {
-              setLevel((prev) => prev + 1);
-              addInitstate({ level: level + 1 });
+              if (progress >= 100) {
+                setLevel((prev) => prev + 1);
+                addInitstate({ level: level + 1 });
+              } else {
+                refModal?.current?.open();
+              }
             }}
           />
         </div>
@@ -528,6 +615,22 @@ const MainComponent = ({ initLevel }: { initLevel?: number }) => {
             setLevel(0);
             addInitstate({ level: 0 });
             modalRef?.current?.close();
+          }}
+        />
+      </Modal>
+      <Modal
+        ref={refModal}
+        className="bg-transparent "
+        // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        onClose={() => addInitstate({ level: level })}
+      >
+        <ModalReviewResult
+          title={message?.title}
+          desc={message?.desc}
+          onClick={() => {
+            refModal?.current?.close();
+            addInitstate({ level: level });
+            setTime(60);
           }}
         />
       </Modal>

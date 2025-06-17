@@ -1,13 +1,12 @@
-import { Idea } from "@/assets";
 import { CustomPagination } from "../common/pagination.component";
 import { courses } from "../home-parent/section-three";
 import Card from "./card";
-import { Button } from "../common/button.component";
 import { useNavigate } from "react-router-dom";
+import EmptyComponent from "../common/empty-component";
 
 const MyCourse = () => {
   const route = useNavigate();
-  
+
   return (
     <>
       <div className="bg-[url('/courses.png')] bg-no-repeat bg-cover w-full min-h-[500px]  bg-white ">
@@ -26,7 +25,6 @@ const MyCourse = () => {
                     className=" bg-[url('/cart.png')] bg-no-repeat bg-cover w-[355px]"
                     key={ele?.title}
                     onClick={() => {
-                    
                       if (index == 0) {
                         route("/home");
                       } else if (index == 1) {
@@ -52,19 +50,13 @@ const MyCourse = () => {
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-center text-black">
-            <div className=" mt-28 mb-16 bg-pinkLightTwo rounded-2xl flex flex-col items-center justify-center min-h-[600px] w-[80%] gap-4">
-              <Idea />
-              <h3 className="text-xl font-bold">😕 No Courses Yet!</h3>
-              <p className="w-[50%]">
-                Looks like you don’t have any courses yet. Ask your parent to
-                enroll you in an exciting course and start learning today!
-              </p>
-              <Button
-                className="!w-auto !rounded-full !text-base"
-                text="Request a Course"
-              />
-            </div>
+          <div className="py-28 ">
+            <EmptyComponent
+              title="😕 No Courses Yet!"
+              desc=" Looks like you don’t have any courses yet. Ask your parent to enroll you in an exciting course and start learning today!"
+              title_button="Request a Course"
+              onClick={() => {}}
+            />
           </div>
         )}
       </div>

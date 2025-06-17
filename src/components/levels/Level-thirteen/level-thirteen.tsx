@@ -167,7 +167,7 @@ const LEvelThirteen = ({onComplete, goHome}: LevelThirteenProps) => {
   return (
     <>
       <div className="flex h-full ">
-        <div className=" bg-white m-5 p-2 flex flex-col gap-4  rounded-xl m-3 ">
+        <div className=" bg-white  p-2 flex flex-col gap-4  rounded-xl m-3 ">
           {tools?.map((ele, index) => {
             return (
               <div
@@ -191,7 +191,7 @@ const LEvelThirteen = ({onComplete, goHome}: LevelThirteenProps) => {
             </div>
           </div>
         </div>
-        <div className="w-[90%]  m-5 p-2 flex flex-col bg-white rounded justify-center items-center rounded-xl ">
+        <div className="w-[90%]  m-5 p-2 flex flex-col bg-white  justify-center items-center rounded-xl ">
           <div className="flex flex-col justify-center  w-[100%]">
             <div className="mb-4 flex justify-center ">
               <p className=" font-bold text-3xl text-black ">

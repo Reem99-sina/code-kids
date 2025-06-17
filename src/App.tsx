@@ -15,6 +15,16 @@ import HomeChild from "./pages/HomeChild";
 import Game from "./pages/Game";
 import AssemblyGame from "./pages/AssemblyGame";
 import PrivateRoute from "./components/common/private-router";
+import MyKids from "./pages/MyKids";
+import MyCourses from "./pages/my-courses";
+import Mentors from "./pages/Mentors";
+import CoursesDetail from "./pages/CoursesDetail";
+import AboutUs from "./pages/AboutUs";
+import ContactUs from "./pages/ContactUs";
+import ContentFooter from "./components/footer/ContentFooter";
+import Faq from "./pages/Faq";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfUse from "./pages/TermsOfUse";
 
 function App() {
   
@@ -26,11 +36,23 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
-          <Route path="/home" element={<Home />} />
-         
+
+          <Route path="/mentors" element={<Mentors />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-use" element={<TermsOfUse />} />
+          <Route path="/courses" element={<MyCourses />} />
+          <Route path="/course/:id" element={<CoursesDetail />} />
+
           <Route path="/assembly-game" element={<AssemblyGame />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/game" element={<Game />} />
+            <Route path="/my-kids" element={<MyKids />} />
+
             <Route path="/add-child" element={<AddChild />} />
             <Route path="/home-child" element={<HomeChild />} />
             <Route path="/home" element={<Home />} />
@@ -43,6 +65,9 @@ function App() {
           element={<GoogleCallbackHandler />}
         />
       </Routes>
+      <div>
+        <ContentFooter />
+      </div>
     </div>
   );
 }

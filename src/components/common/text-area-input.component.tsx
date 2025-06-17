@@ -24,7 +24,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
       {label && (
         <label
           className={clsx(
-            'mb-2 block text-xs font-bold text-black',
+            'mb-2 block text-sm font-bold text-black',
             errorMessage && 'dark:text-error-dark text-error',
           )}
         >

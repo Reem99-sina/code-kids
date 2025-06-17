@@ -1,20 +1,24 @@
 import { LanguageButton } from "@/assets";
 import { LevelCart } from "@/components/cards/level-cart";
 import HelpIconComponent from "@/components/common/help-icon";
-import ContentFooter from "@/components/footer/ContentFooter";
 import LevelEight from "@/components/games/level-eight/level-eight";
+import LevelEleven from "@/components/games/level-eleven/level-eleven";
 import LevelFive from "@/components/games/level-five/level-five";
 import LevelFour from "@/components/games/level-four/level-four";
+import LevelFourteen from "@/components/games/level-fourteen/level-fourteen";
 import LevelNine from "@/components/games/level-nine/level-nine";
 import LevelOne from "@/components/games/level-one/level-one";
 import LevelSeven from "@/components/games/level-seven/level-seven";
 import LevelSix from "@/components/games/level-six/level-six";
 import LevelTen from "@/components/games/level-ten/level-ten";
+import LevelThirteen from "@/components/games/level-thirteen/level-thirteen";
 import LevelThree from "@/components/games/level-three/level-three";
+import LevelTwelve from "@/components/games/level-twelve/level-twelve";
 import LevelTwo from "@/components/games/level-two/levels-two";
 import MainComponent from "@/components/games/main-component";
 import {
   dataAndItems,
+  dataItems,
   dataNandItems,
   dataNorItems,
   dataNotItems,
@@ -280,6 +284,110 @@ const Game = () => {
           </div>
         ),
       },
+      {
+        name: "level 11",
+        view: (
+          <LevelCart
+            title="  XOR Gate Challenge"
+            description="Use the new XOR gate to complete the circuit."
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="">
+            <MainComponent
+              title="Level 11: XOR Gate Challenge"
+              desc="Use the new XOR gate to complete the circuit."
+              operation="and"
+              data={dataXorItems}
+            >
+              <LevelEleven
+                onComplete={() => setSelectedLevel(10)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 12",
+        view: (
+          <LevelCart
+            title=" Bit Combination Lock"
+            description="Create an XOR gate using only AND gates."
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="">
+            <MainComponent
+              title="Level 12: 3- Bit Combination Lock"
+              desc="Create an XOR gate using only NAND gates."
+              operation="and"
+              data={dataItems}
+            >
+              <LevelTwelve
+                onComplete={() => setSelectedLevel(10)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 13",
+        view: (
+          <LevelCart
+            title=" Level 13: Half Adder Circuit"
+            description="Create a full adder circuit using XOR, AND, and OR gates. The circuit should output the sum and carry of three."
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="">
+            <MainComponent
+              title="Half Adder Circuit"
+              desc="Create a full adder circuit using XOR, AND, and OR gates. The circuit should output the sum and carry of three. "
+              operation="and"
+              data={dataItems}
+            >
+              <LevelThirteen
+                onComplete={() => setSelectedLevel(10)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
+      {
+        name: "level 14",
+        view: (
+          <LevelCart
+            title=" Level 14: Full adder circuit"
+            description="Create a full adder circuit using XOR, AND, and OR gates. The circuit should output the sum and carry of three."
+            levelActive
+            progressNumber={0}
+          />
+        ),
+        component: (
+          <div className="">
+            <MainComponent
+              title="Full adder circuit"
+              desc="Create a full adder circuit using XOR, AND, and OR gates. The circuit should output the sum and carry of three. "
+              operation="and"
+              data={dataItems}
+            >
+              <LevelFourteen
+                onComplete={() => setSelectedLevel(10)}
+                goHome={() => setSelectedLevel(0)}
+              />
+            </MainComponent>
+          </div>
+        ),
+      },
     ];
   }, [selectedLevel]);
 
@@ -337,7 +445,7 @@ const Game = () => {
           </div>
         </div>
       </div>
-      <ContentFooter />
+   
     </>
   );
 };

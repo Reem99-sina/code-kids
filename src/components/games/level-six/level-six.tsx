@@ -115,7 +115,7 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
     if (!nandGate || !lamp || result == 0 || !nandSecondGate) {
       toast.error("Missing NAND gate or Lamp.");
       onClose();
-      
+
       return;
     }
 
@@ -330,7 +330,9 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         setBoxes((prev) =>
                           prev ? prev.filter((_, ind) => ind != index) : []
                         );
-                         useLineInBoxRemove(boxes[index],lines,(linesNew)=>setLines(linesNew));
+                        useLineInBoxRemove(boxes[index], lines, (linesNew) =>
+                          setLines(linesNew)
+                        );
                         setVisible(undefined);
                       }}
                     />
@@ -395,36 +397,6 @@ const LevelSix: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
         </div>
       </div>
       <div className="flex items-center gap-3 flex-wrap">
-        <Button
-          text="Create AND Gate"
-          className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[0], id: generateUniqueId() },
-            ]);
-          }}
-        />
-        <Button
-          text="Create QR Gate"
-          className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[1], id: generateUniqueId() },
-            ]);
-          }}
-        />
-        <Button
-          text="Create NOT Gate"
-          className="bg-yellowFunf  whitespace-nowrap !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[5], id: generateUniqueId() },
-            ]);
-          }}
-        />
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"

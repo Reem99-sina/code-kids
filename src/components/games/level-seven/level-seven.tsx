@@ -152,7 +152,7 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
     ) {
       toast.error("Missing NAND gate or Lamp.");
       onClose();
-      
+
       return;
     }
 
@@ -442,12 +442,12 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                       operation: ele?.title,
                     }) == 1 ? (
                       Reverse ? (
-                        <Reverse className="w-16 h-16"/>
+                        <Reverse className="w-16 h-16" />
                       ) : (
                         <></>
                       )
                     ) : (
-                      <Icon className="w-16 h-16"/>
+                      <Icon className="w-16 h-16" />
                     )
                   ) : ele?.repeat == 1 && ele?.title == "nand" ? (
                     useOutput({
@@ -456,12 +456,12 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                       operation: ele?.title,
                     }) == 1 ? (
                       Reverse ? (
-                        <Reverse className="w-16 h-16"/>
+                        <Reverse className="w-16 h-16" />
                       ) : (
                         <></>
                       )
                     ) : (
-                      <Icon className="w-16 h-16"/>
+                      <Icon className="w-16 h-16" />
                     )
                   ) : ele?.repeat == 2 && ele?.title == "nand" ? (
                     useOutput({
@@ -478,12 +478,12 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                       operation: ele?.title,
                     }) == 1 ? (
                       Reverse ? (
-                        <Reverse className="w-16 h-16"/>
+                        <Reverse className="w-16 h-16" />
                       ) : (
                         <></>
                       )
                     ) : (
-                      <Icon className="w-16 h-16"/>
+                      <Icon className="w-16 h-16" />
                     )
                   ) : useOutput({
                       input_1: binary["input_1"],
@@ -491,12 +491,12 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                       operation: ele?.title,
                     }) == 1 ? (
                     Reverse ? (
-                      <Reverse className="w-16 h-16"/>
+                      <Reverse className="w-16 h-16" />
                     ) : (
                       <></>
                     )
                   ) : (
-                    <Icon className="w-16 h-16"/>
+                    <Icon className="w-16 h-16" />
                   )}
                 </div>
 
@@ -550,27 +550,6 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
         </div>
       </div>
       <div className="flex items-center gap-3 flex-wrap">
-        <Button
-          text="Create AND Gate"
-          className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[0], id: generateUniqueId() },
-            ]);
-          }}
-        />
-        <Button
-          text="Create QR Gate"
-          className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[1], id: generateUniqueId() },
-            ]);
-          }}
-        />
-
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"

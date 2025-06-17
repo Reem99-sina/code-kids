@@ -52,7 +52,7 @@ export const LevelTwelve = ({onComplete, goHome}: LevelTwelveProps) => {
   
 
   return (
-    <div className="flex flex-col bg-white rounded justify-center items-center rounded-xl min-h-[500px] relative   ">
+    <div className="flex flex-col bg-white justify-center items-center rounded-xl min-h-[500px] relative   ">
       <div className="flex flex-col justify-center w-[100%]">
         <div className="mb-4 flex justify-center m-3">
           <p className=" font-bold text-3xl text-black ">Circuit Adventure </p>

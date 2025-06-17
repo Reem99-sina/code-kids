@@ -2,27 +2,26 @@ import { Add, Dinosaur, Earth } from "@/assets";
 import AddForm from "@/components/add-child/add-form";
 import ChildCard from "@/components/add-child/child-card";
 import { Button } from "@/components/common/button.component";
-import ContentFooter from "@/components/footer/ContentFooter";
 import { useState } from "react";
 import { useParentQuery } from "@/services/parent-service";
 import { ResponseChildParentAdd } from "@/types/parent.type";
 
-const children = [
-  {
-    name: "kareem",
-    age: 9,
-    numCompletetracks: 7,
-    numCompleteCourses: 7,
-    courses: [],
-  },
-  {
-    name: "Assma",
-    age: 9,
-    numCompletetracks: 7,
-    numCompleteCourses: 7,
-    courses: [],
-  },
-];
+// const children = [
+//   {
+//     name: "kareem",
+//     age: 9,
+//     numCompletetracks: 7,
+//     numCompleteCourses: 7,
+//     courses: [],
+//   },
+//   {
+//     name: "Assma",
+//     age: 9,
+//     numCompletetracks: 7,
+//     numCompleteCourses: 7,
+//     courses: [],
+//   },
+// ];
 
 const AddChild = () => {
   const { data } = useParentQuery();
@@ -68,13 +67,7 @@ const AddChild = () => {
                   onEdit={() => setEdit(ele)}
                 />
               ))
-            : children?.map((ele) => (
-                <ChildCard
-                  key={ele?.name}
-                  child={{ fullname: ele?.name, age: ele?.age }}
-                  onEdit={() => setEdit(ele)}
-                />
-              ))}
+            : <></>}
           <div>
             <Button
               className="!w-auto !rounded-full !text-xs"
@@ -85,7 +78,7 @@ const AddChild = () => {
           </div>
         </div>
       )}
-      <ContentFooter />
+
     </div>
   );
 };

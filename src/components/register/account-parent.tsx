@@ -1,4 +1,4 @@
-import { GoogleColor } from "@/assets";
+// import { GoogleColor } from "@/assets";
 import { FC, useState } from "react";
 import DividerWithText from "../common/line-text-component";
 import { TextInput } from "../common/form/text-input.component";
@@ -54,12 +54,12 @@ const AccountParent: FC<props> = ({ onComplete }) => {
       <p className="text-lg font-normal text-textSecondary">
         Simple steps separate you from entering our platform
       </p>
-      <div className="rounded-full w-full py-2 flex justify-center items-center gap-4 border-2  border-[#EFF0F6] my-3">
+      {/* <div className="rounded-full w-full py-2 flex justify-center items-center gap-4 border-2  border-[#EFF0F6] my-3">
         <GoogleColor />
         <p className="text-sm font-black text-textThird">
           Continue with Google
         </p>
-      </div>
+      </div> */}
       <DividerWithText text="or Sign up with Email" />
       <div className="flex items-start gap-2 flex-col w-full">
         <TextInput
