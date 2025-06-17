@@ -19,204 +19,63 @@ import LevelFifteen from "@/components/levels/Level-fifteen/level-fifteen";
 import LevelSixteen from "@/components/levels/Level-sixteen/level-sixteen";
 import LevelSeventeen from "@/components/levels/Level-seventeen/level-seventeen";
 import LevelEighteen from "@/components/levels/Level-eighteen/level-eighteen";
+import LevelNine from "@/components/levels/level-nine/level-nine";
+import { LevelFour } from "@/components/levels/level-four/level-four";
+import { getGamesQuery } from "@/services/track-service";
+
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
   const [open, setOpen] = useState(false);
-  const router = useNavigate();
-
-  const levels = [
-    {
-      name: "level 1",
-      view: (
-        <LevelCart
-          title="Hexadecimal to binary"
-          description="Well done keep going 💪😍"
-          levelActive
-          progressNumber={0}
-        />
-      ),
-      component: (
-        <LevelOne
-          onComplete={() => setSelectedLevel(2)}
-          goHome={() => setSelectedLevel(0)}
-          open={open}
-        />
-      ),
-    },
-    {
-      name: "level 2",
-      view: (
-        <LevelCart
-          title="Binary Addition"
-          description="Come on, build your skills 💪"
-          levelActive
-          progressNumber={0}
-        />
-      ),
-      component: (
-        <LevelTwo
-          onComplete={() => setSelectedLevel(3)}
-          goHome={() => setSelectedLevel(0)}
-          open={open}
-        />
-      ),
-    },
-    {
-      name: "level 3",
-      view: <LevelCart title="Binary Subtraction" progressNumber={0} lock />,
-      component: (
-        <LevelThree
-          onComplete={() => setSelectedLevel(4)}
-          goHome={() => setSelectedLevel(0)}
-          open={open}
-        />
-      ),
-    },
-    {
-      name: "level 4",
-      view: <LevelCart title="Binary Multiplication" progressNumber={0} lock />,
-      component: (
-        <LevelFive
-          goHome={() => setSelectedLevel(0)}
-          onComplete={() => setSelectedLevel(5)}
-          open={open}
-        />
-      ),
-    },
-    {
-      name: "level 5",
-      view: <LevelCart title="Binary Division" progressNumber={0} lock />,
-      component: (
-        <LevelFive
-          goHome={() => setSelectedLevel(0)}
-          onComplete={() => setSelectedLevel(6)}
-          open={open}
-        />
-      ),
-    },
-    {
-      name: "level 6",
-      view: <LevelCart title="Advanced Binary" progressNumber={0} lock />,
-      component: (
-        <LevelSix
-          onComplete={() => setSelectedLevel(7)}
-          goHome={() => setSelectedLevel(0)}
-          open={open}
-        />
-      ),
-    },
-    {
-      name: "level 7",
-      view: <LevelCart title="Boolean Logic" progressNumber={0} lock />,
-      component: (
-        <LevelSeven
-          onComplete={() => setSelectedLevel(8)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 8",
-      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
-      component: (
-        <LevelEight
-          onComplete={() => setSelectedLevel(10)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 10",
-      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
-      component: (
-        <LevelTen
-          onComplete={() => setSelectedLevel(11)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 11",
-      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
-      component: (
-        <LevelEleven
-          onComplete={() => setSelectedLevel(12)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 12",
-      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
-      component: (
-        <LevelTwelve
-          onComplete={() => setSelectedLevel(13)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 13",
-      view: <LevelCart title="Binary Trees" progressNumber={0} lock />,
-      component: (
-        <LEvelThirteen
-          onComplete={() => setSelectedLevel(14)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 14",
-      view: <LevelCart title="level 14" progressNumber={0} lock />,
-      component: (
-        <LevelFourteen
-          onComplete={() => setSelectedLevel(15)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 15",
-      view: <LevelCart title="level 15" progressNumber={0} lock />,
-      component: (
-        <LevelFifteen
-          onComplete={() => setSelectedLevel(16)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 16",
-      view: <LevelCart title="level 16" progressNumber={0} lock />,
-      component: (
-        <LevelSixteen
-          onComplete={() => setSelectedLevel(17)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 17",
-      view: <LevelCart title="level 17" progressNumber={0} lock />,
-      component: (
-        <LevelSeventeen
-          onComplete={() => setSelectedLevel(18)}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
-    {
-      name: "level 18",
-      view: <LevelCart title="level 18" progressNumber={0} lock />,
-      component: (
-        <LevelEighteen
-          onComplete={() => router("/game")}
-          goHome={() => setSelectedLevel(0)}
-        />
-      ),
-    },
+ const router = useNavigate();
+  const gamesLevels = [
+    LevelOne,
+    LevelTwo,
+    LevelThree,
+    LevelFour,
+    LevelFive,
+    LevelSix,
+    LevelSeven,
+    LevelEight,
+    LevelNine,
+    LevelTen,
+    LevelEleven,
+    LevelTwelve,
+    LEvelThirteen,
+    LevelFourteen,
+    LevelFifteen,
+    LevelSixteen,
+    LevelSeventeen,
+    LevelEighteen,
   ];
+  const {data}=getGamesQuery(1)
+  const gamesData=data?.data
+  const Levels=gamesData?.map((levels,index)=>{
+   const LevelComponent = gamesLevels[index]; // match by index
+
+  return {
+    view: (
+      <LevelCart
+        title={levels.title}
+        description={levels.description}
+        levelActive
+        progressNumber={levels.points}
+      />
+    ),
+    component:  (
+      <LevelComponent
+        onComplete={() => {
+          if(levels.index==gamesData.length)
+            router("/game")
+          setSelectedLevel(levels.index+1)}}
+        goHome={() => setSelectedLevel(0)}
+        open={open}
+      />
+    )
+  };
+});
+  
+
 
   return (
     <>
@@ -248,7 +107,7 @@ const Home = () => {
               <div className="p-6 w-full flex">
                 {selectedLevel === 0 ? (
                   <div className="flex flex-wrap gap-4 w-full min-w-full">
-                    {levels.map((level, index) => (
+                    {Levels?.map((level  , index) => (
                       <div
                         key={index + 1}
                         onClick={() => setSelectedLevel(index + 1)}>
@@ -258,7 +117,7 @@ const Home = () => {
                   </div>
                 ) : (
                   <div className="w-full">
-                    {levels[selectedLevel - 1]?.component}
+                    {Levels&&Levels[selectedLevel - 1]?.component}
                   </div>
                 )}
               </div>
@@ -267,7 +126,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-
     </>
   );
 };
