@@ -1,36 +1,34 @@
-import { BatteryIconB, HomeIcon, Light, LightOff } from "@/assets";
-import { Modal, ModalRef } from "@/components/common/modal.component";
+import {BatteryIconB, HomeIcon, Light, LightOff} from "@/assets";
+import {Modal, ModalRef} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { TransmitCard } from "@/components/common/transmit-card";
-import { useEffect, useRef, useState } from "react";
-import { LevelComplete } from "../LevelComplete";
-import { Button } from "@/components/common/button.component";
+import {TransmitCard} from "@/components/common/transmit-card";
+import {JSX, useEffect, useRef, useState} from "react";
+import {LevelComplete} from "../LevelComplete";
+import {Button} from "@/components/common/button.component";
 import CommonModal from "@/components/common/common-modal";
-import ModalReviewResult from "../Level-two/modal-review-result";
 
 interface LevelOneProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
+  hint: JSX.Element;
+  source?:string
 }
 
 export const LevelOne: React.FC<LevelOneProps> = ({
   onComplete,
   goHome,
   open,
+  hint,
+  source
 }) => {
   const refModal = useRef<ModalRef>(null);
-  const modalResultRef = useRef<ModalRef>(null);
-
   const [conductorPressed, setConductorPressed] = useState(false);
   const [semiconductorPressed, setSemiconductorPressed] = useState(false);
   const [insulatorPressed, setInsulatorPressed] = useState(false);
   const [progress, setProgress] = useState(0);
   const modalRef = useRef<ModalRef>(null);
-  const [message, setMessage] = useState({
-    title: "",
-    desc: "",
-  });
+  const modalHintRef = useRef<ModalRef>(null);
 
   useEffect(() => {
     const activeCount =
@@ -40,23 +38,24 @@ export const LevelOne: React.FC<LevelOneProps> = ({
 
     const newProgress = Math.round((activeCount / 3) * 100);
     setProgress(newProgress);
-  }, [conductorPressed, semiconductorPressed, insulatorPressed]);
 
+    if (newProgress === 100) {
+      modalRef.current?.open();
+    }
+  }, [conductorPressed, semiconductorPressed, insulatorPressed]);
   useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
     if (open) {
-      refModal?.current?.open();
+      modalHintRef?.current?.open();
     }
   }, [open]);
 
   useEffect(() => {
     refModal?.current?.open();
+    modalHintRef?.current?.close();
   }, []);
-
-  const resetPlay=()=>{
-    setConductorPressed(false)
-    setInsulatorPressed(false)
-    setSemiconductorPressed(false)
-  } 
 
   return (
     <>
@@ -79,11 +78,8 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <TransmitCard
               title="Conductor"
               icons={[
-                { icon: <BatteryIconB />, label: "Battery" },
-                {
-                  icon: conductorPressed ? <Light /> : <LightOff />,
-                  label: "Light",
-                },
+                {icon: <BatteryIconB />, label: "Battery"},
+                {icon: <Light />, label: "Light"},
               ]}
               buttonText={!conductorPressed ? "Power" : "Power on"}
               onButtonClick={() => setConductorPressed((prev) => !prev)}
@@ -92,7 +88,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <TransmitCard
               title="Semiconductor"
               icons={[
-                { icon: <BatteryIconB />, label: "Battery" },
+                {icon: <BatteryIconB />, label: "Battery"},
                 {
                   icon: semiconductorPressed ? <Light /> : <LightOff />,
                   label: "Light",
@@ -106,8 +102,8 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <TransmitCard
               title="Insulator"
               icons={[
-                { icon: <BatteryIconB />, label: "Battery" },
-                { icon: <LightOff />, label: "Light" },
+                {icon: <BatteryIconB />, label: "Battery"},
+                {icon: <LightOff />, label: "Light"},
               ]}
               buttonText={!insulatorPressed ? "Power" : "Power on"}
               onButtonClick={() => setInsulatorPressed((prev) => !prev)}
@@ -124,19 +120,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <Button
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
-              onClick={() => {
-                if (
-                  conductorPressed &&
-                  semiconductorPressed &&
-                  insulatorPressed
-                ) {
-                  modalRef.current?.open();
-                } else {
-                  setMessage({title:"Game Over! ",desc:"Time ran out or incorrect sorting."})
-                  resetPlay()
-                  modalResultRef.current?.open()
-                }
-              }}
+              onClick={() => modalRef.current?.open()}
             />
           </div>
           <Modal ref={modalRef}>
@@ -146,32 +130,19 @@ export const LevelOne: React.FC<LevelOneProps> = ({
               onGoHome={goHome}
             />
           </Modal>
-          <Modal
-            ref={modalResultRef}
-            className="bg-transparent"
-            // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
-            // onClose={() => navigate("/")}
-          >
-            <ModalReviewResult
-              title={message?.title}
-              desc={message?.desc}
-              onClick={() => {
-                modalResultRef?.current?.close();
-              }}
-            />
-          </Modal>
         </div>
       </div>
-
       <CommonModal refModal={refModal} title={"Teach Course"}>
         <div className="relative pt-[56.25%] w-full">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src={`https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+1+Material+Conductivity.mp4`}
+            src={source}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
+            allowFullScreen></iframe>
         </div>
+      </CommonModal>
+      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {hint}
       </CommonModal>
     </>
   );

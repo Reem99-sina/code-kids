@@ -1,31 +1,35 @@
-import { HomeIcon } from "@/assets";
-import { Modal, ModalRef } from "@/components/common/modal.component";
+import {HomeIcon} from "@/assets";
+import {Modal, ModalRef} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { LevelComplete } from "../LevelComplete";
-import { Button } from "@/components/common/button.component";
+import {JSX, useEffect, useMemo, useRef, useState} from "react";
+import {LevelComplete} from "../LevelComplete";
+import {Button} from "@/components/common/button.component";
 
-import { FormProvider, useForm } from "react-hook-form";
-import { generateRandomDec } from "@/utils/binary.util";
+import {FormProvider, useForm} from "react-hook-form";
+import {generateRandomDec} from "@/utils/binary.util";
 import InterInput from "../level-five/inter-input";
 import toast from "react-hot-toast";
+import CommonModal from "@/components/common/common-modal";
 
-const LevelSeven = ({
-  onComplete,
-  goHome,
-}: {
+interface Props {
   onComplete: () => void;
   goHome: () => void;
-}) => {
+  open: boolean;
+  hint: JSX.Element;
+  source: string;
+}
+const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
   const formData = useForm();
   const binary = formData.watch("binary");
+  const modalHintRef = useRef<ModalRef>(null);
+  const refModal = useRef<ModalRef>(null);
 
   const modalRef = useRef<ModalRef>(null);
 
-  const { randomDecimal, binaryString } = useMemo(
-    () => generateRandomDec({ length: level * 4, DecNumber: Math.random() }),
+  const {randomDecimal, binaryString} = useMemo(
+    () => generateRandomDec({length: level * 4, DecNumber: Math.random()}),
     [level]
   );
 
@@ -34,7 +38,7 @@ const LevelSeven = ({
       setLevel((prev) => (prev < 4 ? prev + 1 : 4));
       setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
 
-      formData.setValue("binary", Array(binaryString?.length+4).fill(0));
+      formData.setValue("binary", Array(binaryString?.length + 4).fill(0));
     } else {
       toast.error(`Try again!\nCorrect : ${binaryString}`);
     }
@@ -42,6 +46,19 @@ const LevelSeven = ({
     //   modalRef.current?.open();
     // }
   };
+  useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
+    if (open) {
+      modalHintRef?.current?.open();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
 
   useEffect(() => {
     if (level == 4) {
@@ -107,6 +124,18 @@ const LevelSeven = ({
             onGoHome={goHome}
           />
         </Modal>
+        <CommonModal refModal={refModal} title={"Teach Course"}>
+          <div className="relative pt-[56.25%] w-full">
+            <iframe
+              className="absolute top-0 left-0 w-full h-full"
+              src={source}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen></iframe>
+          </div>
+        </CommonModal>
+        <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+          {hint}
+        </CommonModal>
       </div>
     </div>
   );

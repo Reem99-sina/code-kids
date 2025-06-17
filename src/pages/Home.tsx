@@ -53,6 +53,7 @@ const Home = () => {
   const Levels=gamesData?.map((levels,index)=>{
    const LevelComponent = gamesLevels[index]; // match by index
 
+
   return {
     view: (
       <LevelCart
@@ -65,12 +66,17 @@ const Home = () => {
     component:  (
       <LevelComponent
         onComplete={() => {
-          if(levels.index==gamesData.length)
-            router("/game")
-          setSelectedLevel(levels.index+1)}}
+          if (levels.index == gamesData.length)
+            router("/game");
+          setSelectedLevel(levels.index + 1);
+        } }
         goHome={() => setSelectedLevel(0)}
         open={open}
-      />
+        hint={<div>{levels.description}</div>}  
+        source="https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4"
+        />
+        
+
     )
   };
 });
@@ -121,7 +127,9 @@ const Home = () => {
                   </div>
                 )}
               </div>
-              <HelpIconComponent onClick={() => setOpen(!open)} />
+              <HelpIconComponent onClick={() =>   {setOpen((prev) => !prev)
+              }} />
+              
             </div>
           </div>
         </div>

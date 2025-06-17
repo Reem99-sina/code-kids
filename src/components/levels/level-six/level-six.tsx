@@ -1,7 +1,7 @@
 import { HomeIcon } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { JSX, useEffect, useMemo, useRef, useState } from "react";
 import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
@@ -14,18 +14,21 @@ import toast from "react-hot-toast";
 interface LevelSixProps {
   onComplete: () => void;
   goHome: () => void;
-  open: boolean;
+  open: boolean;  hint: JSX.Element;
+  source:string  
 }
 
 export const LevelSix: React.FC<LevelSixProps> = ({
   onComplete,
   goHome,
-  open,
+  open,  hint,
+  source
 }) => {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
   const formData = useForm();
   const hex = formData.watch("hex");
+ const modalHintRef = useRef<ModalRef>(null);
 
   const modalRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
@@ -57,15 +60,20 @@ export const LevelSix: React.FC<LevelSixProps> = ({
     }
   }, [level]);
 
-  useEffect(() => {
-    refModal.current?.open();
-  }, []);
-
-  useEffect(() => {
+useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
     if (open) {
-      refModal?.current?.open();
+      modalHintRef?.current?.open();
     }
   }, [open]);
+
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
+
 
   return (
     <div className="flex flex-col">
@@ -129,11 +137,13 @@ export const LevelSix: React.FC<LevelSixProps> = ({
         <div className="relative pt-[56.25%] w-full">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src={`https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+6+Binary+to+Hex+Heroes.mp4`}
+            src={source}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
         </div>
+      </CommonModal> <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {hint}
       </CommonModal>
     </div>
   );

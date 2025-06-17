@@ -15,7 +15,7 @@ import {
   Wood,
 } from "@/assets";
 import ProgressBar from "@/components/common/ProgressBar";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { JSX, ReactNode, useEffect, useRef, useState } from "react";
 import EachMaterial, { EachMaterialHandle } from "./each-material";
 import EachCollector from "./each-collector";
 import { Button } from "@/components/common/button.component";
@@ -33,19 +33,27 @@ export interface onResultInterface {
   title: string;
   result: materialInfo[];
 }
+interface Props {
+  onComplete: () => void;
+  goHome: () => void;
+  open: boolean;
+    hint: JSX.Element;  
+      source?:string
+
+
+}
 
 export const LevelTwo = ({
   onComplete,
   goHome,
   open,
-}: {
-  onComplete: () => void;
-  goHome: () => void;
-  open: boolean;
-}) => {
+  hint,
+  source
+}: Props) => {
   const refModal = useRef<ModalRef>(null);
   const modalRef = useRef<ModalRef>(null);
   const modalResultRef = useRef<ModalRef>(null);
+ const modalHintRef = useRef<ModalRef>(null);
 
   const [time, setTime] = useState(60);
   const [message, setMessage] = useState({
@@ -90,16 +98,19 @@ export const LevelTwo = ({
     };
   }, [time]);
 
-  useEffect(() => {
+ useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
     if (open) {
-      modalRef?.current?.open();
+      modalHintRef?.current?.open();
     }
   }, [open]);
 
   useEffect(() => {
     modalRef?.current?.open();
+    modalHintRef?.current?.close();
   }, []);
-
   const onResult = ({ title, result }: onResultInterface) => {
     setResult((prev) =>
       (prev ?? []).map((ele) =>
@@ -231,11 +242,14 @@ export const LevelTwo = ({
         <div className="relative pt-[56.25%] w-full">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src={`https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+2+Materials+Science+Explorer.mp4`}
+            src={source}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
         </div>
+      </CommonModal>
+      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {hint}
       </CommonModal>
     </div>
   );
