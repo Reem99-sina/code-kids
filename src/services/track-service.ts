@@ -1,5 +1,5 @@
 import { useFetch } from "@/hooks/fetch.hooks";
-import { IResponse } from "@/types/common.type";
+import { GetGames, IResponse } from "@/types/common.type";
 import { trackInterface } from "@/types/track.type";
 import { useQuery } from "@tanstack/react-query";
 
@@ -28,6 +28,17 @@ export const useCoursesByIdTracksQuery = ({id}:{id?:number}) => {
           await api.get("/course/track/"+id);
   
         return response.data;
+      },
+    });
+  };
+  
+  export const getGamesQuery = (id:number) => {
+    const { api } = useFetch();
+  
+    return useQuery<GetGames>({
+      queryKey: ["game"],
+      queryFn: async () => {
+        return await api.get(`/level/game-levels/${id}`);
       },
     });
   };
