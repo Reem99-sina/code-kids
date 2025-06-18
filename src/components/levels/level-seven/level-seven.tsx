@@ -25,6 +25,7 @@ const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
   const binary = formData.watch("binary");
   const modalHintRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
 
   const modalRef = useRef<ModalRef>(null);
 
@@ -133,9 +134,26 @@ const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
               allowFullScreen></iframe>
           </div>
         </CommonModal>
-        <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-          {hint}
-        </CommonModal>
+            <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {
+          <>
+            {" "}
+            {hint}
+            <Button
+            className={`${answer?`bg-white`:``}`}
+              onClick={() => {
+                if(!answer)
+               { const confirmed = confirm("Do you want to reveal the answer?");
+                if (confirmed) {
+                  setAnswer(true);
+                }}
+              }}
+              text={"Show answer"}
+            />
+            {answer ? <p className="text-lg text-bold">Answer is : {binaryString}</p> : <></>}
+          </>
+        }
+      </CommonModal>
       </div>
     </div>
   );

@@ -29,6 +29,7 @@ export const LevelSix: React.FC<LevelSixProps> = ({
   const formData = useForm();
   const hex = formData.watch("hex");
  const modalHintRef = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
 
   const modalRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
@@ -37,6 +38,7 @@ export const LevelSix: React.FC<LevelSixProps> = ({
     () => generateRandomDec({ length: level * 4, DecNumber: Math.random() }),
     [level]
   );
+    const CorrectHex = randomDecimal.toString(16).toUpperCase();
 
   const handleCheckAnswer = () => {
     const CorrectHex = randomDecimal.toString(16).toUpperCase();
@@ -142,8 +144,25 @@ useEffect(() => {
             allowFullScreen
           ></iframe>
         </div>
-      </CommonModal> <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {hint}
+      </CommonModal>       <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {
+          <>
+            {" "}
+            {hint}
+            <Button
+            className={`${answer?`bg-white`:``}`}
+              onClick={() => {
+                if(!answer)
+               { const confirmed = confirm("Do you want to reveal the answer?");
+                if (confirmed) {
+                  setAnswer(true);
+                }}
+              }}
+              text={"Show answer"}
+            />
+            {answer ? <p className="text-lg text-bold">ANswer id : {CorrectHex}</p> : <></>}
+          </>
+        }
       </CommonModal>
     </div>
   );

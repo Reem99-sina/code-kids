@@ -67,6 +67,8 @@ const LevelThree: React.FC<LevelThreeProps> = ({
 
   const [appear, setAppear] = useState(false);
   const [progress, setProgress] = useState(1);
+    const [answer, setAnswer] = useState(false);
+
   const [componentDrag, setComponentDrag] = useState<
     Record<string, DragComProps>
   >({});
@@ -228,8 +230,25 @@ const LevelThree: React.FC<LevelThreeProps> = ({
           ></iframe>
         </div>
       </CommonModal>
-      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {hint}
+           <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {
+          <>
+            {" "}
+            {hint}
+            <Button
+            className={`${answer?`bg-white`:``}`}
+              onClick={() => {
+                if(!answer)
+               { const confirmed = confirm("Do you want to reveal the answer?");
+                if (confirmed) {
+                  setAnswer(true);
+                }}
+              }}
+              text={"Show answer"}
+            />
+            {answer ? <p className="text-lg text-bold">press on all the button</p> : <></>}
+          </>
+        }
       </CommonModal>
       <Modal ref={modalResultRef}>
         <LevelComplete level="3" onNextLevel={onComplete} onGoHome={goHome} />
