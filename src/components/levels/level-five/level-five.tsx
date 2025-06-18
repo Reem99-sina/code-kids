@@ -16,25 +16,32 @@ interface LevelFiveProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
-    hint: JSX.Element;
-  source:string  
-
+  hint: JSX.Element;
+  source: string;
 }
 
 export const LevelFive: React.FC<LevelFiveProps> = ({
   onComplete,
   goHome,
   open,
-  hint,source
+  hint,
+  source,
 }) => {
   const modalRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
- const modalHintRef = useRef<ModalRef>(null);
-
+  const modalHintRef = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
   const [level, setLevel] = useState(1);
   const [progress, setProgress] = useState(0);
 
-  const formData = useForm();
+  const formData = useForm({
+    defaultValues: {
+      binary: Array(level + 1)
+        .fill(0)
+        ?.join(""),
+      transistors: "",
+    },
+  });
   const transistor = formData.watch("transistors");
   const binary = formData.watch("binary");
 
@@ -42,17 +49,26 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
     () => generateRandomDec({ length: level + 1, DecNumber: Math.random() }),
     [level]
   );
+  const lastIndex = binaryString?.split("")?.reverse()?.lastIndexOf("1");
+  const numOfTransitor = lastIndex == -1 ? 0 + 1 : lastIndex + 1;
 
   const handleCheckAnswer = () => {
     const lastIndex = binaryString?.split("")?.reverse()?.lastIndexOf("1");
+
     const numOfTransitor = lastIndex == -1 ? 0 + 1 : lastIndex + 1;
+    const binaryCheck = Array.isArray(binary) ? binary?.join("") : binary;
 
-    if (binaryString == binary && transistor == numOfTransitor) {
+    if (binaryString == binaryCheck && Number(transistor) == numOfTransitor) {
       setLevel((prev) => prev + 1);
-    
-      setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
 
-      formData?.setValue("binary", Array(level+2).fill(0));
+      setProgress((prev) => (prev < 100 && prev + 25 <= 100 ? prev + 25 : 100));
+
+      formData?.setValue(
+        "binary",
+        Array(level + 2)
+          .fill(0)
+          .join("")
+      );
       formData?.setValue("transistors", "");
     } else {
       toast.error(
@@ -61,12 +77,12 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
     }
   };
   useEffect(() => {
-    if (level == 4) {
+    if (level == 5) {
       modalRef.current?.open();
     }
   }, [level]);
 
- useEffect(() => {
+  useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
     }
@@ -79,7 +95,6 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
     refModal?.current?.open();
     modalHintRef?.current?.close();
   }, []);
-
 
   return (
     <>
@@ -166,8 +181,35 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
           ></iframe>
         </div>
       </CommonModal>
-       <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {hint}
+      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {
+          <>
+            {" "}
+            {hint}
+            <Button
+              className={`${answer ? `bg-white` : ``}`}
+              onClick={() => {
+                if (!answer) {
+                  const confirmed = confirm(
+                    "Do you want to reveal the answer?"
+                  );
+                  if (confirmed) {
+                    setAnswer(true);
+                  }
+                }
+              }}
+              text={"Show answer"}
+            />
+            {answer ? (
+              <p className="text-lg text-bold">
+                Binary number is : {binaryString}
+                <br /> Number of transistors is : {numOfTransitor}
+              </p>
+            ) : (
+              ""
+            )}
+          </>
+        }
       </CommonModal>
     </>
   );

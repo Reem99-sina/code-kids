@@ -1,18 +1,19 @@
-import {BatteryIconB, HomeIcon, Light, LightOff} from "@/assets";
-import {Modal, ModalRef} from "@/components/common/modal.component";
+import { BatteryIconB, HomeIcon, Light, LightOff } from "@/assets";
+import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import {TransmitCard} from "@/components/common/transmit-card";
-import {JSX, useEffect, useRef, useState} from "react";
-import {LevelComplete} from "../LevelComplete";
-import {Button} from "@/components/common/button.component";
+import { TransmitCard } from "@/components/common/transmit-card";
+import { JSX, useEffect, useRef, useState } from "react";
+import { LevelComplete } from "../LevelComplete";
+import { Button } from "@/components/common/button.component";
 import CommonModal from "@/components/common/common-modal";
+import ModalReviewResult from "../Level-two/modal-review-result";
 
 interface LevelOneProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
   hint: JSX.Element;
-  source?:string
+  source?: string;
 }
 
 export const LevelOne: React.FC<LevelOneProps> = ({
@@ -20,7 +21,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({
   goHome,
   open,
   hint,
-  source
+  source,
 }) => {
   const refModal = useRef<ModalRef>(null);
   const [conductorPressed, setConductorPressed] = useState(false);
@@ -29,6 +30,18 @@ export const LevelOne: React.FC<LevelOneProps> = ({
   const [progress, setProgress] = useState(0);
   const modalRef = useRef<ModalRef>(null);
   const modalHintRef = useRef<ModalRef>(null);
+  const modalResultRef = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
+  const [message, setMessage] = useState({
+    title: "",
+    desc: "",
+  });
+
+  const resetPlay = () => {
+    setConductorPressed(false);
+    setInsulatorPressed(false);
+    setSemiconductorPressed(false);
+  };
 
   useEffect(() => {
     const activeCount =
@@ -38,10 +51,6 @@ export const LevelOne: React.FC<LevelOneProps> = ({
 
     const newProgress = Math.round((activeCount / 3) * 100);
     setProgress(newProgress);
-
-    if (newProgress === 100) {
-      modalRef.current?.open();
-    }
   }, [conductorPressed, semiconductorPressed, insulatorPressed]);
   useEffect(() => {
     if (!modalHintRef?.current?.open()) {
@@ -78,8 +87,11 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <TransmitCard
               title="Conductor"
               icons={[
-                {icon: <BatteryIconB />, label: "Battery"},
-                {icon: <Light />, label: "Light"},
+                { icon: <BatteryIconB />, label: "Battery" },
+                {
+                  icon: conductorPressed ? <Light /> : <LightOff />,
+                  label: "Light",
+                },
               ]}
               buttonText={!conductorPressed ? "Power" : "Power on"}
               onButtonClick={() => setConductorPressed((prev) => !prev)}
@@ -88,7 +100,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <TransmitCard
               title="Semiconductor"
               icons={[
-                {icon: <BatteryIconB />, label: "Battery"},
+                { icon: <BatteryIconB />, label: "Battery" },
                 {
                   icon: semiconductorPressed ? <Light /> : <LightOff />,
                   label: "Light",
@@ -102,8 +114,11 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <TransmitCard
               title="Insulator"
               icons={[
-                {icon: <BatteryIconB />, label: "Battery"},
-                {icon: <LightOff />, label: "Light"},
+                { icon: <BatteryIconB />, label: "Battery" },
+                {
+                  icon: insulatorPressed ? <Light /> : <LightOff />,
+                  label: "Light",
+                },
               ]}
               buttonText={!insulatorPressed ? "Power" : "Power on"}
               onButtonClick={() => setInsulatorPressed((prev) => !prev)}
@@ -120,7 +135,22 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <Button
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
-              onClick={() => modalRef.current?.open()}
+              onClick={() => {
+                if (
+                  conductorPressed &&
+                  semiconductorPressed &&
+                  insulatorPressed
+                ) {
+                  modalRef.current?.open();
+                } else {
+                  setMessage({
+                    title: "Game Over! ",
+                    desc: "Time ran out or incorrect sorting.",
+                  });
+                  resetPlay();
+                  modalResultRef.current?.open();
+                }
+              }}
             />
           </div>
           <Modal ref={modalRef}>
@@ -138,12 +168,51 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             className="absolute top-0 left-0 w-full h-full"
             src={source}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen></iframe>
+            allowFullScreen
+          ></iframe>
         </div>
       </CommonModal>
       <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {hint}
+        {
+          <>
+            {" "}
+            {hint}
+            <Button
+              className={`${answer ? `bg-white` : ``}`}
+              onClick={() => {
+                if (!answer) {
+                  const confirmed = confirm(
+                    "Do you want to reveal the answer?"
+                  );
+                  if (confirmed) {
+                    setAnswer(true);
+                  }
+                }
+              }}
+              text={"Show answer"}
+            />
+            {answer ? (
+              <p className="text-lg text-bold">press on all the button</p>
+            ) : (
+              <></>
+            )}
+          </>
+        }
       </CommonModal>
+      <Modal
+        ref={modalResultRef}
+        className="bg-transparent"
+        // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        // onClose={() => navigate("/")}
+      >
+        <ModalReviewResult
+          title={message?.title}
+          desc={message?.desc}
+          onClick={() => {
+            modalResultRef?.current?.close();
+          }}
+        />
+      </Modal>
     </>
   );
 };

@@ -1,33 +1,32 @@
-import {LanguageButton} from "@/assets";
-import {LevelCart} from "@/components/cards/level-cart";
-import {LevelFive} from "@/components/levels/level-five/level-five";
+import { LanguageButton } from "@/assets";
+import { LevelCart } from "@/components/cards/level-cart";
+import { LevelFive } from "@/components/levels/level-five/level-five";
 import LevelEight from "@/components/levels/level-eight/level-eight";
-import {LevelOne} from "@/components/levels/Level-one/level-one";
-import {LevelSix} from "@/components/levels/level-six/level-six";
+import { LevelOne } from "@/components/levels/Level-one/level-one";
+import { LevelSix } from "@/components/levels/level-six/level-six";
 import LevelThree from "@/components/levels/Level-three/level-three";
-import {LevelTwo} from "@/components/levels/Level-two/level-two";
-import {useState} from "react";
+import { LevelTwo } from "@/components/levels/Level-two/level-two";
+import { useState } from "react";
 import LevelSeven from "@/components/levels/level-seven/level-seven";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import HelpIconComponent from "@/components/common/help-icon";
 import LevelTen from "@/components/levels/Level-ten/level-ten";
 import LevelEleven from "@/components/levels/Level-eleven/level-eleven";
-import {LevelTwelve} from "@/components/levels/Level-twelve/level-twelve";
+import { LevelTwelve } from "@/components/levels/Level-twelve/level-twelve";
 import LEvelThirteen from "@/components/levels/Level-thirteen/level-thirteen";
 import LevelFourteen from "@/components/levels/Level-fourteen/level-fourteen";
 import LevelFifteen from "@/components/levels/Level-fifteen/level-fifteen";
 import LevelSixteen from "@/components/levels/Level-sixteen/level-sixteen";
 import LevelSeventeen from "@/components/levels/Level-seventeen/level-seventeen";
 import LevelEighteen from "@/components/levels/Level-eighteen/level-eighteen";
-import LevelNine from "@/components/levels/level-nine/level-nine";
+// import LevelNine from "@/components/levels/level-nine/level-nine";
 import { LevelFour } from "@/components/levels/level-four/level-four";
 import { getGamesQuery } from "@/services/track-service";
-
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
   const [open, setOpen] = useState(false);
- const router = useNavigate();
+  const router = useNavigate();
   const gamesLevels = [
     LevelOne,
     LevelTwo,
@@ -37,7 +36,7 @@ const Home = () => {
     LevelSix,
     LevelSeven,
     LevelEight,
-    LevelNine,
+    // LevelNine,
     LevelTen,
     LevelEleven,
     LevelTwelve,
@@ -48,40 +47,35 @@ const Home = () => {
     LevelSeventeen,
     LevelEighteen,
   ];
-  const {data}=getGamesQuery(1)
-  const gamesData=data?.data
-  const Levels=gamesData?.map((levels,index)=>{
-   const LevelComponent = gamesLevels[index]; // match by index
+  const { data } = getGamesQuery(1);
+  const gamesData = data?.data;
+  const Levels = gamesData?.map((levels, index) => {
+    const LevelComponent = gamesLevels[index]; // match by index
 
 
-  return {
-    view: (
-      <LevelCart
-        title={levels.title}
-        description={levels.description}
-        levelActive
-        progressNumber={levels.points}
-      />
-    ),
-    component:  (
-      <LevelComponent
-        onComplete={() => {
-          if (levels.index == gamesData.length)
-            router("/game");
-          setSelectedLevel(levels.index + 1);
-        } }
-        goHome={() => setSelectedLevel(0)}
-        open={open}
-        hint={<div>{levels.description}</div>}  
-        source="https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4"
+    return {
+      view: (
+        <LevelCart
+          title={levels.title}
+          description={levels.description}
+          levelActive
+          progressNumber={levels.points}
         />
-        
-
-    )
-  };
-});
-  
-
+      ),
+      component: (
+        <LevelComponent
+          onComplete={() => {
+            if (levels.index == gamesData.length) router("/game");
+            setSelectedLevel(levels.index + 1);
+          }}
+          goHome={() => setSelectedLevel(0)}
+          open={open}
+          hint={<div>{levels.description}</div>}
+          source="https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4"
+        />
+      ),
+    };
+  });
 
   return (
     <>
@@ -113,23 +107,26 @@ const Home = () => {
               <div className="p-6 w-full flex">
                 {selectedLevel === 0 ? (
                   <div className="flex flex-wrap gap-4 w-full min-w-full">
-                    {Levels?.map((level  , index) => (
+                    {Levels?.map((level, index) => (
                       <div
                         key={index + 1}
-                        onClick={() => setSelectedLevel(index + 1)}>
+                        onClick={() => setSelectedLevel(index + 1)}
+                      >
                         {level.view}
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="w-full">
-                    {Levels&&Levels[selectedLevel - 1]?.component}
+                    {Levels && Levels[selectedLevel - 1]?.component}
                   </div>
                 )}
               </div>
-              <HelpIconComponent onClick={() =>   {setOpen((prev) => !prev)
-              }} />
-              
+              <HelpIconComponent
+                onClick={() => {
+                  setOpen((prev) => !prev);
+                }}
+              />
             </div>
           </div>
         </div>
