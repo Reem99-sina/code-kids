@@ -54,6 +54,7 @@ export const LevelTwo = ({
   const modalRef = useRef<ModalRef>(null);
   const modalResultRef = useRef<ModalRef>(null);
  const modalHintRef = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
 
   const [time, setTime] = useState(60);
   const [message, setMessage] = useState({
@@ -248,8 +249,25 @@ export const LevelTwo = ({
           ></iframe>
         </div>
       </CommonModal>
-      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {hint}
+    <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {
+          <>
+            {" "}
+            {hint}
+            <Button
+            className={`${answer?`bg-white`:``}`}
+              onClick={() => {
+                if(!answer)
+               { const confirmed = confirm("Do you want to reveal the answer?");
+                if (confirmed) {
+                  setAnswer(true);
+                }}
+              }}
+              text={"Show answer"}
+            />
+            {answer ? <p className="text-lg text-bold">press on all the button</p> : <></>}
+          </>
+        }
       </CommonModal>
     </div>
   );

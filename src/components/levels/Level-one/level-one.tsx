@@ -12,7 +12,7 @@ interface LevelOneProps {
   goHome: () => void;
   open: boolean;
   hint: JSX.Element;
-  source?:string
+  source?: string;
 }
 
 export const LevelOne: React.FC<LevelOneProps> = ({
@@ -20,12 +20,14 @@ export const LevelOne: React.FC<LevelOneProps> = ({
   goHome,
   open,
   hint,
-  source
+  source,
 }) => {
   const refModal = useRef<ModalRef>(null);
   const [conductorPressed, setConductorPressed] = useState(false);
   const [semiconductorPressed, setSemiconductorPressed] = useState(false);
   const [insulatorPressed, setInsulatorPressed] = useState(false);
+  const [answer, setAnswer] = useState(false);
+
   const [progress, setProgress] = useState(0);
   const modalRef = useRef<ModalRef>(null);
   const modalHintRef = useRef<ModalRef>(null);
@@ -142,7 +144,24 @@ export const LevelOne: React.FC<LevelOneProps> = ({
         </div>
       </CommonModal>
       <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {hint}
+        {
+          <>
+            {" "}
+            {hint}
+            <Button
+            className={`${answer?`bg-white`:``}`}
+              onClick={() => {
+                if(!answer)
+               { const confirmed = confirm("Do you want to reveal the answer?");
+                if (confirmed) {
+                  setAnswer(true);
+                }}
+              }}
+              text={"Show answer"}
+            />
+            {answer ? <p className="text-lg text-bold">press on all the button</p> : <></>}
+          </>
+        }
       </CommonModal>
     </>
   );

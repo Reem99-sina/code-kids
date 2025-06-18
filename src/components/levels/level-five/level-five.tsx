@@ -1,12 +1,12 @@
-import { HomeIcon } from "@/assets";
-import { Modal, ModalRef } from "@/components/common/modal.component";
+import {HomeIcon} from "@/assets";
+import {Modal, ModalRef} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { JSX, useEffect, useMemo, useRef, useState } from "react";
-import { LevelComplete } from "../LevelComplete";
-import { Button } from "@/components/common/button.component";
-import { TextInput } from "@/components/common/form/text-input.component";
-import { generateRandomDec } from "@/utils/binary.util";
-import { FormProvider, useForm } from "react-hook-form";
+import {JSX, useEffect, useMemo, useRef, useState} from "react";
+import {LevelComplete} from "../LevelComplete";
+import {Button} from "@/components/common/button.component";
+import {TextInput} from "@/components/common/form/text-input.component";
+import {generateRandomDec} from "@/utils/binary.util";
+import {FormProvider, useForm} from "react-hook-form";
 import InterInput from "./inter-input";
 
 import CommonModal from "@/components/common/common-modal";
@@ -16,43 +16,42 @@ interface LevelFiveProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
-    hint: JSX.Element;
-  source:string  
-
+  hint: JSX.Element;
+  source: string;
 }
 
 export const LevelFive: React.FC<LevelFiveProps> = ({
   onComplete,
   goHome,
   open,
-  hint,source
+  hint,
+  source,
 }) => {
   const modalRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
- const modalHintRef = useRef<ModalRef>(null);
+  const modalHintRef = useRef<ModalRef>(null);
 
   const [level, setLevel] = useState(1);
   const [progress, setProgress] = useState(0);
+  const [answer, setAnswer] = useState(false);
 
   const formData = useForm();
   const transistor = formData.watch("transistors");
   const binary = formData.watch("binary");
 
-  const { randomDecimal, binaryString } = useMemo(
-    () => generateRandomDec({ length: level + 1, DecNumber: Math.random() }),
+  const {randomDecimal, binaryString} = useMemo(
+    () => generateRandomDec({length: level + 1, DecNumber: Math.random()}),
     [level]
   );
-
+  const lastIndex = binaryString?.split("")?.reverse()?.lastIndexOf("1");
+  const numOfTransitor = lastIndex == -1 ? 0 + 1 : lastIndex + 1;
   const handleCheckAnswer = () => {
-    const lastIndex = binaryString?.split("")?.reverse()?.lastIndexOf("1");
-    const numOfTransitor = lastIndex == -1 ? 0 + 1 : lastIndex + 1;
-
     if (binaryString == binary && transistor == numOfTransitor) {
       setLevel((prev) => prev + 1);
-    
+
       setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
 
-      formData?.setValue("binary", Array(level+2).fill(0));
+      formData?.setValue("binary", Array(level + 2).fill(0));
       formData?.setValue("transistors", "");
     } else {
       toast.error(
@@ -66,7 +65,7 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
     }
   }, [level]);
 
- useEffect(() => {
+  useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
     }
@@ -79,7 +78,6 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
     refModal?.current?.open();
     modalHintRef?.current?.close();
   }, []);
-
 
   return (
     <>
@@ -162,12 +160,38 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
             className="absolute top-0 left-0 w-full h-full"
             src={source}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
+            allowFullScreen></iframe>
         </div>
       </CommonModal>
-       <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {hint}
+      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {
+          <>
+            {" "}
+            {hint}
+            <Button
+              className={`${answer ? `bg-white` : ``}`}
+              onClick={() => {
+                if (!answer) {
+                  const confirmed = confirm(
+                    "Do you want to reveal the answer?"
+                  );
+                  if (confirmed) {
+                    setAnswer(true);
+                  }
+                }
+              }}
+              text={"Show answer"}
+            />
+            {answer ? (
+              <p className="text-lg text-bold">
+                Binary number is  : {binaryString}
+                <br /> Number of transistors is  : {numOfTransitor}
+              </p>
+            ) : (
+             ""
+            )}
+          </>
+        }
       </CommonModal>
     </>
   );

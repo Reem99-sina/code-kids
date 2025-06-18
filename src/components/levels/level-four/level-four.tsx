@@ -28,6 +28,8 @@ export const LevelFour: React.FC<LevelFourProps> = ({
   // const [insulatorPressed, setInsulatorPressed] = useState(false);
   // const [progress, setProgress] = useState(0);
   const [answer, setAnswer] = useState("");
+    const [result, setResult] = useState(false);
+  
   const refModal = useRef<ModalRef>(null);
   const modalRef = useRef<ModalRef>(null);
  const modalHintRef = useRef<ModalRef>(null);
@@ -82,7 +84,7 @@ export const LevelFour: React.FC<LevelFourProps> = ({
         <div className="min-w-[894px] min-h-[182px] flex items-center flex-col bg-[#FFE5F3] gap-2 rounded-lg">
           <div className="flex items-center gap-3 mt-2">
             <div className="w-[66px] h-[66px] flex items-center justify-center bg-[#FFC9E6]">
-              0
+              0 
             </div>
             <div className="w-[66px] h-[66px] flex items-center justify-center bg-[#FFC9E6]">
               0
@@ -130,8 +132,25 @@ export const LevelFour: React.FC<LevelFourProps> = ({
           ></iframe>
         </div>
       </CommonModal>
-        <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {hint}
+             <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {
+          <>
+            {" "}
+            {hint}
+            <Button
+            className={`${result?`bg-white`:``}`}
+              onClick={() => {
+                if(!result)
+               { const confirmed = confirm("Do you want to reveal the answer?");
+                if (confirmed) {
+                  setResult(true);
+                }}
+              }}
+              text={"Show answer"}
+            />
+            {result ? <p className="text-lg text-bold">press on all the button</p> : <></>}
+          </>
+        }
       </CommonModal>
     </div>
   );
