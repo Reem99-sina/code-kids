@@ -65,7 +65,6 @@ const LevelSeven = ({ onComplete, goHome, open, hint, source }: Props) => {
       modalRef.current?.open();
     }
   }, [level]);
-  
 
   return (
     <div className="flex flex-col">

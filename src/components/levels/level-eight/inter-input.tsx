@@ -17,14 +17,14 @@ const InterInput = ({ title, level, nameOfForm }: props) => {
     updated[index] = updated[index] == 0 ? 1 : 0;
 
     // Convert to string
-    
+
     const asString = updated.join("");
     setValue(nameOfForm, asString);
   };
 
   return (
     <div className="flex items-center gap-4  justify-center ">
-      <div className="" >
+      <div className="">
         <div className="flex items-center gap-2">
           {Array.from({ length: level }, (_, index) => (
             <Button
