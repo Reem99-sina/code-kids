@@ -11,7 +11,7 @@ import CardElement from "@/components/common/card-element";
 import ProgressBar from "@/components/common/ProgressBar";
 import TransistorComponent from "@/components/common/transistor-component";
 import clsx from "clsx";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { JSX, ReactNode, useEffect, useRef, useState } from "react";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import CommonModal from "@/components/common/common-modal";
 import { LevelComplete } from "../LevelComplete";
@@ -21,6 +21,9 @@ interface LevelThreeProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
+      hint: JSX.Element;  
+      source:string
+
 }
 
 interface DragComProps {
@@ -54,10 +57,13 @@ const LevelThree: React.FC<LevelThreeProps> = ({
   goHome,
   onComplete,
   open,
+  hint,
+  source
 }) => {
   const modalRef = useRef<ModalRef>(null);
   const modalResultRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
+ const modalHintRef = useRef<ModalRef>(null);
 
   const [appear, setAppear] = useState(false);
   const [progress, setProgress] = useState(1);
@@ -116,16 +122,20 @@ const LevelThree: React.FC<LevelThreeProps> = ({
     }
   };
 
-  useEffect(() => {
-    modalRef?.current?.open();
-  }, []);
-
-  useEffect(() => {
+   useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
     if (open) {
-      modalRef?.current?.open();
+      modalHintRef?.current?.open();
     }
   }, [open]);
 
+  useEffect(() => {
+    modalRef?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
+  
   return (
     <div className="flex items-start gap-5">
       <div className="bg-white rounded-lg py-5 px-3 flex flex-col gap-4 min-h-[600px] relative ">
@@ -212,11 +222,14 @@ const LevelThree: React.FC<LevelThreeProps> = ({
         <div className="relative pt-[56.25%] w-full">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src={`https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4`}
+            src={source}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
         </div>
+      </CommonModal>
+      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {hint}
       </CommonModal>
       <Modal ref={modalResultRef}>
         <LevelComplete level="3" onNextLevel={onComplete} onGoHome={goHome} />

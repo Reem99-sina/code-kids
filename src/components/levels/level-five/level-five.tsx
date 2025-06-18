@@ -1,7 +1,7 @@
 import { HomeIcon } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { JSX, useEffect, useMemo, useRef, useState } from "react";
 import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
@@ -16,15 +16,20 @@ interface LevelFiveProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
+    hint: JSX.Element;
+  source:string  
+
 }
 
 export const LevelFive: React.FC<LevelFiveProps> = ({
   onComplete,
   goHome,
   open,
+  hint,source
 }) => {
   const modalRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
+ const modalHintRef = useRef<ModalRef>(null);
 
   const [level, setLevel] = useState(1);
   const [progress, setProgress] = useState(0);
@@ -60,14 +65,21 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
       modalRef.current?.open();
     }
   }, [level]);
-  useEffect(() => {
+
+ useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
     if (open) {
-      refModal?.current?.open();
+      modalHintRef?.current?.open();
     }
   }, [open]);
+
   useEffect(() => {
-    refModal.current?.open();
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
   }, []);
+
 
   return (
     <>
@@ -148,11 +160,14 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
         <div className="relative pt-[56.25%] w-full">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src={`https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+5+Decimal+to+Binary+Blastoff.mp4`}
+            src={source}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
         </div>
+      </CommonModal>
+       <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+        {hint}
       </CommonModal>
     </>
   );
