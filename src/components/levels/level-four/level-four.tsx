@@ -1,19 +1,21 @@
 import { HomeIcon } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { JSX, useEffect, useRef, useState } from "react";
+import { JSX, useEffect, useMemo, useRef, useState } from "react";
 import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
 import CommonModal from "@/components/common/common-modal";
+import { useForm } from "react-hook-form";
+import { generateRandomDec } from "@/utils/binary.util";
+import toast from "react-hot-toast";
 
 interface LevelFourProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
   hint: JSX.Element;
-  source:string  
-
+  source: string;
 }
 
 export const LevelFour: React.FC<LevelFourProps> = ({
@@ -21,38 +23,44 @@ export const LevelFour: React.FC<LevelFourProps> = ({
   goHome,
   open,
   hint,
-  source
+  source,
 }) => {
-  // const [conductorPressed, setConductorPressed] = useState(false);
-  // const [semiconductorPressed, setSemiconductorPressed] = useState(false);
-  // const [insulatorPressed, setInsulatorPressed] = useState(false);
-  // const [progress, setProgress] = useState(0);
-  const [answer, setAnswer] = useState("");
-    const [result, setResult] = useState(false);
-  
-  const refModal = useRef<ModalRef>(null);
+  const [progress, setProgress] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [result, setResult] = useState(false);
+
+  const formData = useForm();
+  const decimal = formData.watch("decimal");
+  const modalHintRef = useRef<ModalRef>(null);
+
   const modalRef = useRef<ModalRef>(null);
- const modalHintRef = useRef<ModalRef>(null);
+  const refModal = useRef<ModalRef>(null);
 
-  // useEffect(() => {
-  //   const activeCount =
-  //     Number(conductorPressed) +
-  //     Number(semiconductorPressed) +
-  //     Number(insulatorPressed);
-
-  //   const newProgress = Math.round((activeCount / 3) * 100);
-  //   setProgress(newProgress);
-
-  //   if (newProgress === 100 && answer === "101") {
-  //     modalRef.current?.open();
-  //   }
-  // }, [conductorPressed, semiconductorPressed, insulatorPressed, answer]);
+  const { randomDecimal, binaryString } = useMemo(
+    () => generateRandomDec({ length: level * 4, DecNumber: Math.random() }),
+    [level]
+  );
 
   const handleCheckAnswer = () => {
-    if (answer === "101") {
+    if (randomDecimal == decimal) {
+      setLevel((prev) => prev + 1);
+      setProgress((prev) => (prev < 100 && prev + 25 <= 100 ? prev + 25 : 100));
+
+      formData.setValue("decimal", "");
+    } else {
+      toast.error(`Try again!\nCorrect : ${randomDecimal}`);
+    }
+    // if (answer === "101") {
+    //   modalRef.current?.open();
+    // }
+  };
+
+  useEffect(() => {
+    if (level == 5) {
       modalRef.current?.open();
     }
-  };
+  }, [level]);
+
   useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
@@ -67,39 +75,30 @@ export const LevelFour: React.FC<LevelFourProps> = ({
     modalHintRef?.current?.close();
   }, []);
 
-
   return (
     <div className="flex flex-col">
       <div className="mb-4 flex justify-start">
         <p className="font-bold text-3xl text-white">Binary Fun Time! </p>
       </div>
-
       <div className="flex flex-col items-center min-h-[524px] gap-4 p-6 bg-white shadow-lg rounded-lg">
-        <h2 className="text-2xl text-[#0E0226] font-bold">Current mission:</h2>
-        <p className="font-bold text-5xl text-[#FF1D92]">5</p>
+        <h2 className="text-2xl text-[#0E0226] font-bold">
+          Convert this binary number:
+        </h2>
+        <p className="font-bold text-5xl text-[#FF1D92]">{binaryString}</p>
         <p className="text-[#0E0226] font-normal text-xl">Your Progress</p>
         <div className="flex w-[80%]">
-          <ProgressBar progress={0} />
+          <ProgressBar progress={progress} />
         </div>
         <div className="min-w-[894px] min-h-[182px] flex items-center flex-col bg-[#FFE5F3] gap-2 rounded-lg">
-          <div className="flex items-center gap-3 mt-2">
-            <div className="w-[66px] h-[66px] flex items-center justify-center bg-[#FFC9E6]">
-              0 
-            </div>
-            <div className="w-[66px] h-[66px] flex items-center justify-center bg-[#FFC9E6]">
-              0
-            </div>
-          </div>
-          <div>
+          <div className="pt-5">
             <p className="font-bold text-sm text-[#0E0226]">
-              How many transistors are needed to represent this number?
+              Enter decimal value
             </p>
             <div className="my-2">
               <TextInput
                 inputProps={{
                   placeholder: "Type your answer here",
-                  value: answer,
-                  onChange: (e) => setAnswer(e.target.value),
+                  ...formData?.register("decimal"),
                 }}
               />
             </div>
@@ -119,7 +118,17 @@ export const LevelFour: React.FC<LevelFourProps> = ({
           </div>
         </div>
         <Modal ref={modalRef}>
-          <LevelComplete level="4" onNextLevel={onComplete} onGoHome={goHome} />
+          <LevelComplete
+            level="4"
+            onNextLevel={() => {
+              if (progress >= 100) {
+                onComplete();
+              } else {
+                modalRef?.current?.open();
+              }
+            }}
+            onGoHome={goHome}
+          />
         </Modal>
       </div>
       <CommonModal refModal={refModal} title={"Teach Course"}>
@@ -131,24 +140,31 @@ export const LevelFour: React.FC<LevelFourProps> = ({
             allowFullScreen
           ></iframe>
         </div>
-      </CommonModal>
-             <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+      </CommonModal>{" "}
+      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
         {
           <>
             {" "}
             {hint}
             <Button
-            className={`${result?`bg-white`:``}`}
+              className={`${result ? `bg-white` : ``}`}
               onClick={() => {
-                if(!result)
-               { const confirmed = confirm("Do you want to reveal the answer?");
-                if (confirmed) {
-                  setResult(true);
-                }}
+                if (!result) {
+                  const confirmed = confirm(
+                    "Do you want to reveal the answer?"
+                  );
+                  if (confirmed) {
+                    setResult(true);
+                  }
+                }
               }}
               text={"Show answer"}
             />
-            {result ? <p className="text-lg text-bold">press on all the button</p> : <></>}
+            {result ? (
+              <p className="text-lg text-bold">press on all the button</p>
+            ) : (
+              <></>
+            )}
           </>
         }
       </CommonModal>

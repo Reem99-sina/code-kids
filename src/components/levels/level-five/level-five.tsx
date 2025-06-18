@@ -30,12 +30,18 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
   const modalRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
   const modalHintRef = useRef<ModalRef>(null);
-
   const [level, setLevel] = useState(1);
   const [progress, setProgress] = useState(0);
   const [answer, setAnswer] = useState(false);
 
-  const formData = useForm();
+  const formData = useForm({
+    defaultValues: {
+      binary: Array(level + 1)
+        .fill(0)
+        ?.join(""),
+      transistors: "",
+    },
+  });
   const transistor = formData.watch("transistors");
   const binary = formData.watch("binary");
 
@@ -45,13 +51,24 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
   );
   const lastIndex = binaryString?.split("")?.reverse()?.lastIndexOf("1");
   const numOfTransitor = lastIndex == -1 ? 0 + 1 : lastIndex + 1;
+
   const handleCheckAnswer = () => {
-    if (binaryString == binary && transistor == numOfTransitor) {
+    const lastIndex = binaryString?.split("")?.reverse()?.lastIndexOf("1");
+
+    const numOfTransitor = lastIndex == -1 ? 0 + 1 : lastIndex + 1;
+    const binaryCheck = Array.isArray(binary) ? binary?.join("") : binary;
+
+    if (binaryString == binaryCheck && Number(transistor) == numOfTransitor) {
       setLevel((prev) => prev + 1);
 
-      setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
+      setProgress((prev) => (prev < 100 && prev + 25 <= 100 ? prev + 25 : 100));
 
-      formData?.setValue("binary", Array(level + 2).fill(0));
+      formData?.setValue(
+        "binary",
+        Array(level + 2)
+          .fill(0)
+          .join("")
+      );
       formData?.setValue("transistors", "");
     } else {
       toast.error(
@@ -60,7 +77,7 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
     }
   };
   useEffect(() => {
-    if (level == 4) {
+    if (level == 5) {
       modalRef.current?.open();
     }
   }, [level]);
@@ -184,11 +201,11 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
             />
             {answer ? (
               <p className="text-lg text-bold">
-                Binary number is  : {binaryString}
-                <br /> Number of transistors is  : {numOfTransitor}
+                Binary number is : {binaryString}
+                <br /> Number of transistors is : {numOfTransitor}
               </p>
             ) : (
-             ""
+              ""
             )}
           </>
         }

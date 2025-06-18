@@ -3,7 +3,9 @@ import {
   Battery,
   BatteryIcon,
   HomeIcon,
+  Light,
   LightIcon,
+  LightOff,
   Radio,
 } from "@/assets";
 import { Button } from "@/components/common/button.component";
@@ -21,9 +23,8 @@ interface LevelThreeProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
-      hint: JSX.Element;  
-      source:string
-
+  hint: JSX.Element;
+  source: string;
 }
 
 interface DragComProps {
@@ -49,7 +50,7 @@ const helpTools = [
   {
     title: "LED",
     icon: <LightIcon />,
-    component: <LightIcon className="my-3 h-[4.5rem] w-[4.5rem]" />,
+    component: <LightOff className="my-3 h-[4.5rem] w-[4.5rem]" />,
   },
 ];
 
@@ -58,13 +59,12 @@ const LevelThree: React.FC<LevelThreeProps> = ({
   onComplete,
   open,
   hint,
-  source
+  source,
 }) => {
   const modalRef = useRef<ModalRef>(null);
   const modalResultRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
- const modalHintRef = useRef<ModalRef>(null);
-
+  const modalHintRef = useRef<ModalRef>(null);
   const [appear, setAppear] = useState(false);
   const [progress, setProgress] = useState(1);
     const [answer, setAnswer] = useState(false);
@@ -113,7 +113,6 @@ const LevelThree: React.FC<LevelThreeProps> = ({
       ) && Object.keys(componentDrag)?.length == 3;
     if (open) {
       setProgress(100);
-      modalResultRef?.current?.open();
     } else {
       setMessage({
         title: "Game Over! ",
@@ -124,7 +123,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({
     }
   };
 
-   useEffect(() => {
+  useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
     }
@@ -137,7 +136,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({
     modalRef?.current?.open();
     modalHintRef?.current?.close();
   }, []);
-  
+
   return (
     <div className="flex items-start gap-5">
       <div className="bg-white rounded-lg py-5 px-3 flex flex-col gap-4 min-h-[600px] relative ">
@@ -194,7 +193,11 @@ const LevelThree: React.FC<LevelThreeProps> = ({
                 onDrop={(e) => onDrop(e, ele.title)} // 👈 حدد اسم الخانة
                 onDragOver={handleDragOver}
               >
-                {componentDrag[ele.title]?.component}
+                {ele.title == "LED" && progress >= 100 ? (
+                  <Light className="my-3 h-[4.5rem] w-[4.5rem]" />
+                ) : (
+                  componentDrag[ele.title]?.component
+                )}
               </div>
             </CardElement>
           ))}
@@ -230,23 +233,30 @@ const LevelThree: React.FC<LevelThreeProps> = ({
           ></iframe>
         </div>
       </CommonModal>
-           <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
         {
           <>
             {" "}
             {hint}
             <Button
-            className={`${answer?`bg-white`:``}`}
+              className={`${answer ? `bg-white` : ``}`}
               onClick={() => {
-                if(!answer)
-               { const confirmed = confirm("Do you want to reveal the answer?");
-                if (confirmed) {
-                  setAnswer(true);
-                }}
+                if (!answer) {
+                  const confirmed = confirm(
+                    "Do you want to reveal the answer?"
+                  );
+                  if (confirmed) {
+                    setAnswer(true);
+                  }
+                }
               }}
               text={"Show answer"}
             />
-            {answer ? <p className="text-lg text-bold">press on all the button</p> : <></>}
+            {answer ? (
+              <p className="text-lg text-bold">press on all the button</p>
+            ) : (
+              <></>
+            )}
           </>
         }
       </CommonModal>

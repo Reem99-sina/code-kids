@@ -8,10 +8,12 @@ import {
   sumBinaryNumber,
 } from "@/utils/binary.util";
 import clsx from "clsx";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import InterInput from "./inter-input";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { LevelComplete } from "../LevelComplete";
+import { Modal, ModalRef } from "@/components/common/modal.component";
 
 interface propsForm {
   total: string;
@@ -25,7 +27,10 @@ const LevelEight = ({
   onComplete: () => void;
   goHome: () => void;
 }) => {
+  const modalRef = useRef<ModalRef>(null);
+
   const [level, setLevel] = useState(1);
+  const [progress, setProgress] = useState(0);
   const [binary, setBinary] = useState(
     generateBinary({ length: level + 2, DecNumber: Math.random() })
   );
@@ -42,32 +47,44 @@ const LevelEight = ({
   const result = formData.watch();
 
   const goToNextLevel = () => {
-    if (level < 4) {
-      if (
-        checkIfUserAddRightNumber({
-          user_number: result,
-          check_number: total_carry,
-        })
-      ) {
-        toast.success("Great job! Keep going!");
-        setLevel((prev) => prev + 1);
-        formData.setValue("total", "");
-        formData.setValue("carry", "");
-      } else {
-        toast.error(
-          `Try again!\nCorrect sum: ${total_carry.total}\nCorrect carry: ${total_carry.carry}`
-        );
-      }
+    if (
+      checkIfUserAddRightNumber({
+        user_number: result,
+        check_number: total_carry,
+      })
+    ) {
+      toast.success("Great job! Keep going!");
+      setLevel((prev) => prev + 1);
+      setProgress((prev) => (prev < 100 && prev + 25 <= 100 ? prev + 25 : 100));
     } else {
-      onComplete();
+      toast.error(
+        `Try again!\nCorrect sum: ${total_carry.total}\nCorrect carry: ${total_carry.carry}`
+      );
     }
   };
+
+  useEffect(() => {
+    formData.setValue(
+      "total",
+      Array(total_carry?.total?.length).fill(0).join("")
+    );
+    formData.setValue(
+      "carry",
+      Array(total_carry?.carry?.length).fill(0).join("")
+    );
+  }, [total_carry]);
 
   useEffect(() => {
     setBinary(generateBinary({ length: level * 2, DecNumber: Math.random() }));
     setBinary_two(
       generateBinary({ length: level * 2, DecNumber: Math.random() })
     );
+  }, [level]);
+
+  useEffect(() => {
+    if (level == 5) {
+      modalRef.current?.open();
+    }
   }, [level]);
 
   return (
@@ -123,7 +140,7 @@ const LevelEight = ({
         </div>
         <p className="text-[#0E0226] font-normal text-xl">Your Progress</p>
         <div className="flex w-[80%]">
-          <ProgressBar progress={(((level - 1) * 25) / 100) * 100} />
+          <ProgressBar progress={progress} />
         </div>
         <div className="container mx-auto ">
           <div className="bg-pinkTwo flex  justify-center items-center flex-col w-full rounded-[8px] mt-4 pb-5">
@@ -167,6 +184,19 @@ const LevelEight = ({
           </div>
         </div>
       </div>
+      <Modal ref={modalRef}>
+        <LevelComplete
+          level="8"
+          onNextLevel={() => {
+            if (progress >= 100) {
+              onComplete();
+            } else {
+              modalRef?.current?.open();
+            }
+          }}
+          onGoHome={goHome}
+        />
+      </Modal>
     </div>
   );
 };

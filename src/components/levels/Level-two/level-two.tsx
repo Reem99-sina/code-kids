@@ -37,25 +37,16 @@ interface Props {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
-    hint: JSX.Element;  
-      source?:string
-
-
+  hint: JSX.Element;
+  source?: string;
 }
 
-export const LevelTwo = ({
-  onComplete,
-  goHome,
-  open,
-  hint,
-  source
-}: Props) => {
+export const LevelTwo = ({ onComplete, goHome, open, hint, source }: Props) => {
   const refModal = useRef<ModalRef>(null);
   const modalRef = useRef<ModalRef>(null);
   const modalResultRef = useRef<ModalRef>(null);
- const modalHintRef = useRef<ModalRef>(null);
+  const modalHintRef = useRef<ModalRef>(null);
   const [answer, setAnswer] = useState(false);
-
   const [time, setTime] = useState(60);
   const [message, setMessage] = useState({
     title: "",
@@ -99,7 +90,7 @@ export const LevelTwo = ({
     };
   }, [time]);
 
- useEffect(() => {
+  useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
     }
@@ -249,23 +240,30 @@ export const LevelTwo = ({
           ></iframe>
         </div>
       </CommonModal>
-    <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
         {
           <>
             {" "}
             {hint}
             <Button
-            className={`${answer?`bg-white`:``}`}
+              className={`${answer ? `bg-white` : ``}`}
               onClick={() => {
-                if(!answer)
-               { const confirmed = confirm("Do you want to reveal the answer?");
-                if (confirmed) {
-                  setAnswer(true);
-                }}
+                if (!answer) {
+                  const confirmed = confirm(
+                    "Do you want to reveal the answer?"
+                  );
+                  if (confirmed) {
+                    setAnswer(true);
+                  }
+                }
               }}
               text={"Show answer"}
             />
-            {answer ? <p className="text-lg text-bold">press on all the button</p> : <></>}
+            {answer ? (
+              <p className="text-lg text-bold">press on all the button</p>
+            ) : (
+              <></>
+            )}
           </>
         }
       </CommonModal>

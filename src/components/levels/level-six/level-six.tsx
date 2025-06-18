@@ -14,23 +14,24 @@ import toast from "react-hot-toast";
 interface LevelSixProps {
   onComplete: () => void;
   goHome: () => void;
-  open: boolean;  hint: JSX.Element;
-  source:string  
+  open: boolean;
+  hint: JSX.Element;
+  source: string;
 }
 
 export const LevelSix: React.FC<LevelSixProps> = ({
   onComplete,
   goHome,
-  open,  hint,
-  source
+  open,
+  hint,
+  source,
 }) => {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
   const formData = useForm();
   const hex = formData.watch("hex");
- const modalHintRef = useRef<ModalRef>(null);
+  const modalHintRef = useRef<ModalRef>(null);
   const [answer, setAnswer] = useState(false);
-
   const modalRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
 
@@ -38,14 +39,13 @@ export const LevelSix: React.FC<LevelSixProps> = ({
     () => generateRandomDec({ length: level * 4, DecNumber: Math.random() }),
     [level]
   );
-    const CorrectHex = randomDecimal.toString(16).toUpperCase();
-
+  const CorrectHex = randomDecimal.toString(16).toUpperCase();
   const handleCheckAnswer = () => {
     const CorrectHex = randomDecimal.toString(16).toUpperCase();
 
     if (CorrectHex == hex?.toUpperCase()) {
       setLevel((prev) => prev + 1);
-      setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
+      setProgress((prev) => (prev < 100 && prev + 25 <= 100 ? prev + 25 : 100));
 
       formData.setValue("hex", "");
     } else {
@@ -57,12 +57,12 @@ export const LevelSix: React.FC<LevelSixProps> = ({
   };
 
   useEffect(() => {
-    if (level == 4) {
+    if (level == 5) {
       modalRef.current?.open();
     }
   }, [level]);
 
-useEffect(() => {
+  useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
     }
@@ -76,13 +76,11 @@ useEffect(() => {
     modalHintRef?.current?.close();
   }, []);
 
-
   return (
     <div className="flex flex-col">
       <div className="mb-4 flex justify-start">
         <p className="font-bold text-3xl text-white">Binary Fun Time! </p>
       </div>
-
       <div className="flex flex-col items-center min-h-[524px] gap-4 p-6 bg-white shadow-lg rounded-lg">
         <h2 className="text-2xl text-[#0E0226] font-bold">
           Convert this binary number:
@@ -144,23 +142,31 @@ useEffect(() => {
             allowFullScreen
           ></iframe>
         </div>
-      </CommonModal>       <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+      </CommonModal>{" "}
+      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
         {
           <>
             {" "}
             {hint}
             <Button
-            className={`${answer?`bg-white`:``}`}
+              className={`${answer ? `bg-white` : ``}`}
               onClick={() => {
-                if(!answer)
-               { const confirmed = confirm("Do you want to reveal the answer?");
-                if (confirmed) {
-                  setAnswer(true);
-                }}
+                if (!answer) {
+                  const confirmed = confirm(
+                    "Do you want to reveal the answer?"
+                  );
+                  if (confirmed) {
+                    setAnswer(true);
+                  }
+                }
               }}
               text={"Show answer"}
             />
-            {answer ? <p className="text-lg text-bold">ANswer id : {CorrectHex}</p> : <></>}
+            {answer ? (
+              <p className="text-lg text-bold">ANswer id : {CorrectHex}</p>
+            ) : (
+              <></>
+            )}
           </>
         }
       </CommonModal>

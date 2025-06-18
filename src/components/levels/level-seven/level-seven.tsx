@@ -1,12 +1,12 @@
-import {HomeIcon} from "@/assets";
-import {Modal, ModalRef} from "@/components/common/modal.component";
+import { HomeIcon } from "@/assets";
+import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import {JSX, useEffect, useMemo, useRef, useState} from "react";
-import {LevelComplete} from "../LevelComplete";
-import {Button} from "@/components/common/button.component";
+import { JSX, useEffect, useMemo, useRef, useState } from "react";
+import { LevelComplete } from "../LevelComplete";
+import { Button } from "@/components/common/button.component";
 
-import {FormProvider, useForm} from "react-hook-form";
-import {generateRandomDec} from "@/utils/binary.util";
+import { FormProvider, useForm } from "react-hook-form";
+import { generateRandomDec } from "@/utils/binary.util";
 import InterInput from "../level-five/inter-input";
 import toast from "react-hot-toast";
 import CommonModal from "@/components/common/common-modal";
@@ -18,7 +18,7 @@ interface Props {
   hint: JSX.Element;
   source: string;
 }
-const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
+const LevelSeven = ({ onComplete, goHome, open, hint, source }: Props) => {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
   const formData = useForm();
@@ -26,18 +26,17 @@ const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
   const modalHintRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
   const [answer, setAnswer] = useState(false);
-
   const modalRef = useRef<ModalRef>(null);
 
-  const {randomDecimal, binaryString} = useMemo(
-    () => generateRandomDec({length: level * 4, DecNumber: Math.random()}),
+  const { randomDecimal, binaryString } = useMemo(
+    () => generateRandomDec({ length: level * 4, DecNumber: Math.random() }),
     [level]
   );
 
   const handleCheckAnswer = () => {
     if (binaryString == binary) {
-      setLevel((prev) => (prev < 4 ? prev + 1 : 4));
-      setProgress((prev) => (prev < 100 && prev + 40 <= 100 ? prev + 40 : 100));
+      setLevel((prev) => (prev < 5 ? prev + 1 : 5));
+      setProgress((prev) => (prev < 100 && prev + 25 <= 100 ? prev + 25 : 100));
 
       formData.setValue("binary", Array(binaryString?.length + 4).fill(0));
     } else {
@@ -62,7 +61,7 @@ const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
   }, []);
 
   useEffect(() => {
-    if (level == 4) {
+    if (level == 5) {
       modalRef.current?.open();
     }
   }, [level]);
@@ -114,7 +113,7 @@ const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
         </div>
         <Modal ref={modalRef}>
           <LevelComplete
-            level="6"
+            level="7"
             onNextLevel={() => {
               if (progress >= 100) {
                 onComplete();
@@ -131,29 +130,37 @@ const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
               className="absolute top-0 left-0 w-full h-full"
               src={source}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen></iframe>
+              allowFullScreen
+            ></iframe>
           </div>
         </CommonModal>
-            <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {
-          <>
-            {" "}
-            {hint}
-            <Button
-            className={`${answer?`bg-white`:``}`}
-              onClick={() => {
-                if(!answer)
-               { const confirmed = confirm("Do you want to reveal the answer?");
-                if (confirmed) {
-                  setAnswer(true);
+        <CommonModal refModal={modalHintRef} title={"Teach Course"}>
+          {
+            <>
+              {" "}
+              {hint}
+              <Button
+                className={`${answer ? `bg-white` : ``}`}
+                onClick={() => {
+                  if (!answer) {
+                    const confirmed = confirm(
+                      "Do you want to reveal the answer?"
+                    );
+                    if (confirmed) {
+                      setAnswer(true);
+                    }
+                  }
                 }}
-              }}
-              text={"Show answer"}
-            />
-            {answer ? <p className="text-lg text-bold">Answer is : {binaryString}</p> : <></>}
-          </>
-        }
-      </CommonModal>
+                text={"Show answer"}
+              />
+              {answer ? (
+                <p className="text-lg text-bold">Answer is : {binaryString}</p>
+              ) : (
+                <></>
+              )}
+            </>
+          }
+        </CommonModal>
       </div>
     </div>
   );
