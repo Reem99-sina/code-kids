@@ -68,6 +68,8 @@ const LevelThree: React.FC<LevelThreeProps> = ({
   const [answer, setAnswer] = useState(false);
   const [appear, setAppear] = useState(false);
   const [progress, setProgress] = useState(1);
+    const [answer, setAnswer] = useState(false);
+
   const [componentDrag, setComponentDrag] = useState<
     Record<string, DragComProps>
   >({});
