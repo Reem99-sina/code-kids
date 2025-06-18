@@ -30,7 +30,6 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
   const modalRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
   const modalHintRef = useRef<ModalRef>(null);
-  const [answer, setAnswer] = useState(false);
   const [level, setLevel] = useState(1);
   const [progress, setProgress] = useState(0);
   const [answer, setAnswer] = useState(false);

@@ -65,7 +65,6 @@ const LevelThree: React.FC<LevelThreeProps> = ({
   const modalResultRef = useRef<ModalRef>(null);
   const refModal = useRef<ModalRef>(null);
   const modalHintRef = useRef<ModalRef>(null);
-  const [answer, setAnswer] = useState(false);
   const [appear, setAppear] = useState(false);
   const [progress, setProgress] = useState(1);
     const [answer, setAnswer] = useState(false);

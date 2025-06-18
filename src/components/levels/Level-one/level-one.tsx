@@ -33,7 +33,6 @@ export const LevelOne: React.FC<LevelOneProps> = ({
   const modalRef = useRef<ModalRef>(null);
   const modalHintRef = useRef<ModalRef>(null);
   const modalResultRef = useRef<ModalRef>(null);
-  const [answer, setAnswer] = useState(false);
   const [message, setMessage] = useState({
     title: "",
     desc: "",
