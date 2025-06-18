@@ -27,6 +27,8 @@ export const LevelOne: React.FC<LevelOneProps> = ({
   const [conductorPressed, setConductorPressed] = useState(false);
   const [semiconductorPressed, setSemiconductorPressed] = useState(false);
   const [insulatorPressed, setInsulatorPressed] = useState(false);
+  const [answer, setAnswer] = useState(false);
+
   const [progress, setProgress] = useState(0);
   const modalRef = useRef<ModalRef>(null);
   const modalHintRef = useRef<ModalRef>(null);

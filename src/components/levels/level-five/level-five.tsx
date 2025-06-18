@@ -1,12 +1,12 @@
-import { HomeIcon } from "@/assets";
-import { Modal, ModalRef } from "@/components/common/modal.component";
+import {HomeIcon} from "@/assets";
+import {Modal, ModalRef} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { JSX, useEffect, useMemo, useRef, useState } from "react";
-import { LevelComplete } from "../LevelComplete";
-import { Button } from "@/components/common/button.component";
-import { TextInput } from "@/components/common/form/text-input.component";
-import { generateRandomDec } from "@/utils/binary.util";
-import { FormProvider, useForm } from "react-hook-form";
+import {JSX, useEffect, useMemo, useRef, useState} from "react";
+import {LevelComplete} from "../LevelComplete";
+import {Button} from "@/components/common/button.component";
+import {TextInput} from "@/components/common/form/text-input.component";
+import {generateRandomDec} from "@/utils/binary.util";
+import {FormProvider, useForm} from "react-hook-form";
 import InterInput from "./inter-input";
 
 import CommonModal from "@/components/common/common-modal";
@@ -33,6 +33,7 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
   const [answer, setAnswer] = useState(false);
   const [level, setLevel] = useState(1);
   const [progress, setProgress] = useState(0);
+  const [answer, setAnswer] = useState(false);
 
   const formData = useForm({
     defaultValues: {
@@ -45,8 +46,8 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
   const transistor = formData.watch("transistors");
   const binary = formData.watch("binary");
 
-  const { randomDecimal, binaryString } = useMemo(
-    () => generateRandomDec({ length: level + 1, DecNumber: Math.random() }),
+  const {randomDecimal, binaryString} = useMemo(
+    () => generateRandomDec({length: level + 1, DecNumber: Math.random()}),
     [level]
   );
   const lastIndex = binaryString?.split("")?.reverse()?.lastIndexOf("1");
@@ -177,8 +178,7 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
             className="absolute top-0 left-0 w-full h-full"
             src={source}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
+            allowFullScreen></iframe>
         </div>
       </CommonModal>
       <CommonModal refModal={modalHintRef} title={"Teach Course"}>
