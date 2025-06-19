@@ -1,18 +1,19 @@
-import { BatteryIconB, HomeIcon, Light, LightOff } from "@/assets";
-import { Modal, ModalRef } from "@/components/common/modal.component";
+import {BatteryIconB, HomeIcon, Light, LightOff} from "@/assets";
+import {Modal, ModalRef} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { TransmitCard } from "@/components/common/transmit-card";
-import { JSX, useEffect, useRef, useState } from "react";
-import { LevelComplete } from "../LevelComplete";
-import { Button } from "@/components/common/button.component";
+import {TransmitCard} from "@/components/common/transmit-card";
+import {useEffect, useRef, useState} from "react";
+import {LevelComplete} from "../LevelComplete";
+import {Button} from "@/components/common/button.component";
 import CommonModal from "@/components/common/common-modal";
 import ModalReviewResult from "../Level-two/modal-review-result";
+import HelpME from "@/components/common/help.me";
 
 interface LevelOneProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
-  hint: JSX.Element;
+  hint: string;
   source?: string;
 }
 
@@ -51,7 +52,8 @@ export const LevelOne: React.FC<LevelOneProps> = ({
       Number(insulatorPressed);
 
     const newProgress = Math.round((activeCount / 3) * 100);
-    setProgress(newProgress);
+
+    setProgress(answer ? newProgress - 20 : newProgress);
   }, [conductorPressed, semiconductorPressed, insulatorPressed]);
   useEffect(() => {
     if (!modalHintRef?.current?.open()) {
@@ -88,7 +90,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <TransmitCard
               title="Conductor"
               icons={[
-                { icon: <BatteryIconB />, label: "Battery" },
+                {icon: <BatteryIconB />, label: "Battery"},
                 {
                   icon: conductorPressed ? <Light /> : <LightOff />,
                   label: "Light",
@@ -101,7 +103,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <TransmitCard
               title="Semiconductor"
               icons={[
-                { icon: <BatteryIconB />, label: "Battery" },
+                {icon: <BatteryIconB />, label: "Battery"},
                 {
                   icon: semiconductorPressed ? <Light /> : <LightOff />,
                   label: "Light",
@@ -115,7 +117,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             <TransmitCard
               title="Insulator"
               icons={[
-                { icon: <BatteryIconB />, label: "Battery" },
+                {icon: <BatteryIconB />, label: "Battery"},
                 {
                   icon: insulatorPressed ? <Light /> : <LightOff />,
                   label: "Light",
@@ -169,37 +171,16 @@ export const LevelOne: React.FC<LevelOneProps> = ({
             className="absolute top-0 left-0 w-full h-full"
             src={source}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
+            allowFullScreen></iframe>
         </div>
       </CommonModal>
-      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {
-          <>
-            {" "}
-            {hint}
-            <Button
-              className={`${answer ? `bg-white` : ``}`}
-              onClick={() => {
-                if (!answer) {
-                  const confirmed = confirm(
-                    "Do you want to reveal the answer?"
-                  );
-                  if (confirmed) {
-                    setAnswer(true);
-                  }
-                }
-              }}
-              text={"Show answer"}
-            />
-            {answer ? (
-              <p className="text-lg text-bold">press on all the button</p>
-            ) : (
-              <></>
-            )}
-          </>
-        }
-      </CommonModal>
+      <HelpME
+        answer={answer}
+        hint={hint}
+        setAnswer={() => setAnswer(true)}
+        refModal={modalHintRef}
+        solution={"press on all the button"}
+      />
       <Modal
         ref={modalResultRef}
         className="bg-transparent"

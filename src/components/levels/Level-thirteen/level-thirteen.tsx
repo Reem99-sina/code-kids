@@ -8,7 +8,6 @@ import {
   Diode,
   Ellipse,
   Ground,
-  HelpIcon,
   HomeIcon,
   HorizontalLine,
   LightIcon,
@@ -22,15 +21,23 @@ import {JSX} from "react/jsx-runtime";
 import {Modal, ModalRef} from "@/components/common/modal.component";
 import {LevelComplete} from "../LevelComplete";
 import DargedDiv from "@/components/common/level-fourteen-component";
+import CommonModal from "@/components/common/common-modal";
+import HelpME from "@/components/common/help.me";
 
 interface LevelThirteenProps {
   onComplete: () => void;
   goHome: () => void;
+      open: boolean;
+  hint: string;
+  source: string;
 }
-const LEvelThirteen = ({onComplete, goHome}: LevelThirteenProps) => {
+const LEvelThirteen = ({onComplete, goHome,open,hint,source}: LevelThirteenProps) => {
   const [progress, setProgress] = useState(0);
   const [appear, setAppear] = useState(false);
   const modalRef = useRef<ModalRef>(null);
+    const modalHintRef = useRef<ModalRef>(null);
+      const [answer, setAnswer] = useState(false);
+        const refModal = useRef<ModalRef>(null);
   const [correctStates, setCorrectStates] = useState({
     top: false,
     bottom: false,
@@ -73,7 +80,19 @@ const LEvelThirteen = ({onComplete, goHome}: LevelThirteenProps) => {
       component: <Ground className="my-3 h-[4.5rem] w-[4.5rem]" />,
     },
   ];
+useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
+    if (open) {
+      modalHintRef?.current?.open();
+    }
+  }, [open]);
 
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
   const getElement = ({title}: {title: string}) => {
     return tools.find((ele) => ele?.title == title)?.component;
   };
@@ -294,9 +313,23 @@ const LEvelThirteen = ({onComplete, goHome}: LevelThirteenProps) => {
             />
           </Modal>
         </div>
-        <div className="absolute  bottom-0 right-0 h-48">
-          <HelpIcon />
+        <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={source}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen></iframe>
         </div>
+      </CommonModal>
+          <HelpME
+        setAnswer={() => setAnswer(true)}
+        answer={answer}
+        hint={hint}
+        refModal={modalHintRef}
+        solution={`  borrows  :`}
+        solutionTwo={` Correct carry:`}
+      />
       </div>
     </>
   );

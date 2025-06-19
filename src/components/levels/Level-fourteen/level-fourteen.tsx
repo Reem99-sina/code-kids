@@ -3,7 +3,7 @@ import {
   Vector,
   Ground,
   HorizontalLine,
-  HelpIcon,
+
   OrGate,
   BoldLine,
   RandomShape,
@@ -19,18 +19,26 @@ import ProgressBar from "@/components/common/ProgressBar";
 import TransistorComponent from "@/components/common/transistor-component";
 import * as React from "react";
 import {LevelComplete} from "../LevelComplete";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import DargedDiv from "./../../common/level-fourteen-component";
+import CommonModal from "@/components/common/common-modal";
+import HelpME from "@/components/common/help.me";
 
 interface LevelFourteenProps {
   onComplete: () => void;
   goHome: () => void;
+      open: boolean;
+  hint: string;
+  source: string;
 }
 
-const LevelFourteen = ({onComplete, goHome}: LevelFourteenProps) => {
+const LevelFourteen = ({onComplete, goHome,source,hint,open}: LevelFourteenProps) => {
   const [progress, setProgress] = useState(0);
   const [appear, setAppear] = useState(false);
   const modalRef = useRef<ModalRef>(null);
+      const modalHintRef = useRef<ModalRef>(null);
+      const [answer, setAnswer] = useState(false);
+        const refModal = useRef<ModalRef>(null);
   const [correctStates, setCorrectStates] = useState({
     top: false,
     bottom: false,
@@ -181,7 +189,19 @@ const LevelFourteen = ({onComplete, goHome}: LevelFourteenProps) => {
       }
     }
   };
+useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
+    if (open) {
+      modalHintRef?.current?.open();
+    }
+  }, [open]);
 
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
   const onDrag = ({e, component}: {e: React.DragEvent; component: string}) => {
     e.dataTransfer.setData("componentType", String(component));
   };
@@ -219,7 +239,7 @@ const LevelFourteen = ({onComplete, goHome}: LevelFourteenProps) => {
             </div>
           </div>
         </div>
-        <div className="w-[90%]  m-5 p-2 flex flex-col bg-white rounded justify-center items-center rounded-xl ">
+        <div className="w-[90%]  m-5 p-2 flex flex-col bg-white rounded justify-center items-center  ">
           <div className="flex flex-col justify-center  w-[100%]">
             <div className="mb-4 flex justify-center ">
               <p className=" font-bold text-3xl text-black ">
@@ -354,9 +374,23 @@ const LevelFourteen = ({onComplete, goHome}: LevelFourteenProps) => {
             />
           </Modal>
         </div>
-        <div className="absolute  bottom-0 right-0 h-48">
-          <HelpIcon />
+         <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={source}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen></iframe>
         </div>
+      </CommonModal>
+          <HelpME
+        setAnswer={() => setAnswer(true)}
+        answer={answer}
+        hint={hint}
+        refModal={modalHintRef}
+        solution={`  borrows  :`}
+        solutionTwo={` Correct carry:`}
+      />
       </div>
     </>
   );

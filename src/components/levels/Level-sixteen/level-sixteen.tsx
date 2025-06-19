@@ -1,28 +1,49 @@
-import {HelpIcon, HomeIcon} from "@/assets";
+import { HomeIcon} from "@/assets";
 import {Button} from "@/components/common/button.component";
 import {Modal, ModalRef} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
 import {LevelComplete} from "../LevelComplete";
 import {useEffect, useRef, useState} from "react";
+import CommonModal from "@/components/common/common-modal";
+import HelpME from "@/components/common/help.me";
 
 interface LevelSixteenProps {
   onComplete: () => void;
   goHome: () => void;
+   open: boolean;
+  hint: string;
+  source: string;
+
 }
 
-const LevelSixteen = ({goHome, onComplete}: LevelSixteenProps) => {
+const LevelSixteen = ({goHome, onComplete,source,hint,open}: LevelSixteenProps) => {
   const [progress, setProgress] = useState(0);
   const [toggleButton, setToggleButton] = useState([0, 0, 0, 0]);
   const modalRef = useRef<ModalRef>(null);
   const [inputValue, setInputValue] = useState<string>("");
   const [number] = useState(getRandomDecimal1to15());
+     const modalHintRef = useRef<ModalRef>(null);
+        const [answer, setAnswer] = useState(false);
+          const refModal = useRef<ModalRef>(null);
 
   const toggleValue = (index: number) => {
     const update = [...toggleButton];
     update[index] = update[index] === 0 ? 1 : 0;
     setToggleButton([...update]);
   };
+useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
+    if (open) {
+      modalHintRef?.current?.open();
+    }
+  }, [open]);
 
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
   function getRandomDecimal1to15(): number {
     return Math.floor(Math.random() * 15) + 1;
   }
@@ -141,9 +162,23 @@ const LevelSixteen = ({goHome, onComplete}: LevelSixteenProps) => {
           <LevelComplete onNextLevel={onComplete} onGoHome={goHome} level={""} />
         </Modal>
       </div>
-      <div className="absolute  bottom-0 right-0 translate-y-[100px] ">
-        <HelpIcon />
-      </div>
+         <CommonModal refModal={refModal} title={"Teach Course"}>
+          <div className="relative pt-[56.25%] w-full">
+            <iframe
+              className="absolute top-0 left-0 w-full h-full"
+              src={source}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen></iframe>
+          </div>
+        </CommonModal>
+        <HelpME
+          setAnswer={() => setAnswer(true)}
+          answer={answer}
+          hint={hint}
+          refModal={modalHintRef}
+          solution={`  borrows  :`}
+          solutionTwo={` Correct carry:`}
+        />
     </div>
   );
 };

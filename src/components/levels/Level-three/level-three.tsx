@@ -13,17 +13,18 @@ import CardElement from "@/components/common/card-element";
 import ProgressBar from "@/components/common/ProgressBar";
 import TransistorComponent from "@/components/common/transistor-component";
 import clsx from "clsx";
-import { JSX, ReactNode, useEffect, useRef, useState } from "react";
+import {  ReactNode, useEffect, useRef, useState } from "react";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import CommonModal from "@/components/common/common-modal";
 import { LevelComplete } from "../LevelComplete";
 import ModalReviewResult from "../Level-two/modal-review-result";
+import HelpME from "@/components/common/help.me";
 
 interface LevelThreeProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
-  hint: JSX.Element;
+  hint: string;
   source: string;
 }
 
@@ -112,7 +113,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({
         (key) => componentDrag[key]?.title == key
       ) && Object.keys(componentDrag)?.length == 3;
     if (open) {
-      setProgress(100);
+      setProgress(answer?80:100);
     } else {
       setMessage({
         title: "Game Over! ",
@@ -213,7 +214,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({
             text="Check Answer"
             className="!max-w-[220px] !rounded-[50px]"
             onClick={() => {
-              if (progress >= 100) {
+              if (progress >= 100||(answer&&progress==80)) {
                 modalResultRef?.current?.open();
               } else {
                 checkLight();
@@ -233,33 +234,8 @@ const LevelThree: React.FC<LevelThreeProps> = ({
           ></iframe>
         </div>
       </CommonModal>
-      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {
-          <>
-            {" "}
-            {hint}
-            <Button
-              className={`${answer ? `bg-white` : ``}`}
-              onClick={() => {
-                if (!answer) {
-                  const confirmed = confirm(
-                    "Do you want to reveal the answer?"
-                  );
-                  if (confirmed) {
-                    setAnswer(true);
-                  }
-                }
-              }}
-              text={"Show answer"}
-            />
-            {answer ? (
-              <p className="text-lg text-bold">press on all the button</p>
-            ) : (
-              <></>
-            )}
-          </>
-        }
-      </CommonModal>
+      <HelpME setAnswer={() => setAnswer(true)} answer={answer} hint={hint} refModal={modalHintRef} solution={""}/>
+
       <Modal ref={modalResultRef}>
         <LevelComplete level="3" onNextLevel={onComplete} onGoHome={goHome} />
       </Modal>

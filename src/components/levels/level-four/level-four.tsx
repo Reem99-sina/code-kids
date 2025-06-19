@@ -1,7 +1,7 @@
 import { HomeIcon } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { JSX, useEffect, useMemo, useRef, useState } from "react";
+import {  useEffect, useMemo, useRef, useState } from "react";
 import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
@@ -9,12 +9,13 @@ import CommonModal from "@/components/common/common-modal";
 import { useForm } from "react-hook-form";
 import { generateRandomDec } from "@/utils/binary.util";
 import toast from "react-hot-toast";
+import HelpME from "@/components/common/help.me";
 
 interface LevelFourProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
-  hint: JSX.Element;
+  hint: string;
   source: string;
 }
 
@@ -141,33 +142,8 @@ export const LevelFour: React.FC<LevelFourProps> = ({
           ></iframe>
         </div>
       </CommonModal>{" "}
-      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {
-          <>
-            {" "}
-            {hint}
-            <Button
-              className={`${result ? `bg-white` : ``}`}
-              onClick={() => {
-                if (!result) {
-                  const confirmed = confirm(
-                    "Do you want to reveal the answer?"
-                  );
-                  if (confirmed) {
-                    setResult(true);
-                  }
-                }
-              }}
-              text={"Show answer"}
-            />
-            {result ? (
-              <p className="text-lg text-bold">press on all the button</p>
-            ) : (
-              <></>
-            )}
-          </>
-        }
-      </CommonModal>
+              <HelpME setAnswer={() => setResult(true)} answer={result} hint={hint} refModal={modalHintRef} solution={""}/>
+
     </div>
   );
 };

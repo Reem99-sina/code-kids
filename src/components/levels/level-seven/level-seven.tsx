@@ -1,24 +1,25 @@
-import { HomeIcon } from "@/assets";
-import { Modal, ModalRef } from "@/components/common/modal.component";
+import {HomeIcon} from "@/assets";
+import {Modal, ModalRef} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { JSX, useEffect, useMemo, useRef, useState } from "react";
-import { LevelComplete } from "../LevelComplete";
-import { Button } from "@/components/common/button.component";
+import {useEffect, useMemo, useRef, useState} from "react";
+import {LevelComplete} from "../LevelComplete";
+import {Button} from "@/components/common/button.component";
 
-import { FormProvider, useForm } from "react-hook-form";
-import { generateRandomDec } from "@/utils/binary.util";
+import {FormProvider, useForm} from "react-hook-form";
+import {generateRandomDec} from "@/utils/binary.util";
 import InterInput from "../level-five/inter-input";
 import toast from "react-hot-toast";
 import CommonModal from "@/components/common/common-modal";
+import HelpME from "@/components/common/help.me";
 
 interface Props {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
-  hint: JSX.Element;
+  hint: string;
   source: string;
 }
-const LevelSeven = ({ onComplete, goHome, open, hint, source }: Props) => {
+const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
   const formData = useForm();
@@ -28,8 +29,8 @@ const LevelSeven = ({ onComplete, goHome, open, hint, source }: Props) => {
   const [answer, setAnswer] = useState(false);
   const modalRef = useRef<ModalRef>(null);
 
-  const { randomDecimal, binaryString } = useMemo(
-    () => generateRandomDec({ length: level * 4, DecNumber: Math.random() }),
+  const {randomDecimal, binaryString} = useMemo(
+    () => generateRandomDec({length: level * 4, DecNumber: Math.random()}),
     [level]
   );
 
@@ -130,37 +131,16 @@ const LevelSeven = ({ onComplete, goHome, open, hint, source }: Props) => {
               className="absolute top-0 left-0 w-full h-full"
               src={source}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
+              allowFullScreen></iframe>
           </div>
         </CommonModal>
-        <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-          {
-            <>
-              {" "}
-              {hint}
-              <Button
-                className={`${answer ? `bg-white` : ``}`}
-                onClick={() => {
-                  if (!answer) {
-                    const confirmed = confirm(
-                      "Do you want to reveal the answer?"
-                    );
-                    if (confirmed) {
-                      setAnswer(true);
-                    }
-                  }
-                }}
-                text={"Show answer"}
-              />
-              {answer ? (
-                <p className="text-lg text-bold">Answer is : {binaryString}</p>
-              ) : (
-                <></>
-              )}
-            </>
-          }
-        </CommonModal>
+        <HelpME
+          setAnswer={() => setAnswer(true)}
+          answer={answer}
+          hint={hint}
+          refModal={modalHintRef}
+          solution={` ANswer is : ${binaryString}`}
+        />
       </div>
     </div>
   );

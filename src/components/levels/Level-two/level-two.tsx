@@ -15,7 +15,7 @@ import {
   Wood,
 } from "@/assets";
 import ProgressBar from "@/components/common/ProgressBar";
-import { JSX, ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import EachMaterial, { EachMaterialHandle } from "./each-material";
 import EachCollector from "./each-collector";
 import { Button } from "@/components/common/button.component";
@@ -23,6 +23,7 @@ import { Modal, ModalRef } from "@/components/common/modal.component";
 import ModalReviewResult from "./modal-review-result";
 import CommonModal from "@/components/common/common-modal";
 import { LevelComplete } from "../LevelComplete";
+import HelpME from "@/components/common/help.me";
 
 interface materialInfo {
   title: string;
@@ -37,7 +38,7 @@ interface Props {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
-  hint: JSX.Element;
+  hint: string;
   source?: string;
 }
 
@@ -112,6 +113,7 @@ export const LevelTwo = ({ onComplete, goHome, open, hint, source }: Props) => {
       )
     );
     setProgress((prev) => (prev < 100 && prev + 13 <= 100 ? prev + 13 : 100));
+    
   };
 
   return (
@@ -240,33 +242,8 @@ export const LevelTwo = ({ onComplete, goHome, open, hint, source }: Props) => {
           ></iframe>
         </div>
       </CommonModal>
-      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {
-          <>
-            {" "}
-            {hint}
-            <Button
-              className={`${answer ? `bg-white` : ``}`}
-              onClick={() => {
-                if (!answer) {
-                  const confirmed = confirm(
-                    "Do you want to reveal the answer?"
-                  );
-                  if (confirmed) {
-                    setAnswer(true);
-                  }
-                }
-              }}
-              text={"Show answer"}
-            />
-            {answer ? (
-              <p className="text-lg text-bold">press on all the button</p>
-            ) : (
-              <></>
-            )}
-          </>
-        }
-      </CommonModal>
+          <HelpME setAnswer={() => setAnswer(true)} answer={answer} hint={hint} refModal={modalHintRef} solution={""}/>
+
     </div>
   );
 };

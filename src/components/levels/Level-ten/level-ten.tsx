@@ -2,18 +2,23 @@ import React, {useEffect, useRef, useState} from "react";
 import ProgressBar from "@/components/common/ProgressBar";
 import {Modal, ModalRef} from "@/components/common/modal.component";
 import {Button} from "@/components/common/button.component";
-import {HelpIcon, HomeIcon} from "@/assets";
+import { HomeIcon} from "@/assets";
 import {Star} from "@/assets";
 import {LevelComplete} from "../LevelComplete";
 import {generateBinary} from "@/utils/binary.util";
 import clsx from "clsx";
+import CommonModal from "@/components/common/common-modal";
+import HelpME from "@/components/common/help.me";
 
 interface LevelTenProps {
   onComplete: () => void;
   goHome: () => void;
+  open: boolean;
+  hint: string;
+  source: string;
 }
 
-const LevelTen: React.FC<LevelTenProps> = ({onComplete, goHome}) => {
+const LevelTen: React.FC<LevelTenProps> = ({onComplete, goHome,open,source,hint}) => {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
   const [binaryNumberBorrow, setBinaryNumberBorrow] = useState(
@@ -21,6 +26,9 @@ const LevelTen: React.FC<LevelTenProps> = ({onComplete, goHome}) => {
   );
   const [binaryResult, setBinaryResult] = useState(Array(level + 1).fill(0));
   const modalRef = useRef<ModalRef>(null);
+  const modalHintRef = useRef<ModalRef>(null);
+    const [answer, setAnswer] = useState(false);
+      const refModal = useRef<ModalRef>(null);
   // const [add, setAdd] = useState("01");
   const max = 2 ** (level + 1) - 1;
 
@@ -105,7 +113,19 @@ const LevelTen: React.FC<LevelTenProps> = ({onComplete, goHome}) => {
       setLevel((l) => l + 1);
     }
   }
+useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
+    if (open) {
+      modalHintRef?.current?.open();
+    }
+  }, [open]);
 
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
   useEffect(() => {
     setProgress(0);
     if (level <= 3) {
@@ -145,7 +165,7 @@ const LevelTen: React.FC<LevelTenProps> = ({onComplete, goHome}) => {
                 ? "bg-purpleOne text-white"
                 : "bg-white text-purpleOne",
               "!px-8 !rounded-[10px] border border-purpleOne",
-              "w-[15%]"
+              "w-[14%]"
             )}
           />
           <Button
@@ -156,20 +176,10 @@ const LevelTen: React.FC<LevelTenProps> = ({onComplete, goHome}) => {
                 ? "bg-purpleOne text-white"
                 : "bg-white text-purpleOne",
               "!px-8 !rounded-[10px] border border-purpleOne",
-              "w-[15%]"
+              "w-[14%]"
             )}
           />{" "}
-          <Button
-            text="Caption"
-            startIcon={<Star className="mx-2 h-6" />}
-            className={clsx(
-              level == 3
-                ? "bg-purpleOne text-white"
-                : "bg-white text-purpleOne",
-              "!px-8 !rounded-[10px] border border-purpleOne",
-              "w-[15%]"
-            )}
-          />{" "}
+          
           <Button
             text="Commander"
             startIcon={<Star className="mx-2 h-6" />}
@@ -178,7 +188,7 @@ const LevelTen: React.FC<LevelTenProps> = ({onComplete, goHome}) => {
                 ? "bg-purpleOne text-white"
                 : "bg-white text-purpleOne",
               "!px-8 !rounded-[10px] border border-purpleOne",
-              "w-[15%]"
+              "w-[14%]"
             )}
           />
         </div>
@@ -246,9 +256,24 @@ const LevelTen: React.FC<LevelTenProps> = ({onComplete, goHome}) => {
           </div>
         </div>
       </div>
-      <div className="absolute  bottom-8 right-0 h-96">
-        <HelpIcon />
-      </div>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={source}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen></iframe>
+        </div>
+      </CommonModal>
+          <HelpME
+        setAnswer={() => setAnswer(true)}
+        answer={answer}
+        hint={hint}
+        refModal={modalHintRef}
+        solution={`  borrows  : ${subtractBinaryStrings(one, two).borrows}`}
+        solutionTwo={` Correct carry: ${subtractBinaryStrings(one, two).result}`}
+      />
+     
     </>
   );
 };

@@ -2,7 +2,6 @@ import {
   LightIcon,
   Vector,
   Ground,
-  HelpIcon,
   BatteryIcon,
   Radio,
   Battery,
@@ -13,24 +12,38 @@ import {
   VerticalDashLine,
   Incline,
 } from "@/assets";
-import { Button } from "@/components/common/button.component";
-import { ModalRef, Modal } from "@/components/common/modal.component";
+import {Button} from "@/components/common/button.component";
+import {ModalRef, Modal} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
 import TransistorComponent from "@/components/common/transistor-component";
 import * as React from "react";
-import { LevelComplete } from "../LevelComplete";
-import { useRef, useState } from "react";
+import {LevelComplete} from "../LevelComplete";
+import {useEffect, useRef, useState} from "react";
 import DargedDiv from "./../../common/level-fourteen-component";
+import CommonModal from "@/components/common/common-modal";
+import HelpME from "@/components/common/help.me";
 
 interface LevelFifteenProps {
   onComplete: () => void;
   goHome: () => void;
+  open: boolean;
+  hint: string;
+  source: string;
 }
 
-const LevelFifteen = ({ onComplete, goHome }: LevelFifteenProps) => {
+const LevelFifteen = ({
+  onComplete,
+  goHome,
+  open,
+  hint,
+  source,
+}: LevelFifteenProps) => {
   const [progress, setProgress] = useState(0);
   const [appear, setAppear] = useState(false);
   const modalRef = useRef<ModalRef>(null);
+  const modalHintRef = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
+  const refModal = useRef<ModalRef>(null);
   const [correctStates, setCorrectStates] = useState({
     top: false,
     bottom: false,
@@ -40,7 +53,19 @@ const LevelFifteen = ({ onComplete, goHome }: LevelFifteenProps) => {
     leftTop: false,
     leftBottom: false,
   });
+  useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
+    if (open) {
+      modalHintRef?.current?.open();
+    }
+  }, [open]);
 
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
   const [componentDrag, setComponentDrag] = useState<{
     [id: string]: React.JSX.Element[];
   }>({});
@@ -77,7 +102,7 @@ const LevelFifteen = ({ onComplete, goHome }: LevelFifteenProps) => {
     },
   ];
 
-  const getElement = ({ title }: { title: string }) => {
+  const getElement = ({title}: {title: string}) => {
     return tools.find((ele) => ele?.title == title)?.component;
   };
 
@@ -86,7 +111,7 @@ const LevelFifteen = ({ onComplete, goHome }: LevelFifteenProps) => {
 
     const componentType = event.dataTransfer.getData("componentType");
     const dropId = event.currentTarget.id;
-    const item = getElement({ title: componentType });
+    const item = getElement({title: componentType});
     if (item) {
       setComponentDrag((prev) => ({
         ...prev,
@@ -97,96 +122,90 @@ const LevelFifteen = ({ onComplete, goHome }: LevelFifteenProps) => {
       if (componentType === "Button") {
         if (!correctStates.top) {
           setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({ ...prev, top: true }));
+          setCorrectStates((prev) => ({...prev, top: true}));
         }
       } else {
         if (correctStates.top) {
           setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({ ...prev, top: false }));
+          setCorrectStates((prev) => ({...prev, top: false}));
         }
       }
     } else if (dropId === "bottom") {
       if (componentType === "Ground") {
         if (!correctStates.bottom) {
           setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({ ...prev, bottom: true }));
+          setCorrectStates((prev) => ({...prev, bottom: true}));
         }
       } else {
         if (correctStates.bottom) {
           setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({ ...prev, bottom: false }));
+          setCorrectStates((prev) => ({...prev, bottom: false}));
         }
       }
     } else if (dropId === "centerTop") {
       if (componentType === "Transistor") {
         if (!correctStates.centerTop) {
           setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({ ...prev, centerTop: true }));
+          setCorrectStates((prev) => ({...prev, centerTop: true}));
         }
       } else {
         if (correctStates.centerTop) {
           setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({ ...prev, centerTop: false }));
+          setCorrectStates((prev) => ({...prev, centerTop: false}));
         }
       }
     } else if (dropId === "centerBottom") {
       if (componentType === "Transistor") {
         if (!correctStates.centerBottom) {
           setProgress((prv) => prv + 10);
-          setCorrectStates((prev) => ({ ...prev, centerBottom: true }));
+          setCorrectStates((prev) => ({...prev, centerBottom: true}));
         }
       } else {
         if (correctStates.centerBottom) {
           setProgress((prv) => prv - 10);
-          setCorrectStates((prev) => ({ ...prev, centerBottom: false }));
+          setCorrectStates((prev) => ({...prev, centerBottom: false}));
         }
       }
     } else if (dropId === "right") {
       if (componentType === "LED") {
         if (!correctStates.right) {
           setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({ ...prev, right: true }));
+          setCorrectStates((prev) => ({...prev, right: true}));
         }
       } else {
         if (correctStates.right) {
           setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({ ...prev, right: false }));
+          setCorrectStates((prev) => ({...prev, right: false}));
         }
       }
     } else if (dropId === "leftTop") {
       if (componentType === "Battery") {
         if (!correctStates.leftTop) {
           setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({ ...prev, leftTop: true }));
+          setCorrectStates((prev) => ({...prev, leftTop: true}));
         }
       } else {
         if (correctStates.leftTop) {
           setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({ ...prev, leftTop: false }));
+          setCorrectStates((prev) => ({...prev, leftTop: false}));
         }
       }
     } else if (dropId === "leftBottom") {
       if (componentType === "Battery") {
         if (!correctStates.leftBottom) {
           setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({ ...prev, leftBottom: true }));
+          setCorrectStates((prev) => ({...prev, leftBottom: true}));
         }
       } else {
         if (correctStates.leftBottom) {
           setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({ ...prev, leftBottom: false }));
+          setCorrectStates((prev) => ({...prev, leftBottom: false}));
         }
       }
     }
   };
 
-  const onDrag = ({
-    e,
-    component,
-  }: {
-    e: React.DragEvent;
-    component: string;
-  }) => {
+  const onDrag = ({e, component}: {e: React.DragEvent; component: string}) => {
     e.dataTransfer.setData("componentType", String(component));
   };
 
@@ -204,9 +223,8 @@ const LevelFifteen = ({ onComplete, goHome }: LevelFifteenProps) => {
             return (
               <div
                 draggable={true}
-                onDragStart={(e) => onDrag({ e, component: ele.title })}
-                key={index}
-              >
+                onDragStart={(e) => onDrag({e, component: ele.title})}
+                key={index}>
                 <Button
                   className="!bg-purpleOne rounded-lg flex items-center justify-center gap-2 font-normal text-white !text-base px-6 w-[100%]"
                   text={appear ? "" : ele?.title}
@@ -218,8 +236,7 @@ const LevelFifteen = ({ onComplete, goHome }: LevelFifteenProps) => {
 
           <div
             className="bg- py-2 rounded-full  w-[50px] absolute bottom- cursor-pointer top-1/2 transform translate-y-48 translate-x-16    "
-            onClick={() => setAppear(!appear)}
-          >
+            onClick={() => setAppear(!appear)}>
             <div className="bg-greenOne py-2 rounded-full px-3 flex ">
               <ArrowLeftIcon className="text-xl " />
             </div>
@@ -356,9 +373,23 @@ const LevelFifteen = ({ onComplete, goHome }: LevelFifteenProps) => {
             />
           </Modal>
         </div>
-        <div className="absolute  bottom-0 right-0 h-48">
-          <HelpIcon />
-        </div>
+        <CommonModal refModal={refModal} title={"Teach Course"}>
+          <div className="relative pt-[56.25%] w-full">
+            <iframe
+              className="absolute top-0 left-0 w-full h-full"
+              src={source}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen></iframe>
+          </div>
+        </CommonModal>
+        <HelpME
+          setAnswer={() => setAnswer(true)}
+          answer={answer}
+          hint={hint}
+          refModal={modalHintRef}
+          solution={`  borrows  :`}
+          solutionTwo={` Correct carry:`}
+        />
       </div>
     </>
   );
