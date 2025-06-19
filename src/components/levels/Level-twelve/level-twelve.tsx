@@ -1,4 +1,4 @@
-import {Arrow, HelpIcon} from "@/assets";
+import {Arrow} from "@/assets";
 import {Button} from "@/components/common/button.component";
 import GatComponent from "@/components/common/level-twelvec-component";
 import { Modal, ModalRef } from "@/components/common/modal.component";
@@ -6,13 +6,18 @@ import ProgressBar from "@/components/common/ProgressBar";
 import {HomeIcon} from "lucide-react";
 import {useEffect, useRef, useState} from "react";
 import { LevelComplete } from "../LevelComplete";
+import CommonModal from "@/components/common/common-modal";
+import HelpME from "@/components/common/help.me";
 
 interface LevelTwelveProps {
   onComplete: () => void;
   goHome: () => void;
+    open: boolean;
+  hint: string;
+  source: string;
 }
 
-export const LevelTwelve = ({onComplete, goHome}: LevelTwelveProps) => {
+export const LevelTwelve = ({onComplete, goHome,open,hint,source}: LevelTwelveProps) => {
   const [progress, setProgress] = useState(0);
   const [lightOfButtonOne, setLightOfButtonOne] = useState([
     false,
@@ -22,7 +27,9 @@ export const LevelTwelve = ({onComplete, goHome}: LevelTwelveProps) => {
   ]);
   const [lightOfButtonTwo, setLightOfButtonTwo] = useState([false, false]);
   const modalRef = useRef<ModalRef>(null);
-
+  const modalHintRef = useRef<ModalRef>(null);
+    const [answer, setAnswer] = useState(false);
+      const refModal = useRef<ModalRef>(null);
   function onClickLightMe(index: number) {
     const update = [...lightOfButtonOne];
     update[index] = !update[index];
@@ -33,7 +40,19 @@ export const LevelTwelve = ({onComplete, goHome}: LevelTwelveProps) => {
     update[index] = !update[index];
     setLightOfButtonTwo([...update]);
   }
+useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
+    if (open) {
+      modalHintRef?.current?.open();
+    }
+  }, [open]);
 
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
   useEffect(()=>{
 
     const result =
@@ -123,9 +142,23 @@ export const LevelTwelve = ({onComplete, goHome}: LevelTwelveProps) => {
                   <LevelComplete onNextLevel={onComplete} onGoHome={goHome} level={""} />
                 </Modal>
       </div>
-      <div className="absolute  bottom-0 right-0 h-48">
-        <HelpIcon />
-      </div>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={source}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen></iframe>
+        </div>
+      </CommonModal>
+          <HelpME
+        setAnswer={() => setAnswer(true)}
+        answer={answer}
+        hint={hint}
+        refModal={modalHintRef}
+        solution={`  borrows  :`}
+        solutionTwo={` Correct carry:`}
+      />
     </div>
     
   );

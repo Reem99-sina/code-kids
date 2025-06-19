@@ -1,5 +1,4 @@
 import {
-  HelpIcon,
   HomeIcon,
   HorizontalLightLine,
   VerticalDarkLine,
@@ -10,16 +9,30 @@ import ProgressBar from "@/components/common/ProgressBar";
 import {LevelComplete} from "../LevelComplete";
 import {useEffect, useRef, useState} from "react";
 import {Button} from "@/components/common/button.component";
+import CommonModal from "@/components/common/common-modal";
+import HelpME from "@/components/common/help.me";
 
 interface LevelEighteenProps {
   onComplete: () => void;
   goHome: () => void;
+  open: boolean;
+  hint: string;
+  source: string;
 }
 
-const LevelEighteen = ({onComplete, goHome}: LevelEighteenProps) => {
+const LevelEighteen = ({
+  onComplete,
+  goHome,
+  hint,
+  open,
+  source,
+}: LevelEighteenProps) => {
   const [progress, setProgress] = useState(0);
   const [toggleButton, setToggleButton] = useState(Array(7).fill(0));
   const modalRef = useRef<ModalRef>(null);
+  const modalHintRef = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
+  const refModal = useRef<ModalRef>(null);
   const [inputValue, setInputValue] = useState<string>("");
   const [number] = useState(getRandomDecimal1to15());
   const toggleValue = (index: number) => {
@@ -99,6 +112,20 @@ const LevelEighteen = ({onComplete, goHome}: LevelEighteenProps) => {
   useEffect(() => {
     checkSegments();
   }, [toggleButton, inputValue]);
+
+  useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
+    if (open) {
+      modalHintRef?.current?.open();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
 
   return (
     <div className="flex flex-col bg-white rounded justify-center items-center rounded-xl   ">
@@ -215,9 +242,23 @@ const LevelEighteen = ({onComplete, goHome}: LevelEighteenProps) => {
         <LevelComplete onNextLevel={onComplete} onGoHome={goHome} level={""} />
       </Modal>
 
-      <div className="absolute  bottom-0 right-0 translate-y-[100px] ">
-        <HelpIcon />
-      </div>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={source}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen></iframe>
+        </div>
+      </CommonModal>
+      <HelpME
+        setAnswer={() => setAnswer(true)}
+        answer={answer}
+        hint={hint}
+        refModal={modalHintRef}
+        solution={`  borrows  :`}
+        solutionTwo={` Correct carry:`}
+      />
     </div>
   );
 };

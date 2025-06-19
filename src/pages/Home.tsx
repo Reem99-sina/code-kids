@@ -19,9 +19,9 @@ import LevelFifteen from "@/components/levels/Level-fifteen/level-fifteen";
 import LevelSixteen from "@/components/levels/Level-sixteen/level-sixteen";
 import LevelSeventeen from "@/components/levels/Level-seventeen/level-seventeen";
 import LevelEighteen from "@/components/levels/Level-eighteen/level-eighteen";
-// import LevelNine from "@/components/levels/level-nine/level-nine";
 import { LevelFour } from "@/components/levels/level-four/level-four";
 import { getGamesQuery } from "@/services/track-service";
+import { LevelNine } from "@/components/levels/level-nine/level-nine";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
@@ -36,7 +36,7 @@ const Home = () => {
     LevelSix,
     LevelSeven,
     LevelEight,
-    // LevelNine,
+    LevelNine,
     LevelTen,
     LevelEleven,
     LevelTwelve,
