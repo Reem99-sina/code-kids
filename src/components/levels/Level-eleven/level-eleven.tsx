@@ -1,4 +1,4 @@
-import {HelpIcon, HomeIcon, Reward, Star} from "@/assets";
+import { HomeIcon, Star} from "@/assets";
 import {Button} from "@/components/common/button.component";
 import {Modal, ModalRef} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
@@ -9,10 +9,15 @@ import { generateBinary, sumBinaryNumber } from "@/utils/binary.util";
 import clsx from "clsx";
 import toast from "react-hot-toast";
 import ToggleButton from "@/components/common/toggleButton";
+import CommonModal from "@/components/common/common-modal";
+import HelpME from "@/components/common/help.me";
 
 interface LevelElevenProps {
   onComplete: () => void;
   goHome: () => void;
+    open: boolean;
+  hint: string;
+  source: string;
 }
 
 const ToggleGroup = ({
@@ -33,7 +38,7 @@ const ToggleGroup = ({
   </>
 );
 
-const LevelEleven: React.FC<LevelElevenProps> = ({onComplete, goHome}) => {
+const LevelEleven: React.FC<LevelElevenProps> = ({onComplete, goHome,open,hint,source}) => {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
   const [add, setAdd] = useState("");
@@ -56,7 +61,9 @@ const LevelEleven: React.FC<LevelElevenProps> = ({onComplete, goHome}) => {
     Array((level + 3) * 2).fill(0)
   );
   const [answer, setAnswer] = useState(Array(level + 3).fill(0));
-
+  const modalHintRef = useRef<ModalRef>(null);
+    const [reslut, setReslut] = useState(false);
+      const refModal = useRef<ModalRef>(null);
   const modalRef = useRef<ModalRef>(null);
 
   const toggleValue = (index: number) => {
@@ -127,7 +134,19 @@ const LevelEleven: React.FC<LevelElevenProps> = ({onComplete, goHome}) => {
           lastAns.total.slice(-(level + 3))
       );
   }
+useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
+    if (open) {
+      modalHintRef?.current?.open();
+    }
+  }, [open]);
 
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
   useEffect(() => {
     if (level <= 3) {
       setAdd(level == 1 ? "0001" : level == 2 ? "00001" : "000001");
@@ -150,41 +169,42 @@ const LevelEleven: React.FC<LevelElevenProps> = ({onComplete, goHome}) => {
           </p>
         </div>
 
-        <div className="flex justify-center items-center gap-4">
-          <Button
-            text="Codet"
-            startIcon={<Star className="mx-2" />}
-            className={clsx(
-              level == 1
-                ? "bg-purpleOne text-white"
-                : "bg-white text-purpleOne",
-              " !px-8 !rounded-[10px] border-purpleOne",
-              "w-[15%]"
-            )}
-          />
-          <Button
-            text="Pilot"
-            startIcon={<Star className="mx-2 h-6" />}
-            className={clsx(
-              level == 2
-                ? "bg-purpleOne text-white"
-                : "bg-white text-purpleOne",
-              "!px-8 !rounded-[10px] border border-purpleOne",
-              "w-[15%]"
-            )}
-          />
-          <Button
-            text="Commander"
-            startIcon={<Reward className="mx-2" />}
-            className={clsx(
-              level == 3
-                ? "bg-purpleOne text-white"
-                : "bg-white text-purpleOne",
-              " !px-8 !rounded-[10px] border border-purpleOne",
-              "w-[15%]"
-            )}
-          />
-        </div>
+          <div className="flex justify-center gap-4 ">
+                 <Button
+                   text="Codet"
+                   startIcon={<Star className=" mx-2 h-6" />}
+                   className={clsx(
+                     level == 1
+                       ? "bg-purpleOne text-white"
+                       : "bg-white text-purpleOne",
+                     "!px-8 !rounded-[10px] border border-purpleOne",
+                     "w-[14%]"
+                   )}
+                 />
+                 <Button
+                   text="pilot"
+                   startIcon={<Star className="mx-2 h-6" />}
+                   className={clsx(
+                     level == 2
+                       ? "bg-purpleOne text-white"
+                       : "bg-white text-purpleOne",
+                     "!px-8 !rounded-[10px] border border-purpleOne",
+                     "w-[14%]"
+                   )}
+                 />{" "}
+                 
+                 <Button
+                   text="Commander"
+                   startIcon={<Star className="mx-2 h-6" />}
+                   className={clsx(
+                     level == 4
+                       ? "bg-purpleOne text-white"
+                       : "bg-white text-purpleOne",
+                     "!px-8 !rounded-[10px] border border-purpleOne",
+                     "w-[14%]"
+                   )}
+                 />
+               </div>
         <div className="flex flex-col items-center justify-center mx-12 p-5 m-3 ">
           <p>Your Progress</p>
           <div className="w-3/4">
@@ -277,9 +297,23 @@ const LevelEleven: React.FC<LevelElevenProps> = ({onComplete, goHome}) => {
           <LevelComplete onNextLevel={onComplete} onGoHome={goHome} level={""} />
         </Modal>
       </div>
-      <div className="absolute  bottom-0 right-0 h-48">
-        <HelpIcon />
-      </div>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={source}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen></iframe>
+        </div>
+      </CommonModal>
+          <HelpME
+        setAnswer={() => setReslut(true)}
+        answer={reslut}
+        hint={hint}
+        refModal={modalHintRef}
+        solution={`  borrows  : `}
+        solutionTwo={` Correct carry:`}
+      />
     </>
   );
 };

@@ -70,7 +70,7 @@ const Home = () => {
           }}
           goHome={() => setSelectedLevel(0)}
           open={open}
-          hint={<div>{levels.description}</div>}
+          hint={levels.description}
           source="https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4"
         />
       ),

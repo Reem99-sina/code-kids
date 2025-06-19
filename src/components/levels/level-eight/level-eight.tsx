@@ -14,21 +14,32 @@ import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { LevelComplete } from "../LevelComplete";
 import { Modal, ModalRef } from "@/components/common/modal.component";
+import CommonModal from "@/components/common/common-modal";
+import HelpME from "@/components/common/help.me";
 
 interface propsForm {
   total: string;
   carry: string;
 }
+interface Props {
+  onComplete: () => void;
+  goHome: () => void;
+  open: boolean;
+  hint: string;
+  source: string;
+}
 
 const LevelEight = ({
   onComplete,
   goHome,
-}: {
-  onComplete: () => void;
-  goHome: () => void;
-}) => {
+  open,
+  hint,
+  source,
+}:Props) => {
   const modalRef = useRef<ModalRef>(null);
-
+  const modalHintRef = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
+    const refModal = useRef<ModalRef>(null);
   const [level, setLevel] = useState(1);
   const [progress, setProgress] = useState(0);
   const [binary, setBinary] = useState(
@@ -62,6 +73,19 @@ const LevelEight = ({
       );
     }
   };
+ useEffect(() => {
+    if (!modalHintRef?.current?.open()) {
+      open = false;
+    }
+    if (open) {
+      modalHintRef?.current?.open();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    refModal?.current?.open();
+    modalHintRef?.current?.close();
+  }, []);
 
   useEffect(() => {
     formData.setValue(
@@ -197,6 +221,23 @@ const LevelEight = ({
           onGoHome={goHome}
         />
       </Modal>
+      <CommonModal refModal={refModal} title={"Teach Course"}>
+        <div className="relative pt-[56.25%] w-full">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={source}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen></iframe>
+        </div>
+      </CommonModal>
+          <HelpME
+        setAnswer={() => setAnswer(true)}
+        answer={answer}
+        hint={hint}
+        refModal={modalHintRef}
+        solution={` Correct sum  : ${total_carry.total}`}
+        solutionTwo={` Correct carry: ${total_carry.carry}`}
+      />
     </div>
   );
 };

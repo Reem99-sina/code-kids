@@ -1,7 +1,7 @@
 import { HomeIcon } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
-import { JSX, useEffect, useMemo, useRef, useState } from "react";
+import {  useEffect, useMemo, useRef, useState } from "react";
 import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
@@ -10,12 +10,13 @@ import { useForm } from "react-hook-form";
 
 import CommonModal from "@/components/common/common-modal";
 import toast from "react-hot-toast";
+import HelpME from "@/components/common/help.me";
 
 interface LevelSixProps {
   onComplete: () => void;
   goHome: () => void;
   open: boolean;
-  hint: JSX.Element;
+  hint: string;
   source: string;
 }
 
@@ -143,33 +144,13 @@ export const LevelSix: React.FC<LevelSixProps> = ({
           ></iframe>
         </div>
       </CommonModal>{" "}
-      <CommonModal refModal={modalHintRef} title={"Teach Course"}>
-        {
-          <>
-            {" "}
-            {hint}
-            <Button
-              className={`${answer ? `bg-white` : ``}`}
-              onClick={() => {
-                if (!answer) {
-                  const confirmed = confirm(
-                    "Do you want to reveal the answer?"
-                  );
-                  if (confirmed) {
-                    setAnswer(true);
-                  }
-                }
-              }}
-              text={"Show answer"}
-            />
-            {answer ? (
-              <p className="text-lg text-bold">ANswer id : {CorrectHex}</p>
-            ) : (
-              <></>
-            )}
-          </>
-        }
-      </CommonModal>
+       <HelpME
+              setAnswer={() => setAnswer(true)}
+              answer={answer}
+              hint={hint}
+              refModal={modalHintRef}
+              solution={` ANswer is : ${CorrectHex}`}
+            />    
     </div>
   );
 };
