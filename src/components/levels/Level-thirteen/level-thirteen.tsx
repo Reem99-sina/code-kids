@@ -27,17 +27,23 @@ import HelpME from "@/components/common/help.me";
 interface LevelThirteenProps {
   onComplete: () => void;
   goHome: () => void;
-      open: boolean;
+  open: boolean;
   hint: string;
   source: string;
 }
-const LEvelThirteen = ({onComplete, goHome,open,hint,source}: LevelThirteenProps) => {
+const LEvelThirteen = ({
+  onComplete,
+  goHome,
+  open,
+  hint,
+  source,
+}: LevelThirteenProps) => {
   const [progress, setProgress] = useState(0);
   const [appear, setAppear] = useState(false);
   const modalRef = useRef<ModalRef>(null);
-    const modalHintRef = useRef<ModalRef>(null);
-      const [answer, setAnswer] = useState(false);
-        const refModal = useRef<ModalRef>(null);
+  const modalHintRef = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
+  const refModal = useRef<ModalRef>(null);
   const [correctStates, setCorrectStates] = useState({
     top: false,
     bottom: false,
@@ -80,7 +86,7 @@ const LEvelThirteen = ({onComplete, goHome,open,hint,source}: LevelThirteenProps
       component: <Ground className="my-3 h-[4.5rem] w-[4.5rem]" />,
     },
   ];
-useEffect(() => {
+  useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
     }
@@ -97,91 +103,52 @@ useEffect(() => {
     return tools.find((ele) => ele?.title == title)?.component;
   };
 
+  const rules = {
+    top: {type: "Button", score: 20},
+    bottom: {type: "Ground", score: 20},
+    center: {type: "Transistor", score: 20},
+    right: {type: "LED", score: 20},
+    left: {type: "Battery", score: 20},
+  } as const;
+
+  type DropId = keyof typeof rules;
   const onDrop = (event: React.DragEvent) => {
     event.preventDefault();
 
     const componentType = event.dataTransfer.getData("componentType");
-    const dropId = event.currentTarget.id;
-    const item = getElement({title: componentType});
+    const dropId = event.currentTarget.id as DropId;
 
+    const item = getElement({title: componentType});
     if (item) {
       setComponentDrag((prev) => ({
         ...prev,
         [dropId]: [item],
       }));
     }
-    if (dropId == "top") {
-      if (componentType === "Button") {
-        if (!correctStates.top) {
-          setProgress((prv) => prv + 20);
-          setCorrectStates((prev) => ({...prev, top: true}));
-        }
-      } else {
-        if (correctStates.top) {
-          setProgress((prv) => prv - 20);
-          setCorrectStates((prev) => ({...prev, top: false}));
-        }
-      }
-    } else if (dropId == "bottom") {
-      if (componentType === "Ground") {
-        if (!correctStates.bottom) {
-          setProgress((prv) => prv + 20);
-          setCorrectStates((prev) => ({...prev, bottom: true}));
-        }
-      } else {
-        if (correctStates.bottom) {
-          setProgress((prv) => prv - 20);
-          setCorrectStates((prev) => ({...prev, bottom: false}));
-        }
-      }
-    } else if (dropId == "center") {
-      if (componentType === "Transistor") {
-        if (!correctStates.center) {
-          setProgress((prv) => prv + 20);
-          setCorrectStates((prev) => ({...prev, center: true}));
-        }
-      } else {
-        if (correctStates.center) {
-          setProgress((prv) => prv - 20);
-          setCorrectStates((prev) => ({...prev, center: false}));
-        }
-      }
-    } else if (dropId == "right") {
-      if (componentType === "LED") {
-        if (!correctStates.right) {
-          setProgress((prv) => prv + 20);
-          setCorrectStates((prev) => ({...prev, right: true}));
-        }
-      } else {
-        if (correctStates.right) {
-          setProgress((prv) => prv - 20);
-          setCorrectStates((prev) => ({...prev, right: false}));
-        }
-      }
-    } else if (dropId == "left") {
-      if (componentType === "Battery") {
-        if (!correctStates.left) {
-          setProgress((prv) => prv + 20);
-          setCorrectStates((prev) => ({...prev, left: true}));
-        }
-      } else {
-        if (correctStates.left) {
-          setProgress((prv) => prv - 20);
-          setCorrectStates((prev) => ({...prev, left: false}));
-        }
-      }
-    }
+
+    const rule = rules[dropId];
+    if (!rule) return;
+
+    const isCorrect = componentType === rule.type;
+
+    setCorrectStates((prev) => ({...prev, [dropId]: isCorrect}));
   };
 
   const onDrag = ({e, component}: {e: React.DragEvent; component: string}) => {
     e.dataTransfer.setData("componentType", String(component));
   };
+  const checkAnswer=()=>{
+        let score = 0;
+    for (const dropId in rules) {
+      const key = dropId as DropId;
+      if (correctStates[key]) {
+        score += rules[key].score;
+      }
+      setProgress(score)
+      if(score==100)
+        modalRef.current?.open()
+  }}
 
-  useEffect(() => {
-    if (progress === 100) {
-      modalRef.current?.open();
-    }
-  }, [componentDrag, progress]);
 
   return (
     <>
@@ -301,6 +268,7 @@ useEffect(() => {
             />
 
             <Button
+            onClick={checkAnswer}
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
             />
@@ -314,22 +282,22 @@ useEffect(() => {
           </Modal>
         </div>
         <CommonModal refModal={refModal} title={"Teach Course"}>
-        <div className="relative pt-[56.25%] w-full">
-          <iframe
-            className="absolute top-0 left-0 w-full h-full"
-            src={source}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen></iframe>
-        </div>
-      </CommonModal>
-          <HelpME
-        setAnswer={() => setAnswer(true)}
-        answer={answer}
-        hint={hint}
-        refModal={modalHintRef}
-        solution={`  borrows  :`}
-        solutionTwo={` Correct carry:`}
-      />
+          <div className="relative pt-[56.25%] w-full">
+            <iframe
+              className="absolute top-0 left-0 w-full h-full"
+              src={source}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen></iframe>
+          </div>
+        </CommonModal>
+        <HelpME
+          setAnswer={() => setAnswer(true)}
+          answer={answer}
+          hint={hint}
+          refModal={modalHintRef}
+          solution={`  borrows  :`}
+          solutionTwo={` Correct carry:`}
+        />
       </div>
     </>
   );

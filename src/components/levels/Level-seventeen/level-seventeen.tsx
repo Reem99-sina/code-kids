@@ -40,37 +40,31 @@ const LevelSeventeen = ({goHome, onComplete,source,hint,open}: LevelSeventeenPro
   function getRandomDecimal1to15(): number {
     return Math.floor(Math.random() * 15) + 1;
   }
-  function checkResult(): void {
-    let re1 = 0;
-    let re2 = 0;
-    let re3 = 0;
-    const answer = convertDecimal(numberState);
-    if (Number(transistorValue) === 4 && numberState > 7 && numberState < 16)
-      re3 = 1;
+function checkResult(): void {
+  const answer = convertDecimal(numberState);
+  const transistor = Number(transistorValue);
 
-    if (Number(transistorValue) === 3 && numberState > 3 && numberState < 8)
-      re3 = 1;
+  const hexMatch = answer.hex === inputValue ? 1 : 0;
+  const binaryMatch = answer.binary === toggleButton.join('') ? 1 : 0;
 
-    if ((Number(transistorValue) === 2 && numberState == 2) || numberState == 3)
-      re3 = 1;
-    if (Number(transistorValue) === 1 && numberState == 1) re3 = 1;
-    if (Number(transistorValue) === 0) re3 = 0;
+  const rangeMatch =
+    (transistor === 4 && numberState > 7 && numberState < 16) ||
+    (transistor === 3 && numberState > 3 && numberState < 8) ||
+    (transistor === 2 && (numberState === 2 || numberState === 3)) ||
+    (transistor === 1 && numberState === 1)
+      ? 1
+      : 0;
 
-    if (answer.hex === inputValue) re1 = 1;
+  const newProgress = Math.round(((hexMatch + binaryMatch + rangeMatch) / 3) * 100);
 
-    if (answer.binary === toggleButton.join(``)) re2 = 1;
+  setProgress(newProgress);
 
-    const newProgress = Math.round(((re1 + re2 + re3) / 3) * 100);
-
-    setProgress(newProgress);
-    if (newProgress === 100) {
-      modalRef.current?.open();
-    }
+  if (newProgress === 100) {
+    modalRef.current?.open();
   }
+}
 
-  useEffect(() => {
-    checkResult();
-  }, [toggleButton, inputValue, transistorValue]);
+ 
 useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
@@ -183,6 +177,7 @@ useEffect(() => {
               onClick={goHome}
             />
             <Button
+            onClick={checkResult}
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
             />

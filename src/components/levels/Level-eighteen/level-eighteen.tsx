@@ -49,69 +49,40 @@ const LevelEighteen = ({
       hex: decimal.toString(16),
     };
   }
-  function checkSegments(): void {
-    let result = 0;
-    switch (toggleButton.join(``)) {
-      case "0010010":
-        result = 1;
-        break;
-      case "1011101":
-        result = 1;
-        break;
+  
+ const segmentMap: Record<number, string> = {
+    1: "0010010",
+    2: "1011101",
+    3: "1011011",
+    4: "0111010",
+    5: "1101011",
+    6: "1101111",
+    7: "1010010",
+    8: "1111111",
+    9: "1111011",
+    10: "1111110",
+    11: "0101111",
+    12: "1100101",
+    13: "1110111",
+    14: "1101101",
+    15: "1101100",
+  };
 
-      case "1011011":
-        result = 1;
-        break;
-      case "0111010":
-        result = 1;
-        break;
-      case "1101011":
-        result = 1;
-        break;
-      case "1101111":
-        result = 1;
-        break;
-      case "1010010":
-        result = 1;
-        break;
-      case "1111111":
-        result = 1;
-        break;
-      case "1111011":
-        result = 1;
-        break;
-      case "1111110":
-        result = 1;
-        break;
-      case "0101111":
-        result = 1;
-        break;
-      case "1100101":
-        result = 1;
-        break;
-      case "1110111":
-        result = 1;
-        break;
-      case "1101101":
-        result = 1;
-        break;
-      case "1101100":
-        result = 1;
-        break;
-    }
-    const resultHex = convertDecimal(number);
-    let hexAnswer = 0;
-    if (resultHex.hex === inputValue) hexAnswer = 1;
-    const newProgress = Math.round(((result + hexAnswer) / 2) * 100);
-
-    setProgress(newProgress);
-    if (newProgress === 100) {
-      modalRef.current?.open();
-    }
+ function checkSegments(): void {
+  const inputBinary = toggleButton.join(""); 
+  const expectedBinary = segmentMap[number];
+  const result = inputBinary === expectedBinary ? 1 : 0;
+  const resultHex = convertDecimal(number);
+  const hexAnswer = resultHex.hex === inputValue ? 1 : 0;
+  const newProgress = Math.round(((result + hexAnswer) / 2) * 100);
+  setProgress(newProgress);
+  if (newProgress === 100) {
+    modalRef.current?.open();
   }
-  useEffect(() => {
-    checkSegments();
-  }, [toggleButton, inputValue]);
+}
+
+
+ 
 
   useEffect(() => {
     if (!modalHintRef?.current?.open()) {
@@ -231,6 +202,7 @@ const LevelEighteen = ({
               onClick={goHome}
             />
             <Button
+            onClick={checkSegments}
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
             />
@@ -256,8 +228,8 @@ const LevelEighteen = ({
         answer={answer}
         hint={hint}
         refModal={modalHintRef}
-        solution={`  borrows  :`}
-        solutionTwo={` Correct carry:`}
+        solution={`  borrows  :${convertDecimal(number).hex}`}
+        solutionTwo={` Correct carry:${segmentMap[number]}`}
       />
     </div>
   );

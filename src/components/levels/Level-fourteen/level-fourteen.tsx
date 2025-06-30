@@ -3,7 +3,6 @@ import {
   Vector,
   Ground,
   HorizontalLine,
-
   OrGate,
   BoldLine,
   RandomShape,
@@ -27,18 +26,24 @@ import HelpME from "@/components/common/help.me";
 interface LevelFourteenProps {
   onComplete: () => void;
   goHome: () => void;
-      open: boolean;
+  open: boolean;
   hint: string;
   source: string;
 }
 
-const LevelFourteen = ({onComplete, goHome,source,hint,open}: LevelFourteenProps) => {
+const LevelFourteen = ({
+  onComplete,
+  goHome,
+  source,
+  hint,
+  open,
+}: LevelFourteenProps) => {
   const [progress, setProgress] = useState(0);
   const [appear, setAppear] = useState(false);
   const modalRef = useRef<ModalRef>(null);
-      const modalHintRef = useRef<ModalRef>(null);
-      const [answer, setAnswer] = useState(false);
-        const refModal = useRef<ModalRef>(null);
+  const modalHintRef = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
+  const refModal = useRef<ModalRef>(null);
   const [correctStates, setCorrectStates] = useState({
     top: false,
     bottom: false,
@@ -84,15 +89,34 @@ const LevelFourteen = ({onComplete, goHome,source,hint,open}: LevelFourteenProps
     },
   ];
 
+  type DropId =
+    | "top"
+    | "bottom"
+    | "centerTop"
+    | "centerBottom"
+    | "right"
+    | "leftTop"
+    | "leftBottom";
+
+  const rules: Record<DropId, {type: string; score: number}> = {
+    top: {type: "Button", score: 15},
+    bottom: {type: "Ground", score: 15},
+    centerTop: {type: "Transistor", score: 15},
+    centerBottom: {type: "Transistor", score: 10},
+    right: {type: "LED", score: 15},
+    leftTop: {type: "Battery", score: 15},
+    leftBottom: {type: "Battery", score: 15},
+  };
+
   const getElement = ({title}: {title: string}) => {
-    return tools.find((ele) => ele?.title == title)?.component;
+    return tools.find((ele) => ele?.title === title)?.component;
   };
 
   const onDrop = (event: React.DragEvent) => {
     event.preventDefault();
 
     const componentType = event.dataTransfer.getData("componentType");
-    const dropId = event.currentTarget.id;
+    const dropId = event.currentTarget.id as DropId;
 
     const item = getElement({title: componentType});
 
@@ -103,93 +127,26 @@ const LevelFourteen = ({onComplete, goHome,source,hint,open}: LevelFourteenProps
       }));
     }
 
-    if (dropId == "top") {
-      if (componentType === "Button") {
-        if (!correctStates.top) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, top: true}));
-        }
-      } else {
-        if (correctStates.top) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, top: false}));
-        }
+    const rule = rules[dropId];
+    if (!rule) return;
+
+    const isCorrect = componentType === rule.type;
+
+    setCorrectStates((prev) => ({...prev, [dropId]: isCorrect}));
+  };
+  const checkAnswer = () => {
+    let score = 0;
+    for (const dropId in rules) {
+      const key = dropId as DropId;
+      if (correctStates[key]) {
+        score += rules[key].score;
       }
-    } else if (dropId == "bottom") {
-      if (componentType === "Ground") {
-        if (!correctStates.bottom) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, bottom: true}));
-        }
-      } else {
-        if (correctStates.bottom) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, bottom: false}));
-        }
-      }
-    } else if (dropId == "centerTop") {
-      if (componentType === "Transistor") {
-        if (!correctStates.centerTop) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, centerTop: true}));
-        }
-      } else {
-        if (correctStates.centerTop) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, centerTop: false}));
-        }
-      }
-    } else if (dropId == "centerBottom") {
-      if (componentType === "Transistor") {
-        if (!correctStates.centerBottom) {
-          setProgress((prv) => prv + 10);
-          setCorrectStates((prev) => ({...prev, centerBottom: true}));
-        }
-      } else {
-        if (correctStates.centerBottom) {
-          setProgress((prv) => prv - 10);
-          setCorrectStates((prev) => ({...prev, centerBottom: false}));
-        }
-      }
-    } else if (dropId == "right") {
-      if (componentType === "LED") {
-        if (!correctStates.right) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, right: true}));
-        }
-      } else {
-        if (correctStates.right) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, right: false}));
-        }
-      }
-    } else if (dropId == "leftTop") {
-      if (componentType === "Battery") {
-        if (!correctStates.leftTop) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, leftTop: true}));
-        }
-      } else {
-        if (correctStates.leftTop) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, leftTop: false}));
-        }
-      }
-    } else if (dropId == "leftBottom") {
-      if (componentType === "Battery") {
-        if (!correctStates.leftBottom) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, leftBottom: true}));
-        }
-      } else {
-        if (correctStates.leftBottom) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, leftBottom: false}));
-        }
-      }
+      setProgress(score);
+      if (score == 100) modalRef.current?.open();
     }
   };
-useEffect(() => {
+
+  useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
     }
@@ -205,12 +162,6 @@ useEffect(() => {
   const onDrag = ({e, component}: {e: React.DragEvent; component: string}) => {
     e.dataTransfer.setData("componentType", String(component));
   };
-
-  React.useEffect(() => {
-    if (progress >= 100) {
-      modalRef.current?.open();
-    }
-  }, [componentDrag, progress]);
 
   return (
     <>
@@ -362,6 +313,7 @@ useEffect(() => {
             />
 
             <Button
+              onClick={checkAnswer}
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
             />
@@ -374,23 +326,23 @@ useEffect(() => {
             />
           </Modal>
         </div>
-         <CommonModal refModal={refModal} title={"Teach Course"}>
-        <div className="relative pt-[56.25%] w-full">
-          <iframe
-            className="absolute top-0 left-0 w-full h-full"
-            src={source}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen></iframe>
-        </div>
-      </CommonModal>
-          <HelpME
-        setAnswer={() => setAnswer(true)}
-        answer={answer}
-        hint={hint}
-        refModal={modalHintRef}
-        solution={`  borrows  :`}
-        solutionTwo={` Correct carry:`}
-      />
+        <CommonModal refModal={refModal} title={"Teach Course"}>
+          <div className="relative pt-[56.25%] w-full">
+            <iframe
+              className="absolute top-0 left-0 w-full h-full"
+              src={source}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen></iframe>
+          </div>
+        </CommonModal>
+        <HelpME
+          setAnswer={() => setAnswer(true)}
+          answer={answer}
+          hint={hint}
+          refModal={modalHintRef}
+          solution={`  borrows  :`}
+          solutionTwo={` Correct carry:`}
+        />
       </div>
     </>
   );

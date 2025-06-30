@@ -70,9 +70,7 @@ useEffect(() => {
     }
   }
 
-  useEffect(() => {
-    checkResult();
-  }, [toggleButton, inputValue]);
+
 
   return (
     <div className="flex flex-col bg-white rounded justify-center items-center rounded-xl h-[644px]  ">
@@ -153,6 +151,7 @@ useEffect(() => {
               onClick={goHome}
             />
             <Button
+            onClick={checkResult}
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
             />
@@ -176,8 +175,8 @@ useEffect(() => {
           answer={answer}
           hint={hint}
           refModal={modalHintRef}
-          solution={`  borrows  :`}
-          solutionTwo={` Correct carry:`}
+          solution={`  Binary:  :${convertDecimal(number).binary}`}
+          solutionTwo={` Hex: ${convertDecimal(number).hex.toUpperCase()}`}
         />
     </div>
   );

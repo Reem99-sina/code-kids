@@ -106,114 +106,59 @@ const LevelFifteen = ({
     return tools.find((ele) => ele?.title == title)?.component;
   };
 
-  const onDrop = (event: React.DragEvent) => {
-    event.preventDefault();
+const rules = {
+  top: { type: "Button", score: 15 },
+  bottom: { type: "Ground", score: 15 },
+  centerTop: { type: "Transistor", score: 15 },
+  centerBottom: { type: "Transistor", score: 10 },
+  right: { type: "LED", score: 15 },
+  leftTop: { type: "Battery", score: 15 },
+  leftBottom: { type: "Battery", score: 15 },
+};
 
-    const componentType = event.dataTransfer.getData("componentType");
-    const dropId = event.currentTarget.id;
-    const item = getElement({title: componentType});
-    if (item) {
-      setComponentDrag((prev) => ({
-        ...prev,
-        [dropId]: [item],
-      }));
-    }
-    if (dropId === "top") {
-      if (componentType === "Button") {
-        if (!correctStates.top) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, top: true}));
-        }
-      } else {
-        if (correctStates.top) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, top: false}));
-        }
-      }
-    } else if (dropId === "bottom") {
-      if (componentType === "Ground") {
-        if (!correctStates.bottom) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, bottom: true}));
-        }
-      } else {
-        if (correctStates.bottom) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, bottom: false}));
-        }
-      }
-    } else if (dropId === "centerTop") {
-      if (componentType === "Transistor") {
-        if (!correctStates.centerTop) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, centerTop: true}));
-        }
-      } else {
-        if (correctStates.centerTop) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, centerTop: false}));
-        }
-      }
-    } else if (dropId === "centerBottom") {
-      if (componentType === "Transistor") {
-        if (!correctStates.centerBottom) {
-          setProgress((prv) => prv + 10);
-          setCorrectStates((prev) => ({...prev, centerBottom: true}));
-        }
-      } else {
-        if (correctStates.centerBottom) {
-          setProgress((prv) => prv - 10);
-          setCorrectStates((prev) => ({...prev, centerBottom: false}));
-        }
-      }
-    } else if (dropId === "right") {
-      if (componentType === "LED") {
-        if (!correctStates.right) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, right: true}));
-        }
-      } else {
-        if (correctStates.right) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, right: false}));
-        }
-      }
-    } else if (dropId === "leftTop") {
-      if (componentType === "Battery") {
-        if (!correctStates.leftTop) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, leftTop: true}));
-        }
-      } else {
-        if (correctStates.leftTop) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, leftTop: false}));
-        }
-      }
-    } else if (dropId === "leftBottom") {
-      if (componentType === "Battery") {
-        if (!correctStates.leftBottom) {
-          setProgress((prv) => prv + 15);
-          setCorrectStates((prev) => ({...prev, leftBottom: true}));
-        }
-      } else {
-        if (correctStates.leftBottom) {
-          setProgress((prv) => prv - 15);
-          setCorrectStates((prev) => ({...prev, leftBottom: false}));
-        }
-      }
-    }
-  };
+type DropId = keyof typeof correctStates;
 
-  const onDrag = ({e, component}: {e: React.DragEvent; component: string}) => {
-    e.dataTransfer.setData("componentType", String(component));
-  };
+const onDrop = (event: React.DragEvent) => {
+  event.preventDefault();
 
-  React.useEffect(() => {
-    if (progress >= 100) {
-      modalRef.current?.open();
-    }
-  }, [componentDrag, progress]);
+  const componentType = event.dataTransfer.getData("componentType");
+  const dropId = event.currentTarget.id as DropId;
+
+  const item = getElement({ title: componentType });
+  if (item) {
+    setComponentDrag(prev => ({
+      ...prev,
+      [dropId]: [item],
+    }));
+  }
+
+   const rule = rules[dropId];
+  if (!rule) return;
+
+  const isCorrect = componentType === rule.type;
+
+
+    setCorrectStates((prev) => ({ ...prev, [dropId]: isCorrect }));
+  
+};
+
+const onDrag = ({ e, component }: { e: React.DragEvent; component: string }) => {
+  e.dataTransfer.setData("componentType", component);
+};
+
+
+  const checkAnswer=()=>{
+        let score = 0;
+    for (const dropId in rules) {
+      const key = dropId as DropId;
+      if (correctStates[key]) {
+        score += rules[key].score;
+      }
+      setProgress(score)
+      if(score==100)
+        modalRef.current?.open()
+
+  }}
 
   return (
     <>
@@ -361,6 +306,7 @@ const LevelFifteen = ({
             />
 
             <Button
+            onClick={checkAnswer}
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
             />

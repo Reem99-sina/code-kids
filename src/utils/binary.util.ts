@@ -78,3 +78,40 @@ export const checkIfUserAddRightNumber = ({
   );
 };
 
+ export function subtractBinaryStrings(...binaries: string[]): {
+    result: number[];
+    borrows: number[];
+  } 
+  {
+    if (binaries.length < 2) {
+      throw new Error("Provide at least two binary numbers to subtract.");
+    }
+
+    const maxLength = Math.max(...binaries.map((b) => b.length));
+    const padded = binaries.map((b) => b.padStart(maxLength, "0"));
+
+    const result: number[] = [];
+    const borrows: number[] = [];
+    let borrow = 0;
+
+    for (let i = maxLength - 1; i >= 0; i--) {
+      const minuend = parseInt(padded[0][i]);
+      const subtrahend = padded
+        .slice(1)
+        .reduce((sum, bin) => sum + parseInt(bin[i]), 0);
+
+      const temp = minuend - subtrahend - borrow;
+
+      if (temp >= 0) {
+        result.unshift(temp);
+        borrows.unshift(0);
+        borrow = 0;
+      } else {
+        result.unshift(temp + 2);
+        borrows.unshift(1);
+        borrow = 1;
+      }
+    }
+
+    return {result, borrows};
+  }
