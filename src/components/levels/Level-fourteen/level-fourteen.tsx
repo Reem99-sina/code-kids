@@ -22,6 +22,7 @@ import {useEffect, useRef, useState} from "react";
 import DargedDiv from "./../../common/level-fourteen-component";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelFourteenProps {
   onComplete: () => void;
@@ -29,6 +30,7 @@ interface LevelFourteenProps {
   open: boolean;
   hint: string;
   source: string;
+  sol?: string;
 }
 
 const LevelFourteen = ({
@@ -37,6 +39,7 @@ const LevelFourteen = ({
   source,
   hint,
   open,
+  sol,
 }: LevelFourteenProps) => {
   const [progress, setProgress] = useState(0);
   const [appear, setAppear] = useState(false);
@@ -142,7 +145,12 @@ const LevelFourteen = ({
         score += rules[key].score;
       }
       setProgress(score);
-      if (score == 100) modalRef.current?.open();
+    }
+    if (score == 100) {
+      setProgress(answer ? 80 : 100);
+      modalRef.current?.open();
+    } else {
+      toast.error(`Answer is not correct, Try again!`);
     }
   };
 
@@ -340,8 +348,7 @@ const LevelFourteen = ({
           answer={answer}
           hint={hint}
           refModal={modalHintRef}
-          solution={`  borrows  :`}
-          solutionTwo={` Correct carry:`}
+          solution={sol ?? ""}
         />
       </div>
     </>
