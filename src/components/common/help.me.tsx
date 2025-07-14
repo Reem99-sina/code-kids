@@ -20,7 +20,7 @@ const HelpME = ({ hint, answer, setAnswer, refModal,solution,solutionTwo,solutio
 
   return (
     <CommonModal refModal={refModal} title={"Hint"}>
-      <div>{hint}"ssssssssssssssssss</div>
+      <div>{hint}</div>
       <Button
         className={answer ? `bg-white` : ``}
         onClick={() => {
