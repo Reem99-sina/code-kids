@@ -11,6 +11,7 @@ import {useEffect, useRef, useState} from "react";
 import {Button} from "@/components/common/button.component";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelEighteenProps {
   onComplete: () => void;
@@ -49,8 +50,8 @@ const LevelEighteen = ({
       hex: decimal.toString(16),
     };
   }
-  
- const segmentMap: Record<number, string> = {
+
+  const segmentMap: Record<number, string> = {
     1: "0010010",
     2: "1011101",
     3: "1011011",
@@ -68,21 +69,21 @@ const LevelEighteen = ({
     15: "1101100",
   };
 
- function checkSegments(): void {
-  const inputBinary = toggleButton.join(""); 
-  const expectedBinary = segmentMap[number];
-  const result = inputBinary === expectedBinary ? 1 : 0;
-  const resultHex = convertDecimal(number);
-  const hexAnswer = resultHex.hex === inputValue ? 1 : 0;
-  const newProgress = Math.round(((result + hexAnswer) / 2) * 100);
-  setProgress(newProgress);
-  if (newProgress === 100) {
-    modalRef.current?.open();
+  function checkSegments(): void {
+    const inputBinary = toggleButton.join("");
+    const expectedBinary = segmentMap[number];
+    const result = inputBinary === expectedBinary ? 1 : 0;
+    const resultHex = convertDecimal(number);
+    const hexAnswer = resultHex.hex === inputValue ? 1 : 0;
+    const newProgress = Math.round(((result + hexAnswer) / 2) * 100);
+    setProgress(newProgress);
+    if (newProgress === 100) {
+      setProgress(answer ? 80 : 100);
+      modalRef.current?.open();
+    } else {
+      toast.error(`Answer is not correct, Try again!`);
+    }
   }
-}
-
-
- 
 
   useEffect(() => {
     if (!modalHintRef?.current?.open()) {
@@ -99,7 +100,7 @@ const LevelEighteen = ({
   }, []);
 
   return (
-    <div className="flex flex-col bg-white rounded justify-center items-center rounded-xl   ">
+    <div className="flex flex-col bg-white  justify-center items-center rounded-xl   ">
       <div className="flex flex-col justify-center w-[90%] items-center  ">
         <div className="flex flex-col justify-center w-[90%] ">
           <div className=" mb-4 flex flex-col justify-center m-3">
@@ -202,7 +203,7 @@ const LevelEighteen = ({
               onClick={goHome}
             />
             <Button
-            onClick={checkSegments}
+              onClick={checkSegments}
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
             />
