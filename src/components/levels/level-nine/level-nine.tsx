@@ -9,6 +9,7 @@ import {generateBinary, subtractBinaryStrings} from "@/utils/binary.util";
 import clsx from "clsx";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelNineProps {
   onComplete: () => void;
@@ -73,6 +74,9 @@ const LevelNine: React.FC<LevelNineProps> = ({
 
       setLevel((l) => l + 1);
     }
+     else {
+          toast.error(`Answer is not correct, Try again!`);
+        }
   }
   useEffect(() => {
     if (!modalHintRef?.current?.open()) {
@@ -95,7 +99,7 @@ const LevelNine: React.FC<LevelNineProps> = ({
       setTwo(generateBinary({length: level + 1, DecNumber: Math.random()}));
     } else {
       setLevel(4);
-      if (answer) setProgress(100 - 20);
+     setProgress(answer ? 80 : 100);
       modalRef.current?.open();
     }
   }, [level]);
