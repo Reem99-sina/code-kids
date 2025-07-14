@@ -22,6 +22,7 @@ import {useEffect, useRef, useState} from "react";
 import DargedDiv from "./../../common/level-fourteen-component";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelFifteenProps {
   onComplete: () => void;
@@ -29,6 +30,7 @@ interface LevelFifteenProps {
   open: boolean;
   hint: string;
   source: string;
+  sol?:string
 }
 
 const LevelFifteen = ({
@@ -37,6 +39,7 @@ const LevelFifteen = ({
   open,
   hint,
   source,
+  sol
 }: LevelFifteenProps) => {
   const [progress, setProgress] = useState(0);
   const [appear, setAppear] = useState(false);
@@ -106,59 +109,60 @@ const LevelFifteen = ({
     return tools.find((ele) => ele?.title == title)?.component;
   };
 
-const rules = {
-  top: { type: "Button", score: 15 },
-  bottom: { type: "Ground", score: 15 },
-  centerTop: { type: "Transistor", score: 15 },
-  centerBottom: { type: "Transistor", score: 10 },
-  right: { type: "LED", score: 15 },
-  leftTop: { type: "Battery", score: 15 },
-  leftBottom: { type: "Battery", score: 15 },
-};
+  const rules = {
+    top: {type: "Button", score: 15},
+    bottom: {type: "Ground", score: 15},
+    centerTop: {type: "Transistor", score: 15},
+    centerBottom: {type: "Transistor", score: 10},
+    right: {type: "LED", score: 15},
+    leftTop: {type: "Battery", score: 15},
+    leftBottom: {type: "Battery", score: 15},
+  };
 
-type DropId = keyof typeof correctStates;
+  type DropId = keyof typeof correctStates;
 
-const onDrop = (event: React.DragEvent) => {
-  event.preventDefault();
+  const onDrop = (event: React.DragEvent) => {
+    event.preventDefault();
 
-  const componentType = event.dataTransfer.getData("componentType");
-  const dropId = event.currentTarget.id as DropId;
+    const componentType = event.dataTransfer.getData("componentType");
+    const dropId = event.currentTarget.id as DropId;
 
-  const item = getElement({ title: componentType });
-  if (item) {
-    setComponentDrag(prev => ({
-      ...prev,
-      [dropId]: [item],
-    }));
-  }
+    const item = getElement({title: componentType});
+    if (item) {
+      setComponentDrag((prev) => ({
+        ...prev,
+        [dropId]: [item],
+      }));
+    }
 
-   const rule = rules[dropId];
-  if (!rule) return;
+    const rule = rules[dropId];
+    if (!rule) return;
 
-  const isCorrect = componentType === rule.type;
+    const isCorrect = componentType === rule.type;
 
+    setCorrectStates((prev) => ({...prev, [dropId]: isCorrect}));
+  };
 
-    setCorrectStates((prev) => ({ ...prev, [dropId]: isCorrect }));
-  
-};
+  const onDrag = ({e, component}: {e: React.DragEvent; component: string}) => {
+    e.dataTransfer.setData("componentType", component);
+  };
 
-const onDrag = ({ e, component }: { e: React.DragEvent; component: string }) => {
-  e.dataTransfer.setData("componentType", component);
-};
-
-
-  const checkAnswer=()=>{
-        let score = 0;
+  const checkAnswer = () => {
+    let score = 0;
     for (const dropId in rules) {
       const key = dropId as DropId;
       if (correctStates[key]) {
         score += rules[key].score;
       }
-      setProgress(score)
-      if(score==100)
-        modalRef.current?.open()
-
-  }}
+      setProgress(score);
+    }
+    if (score == 100) {
+      setProgress(answer ? 80 : 100);
+      modalRef.current?.open();
+    } else {
+      toast.error(`Answer is not correct, Try again!`);
+    }
+  };
 
   return (
     <>
@@ -306,7 +310,7 @@ const onDrag = ({ e, component }: { e: React.DragEvent; component: string }) => 
             />
 
             <Button
-            onClick={checkAnswer}
+              onClick={checkAnswer}
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
             />
@@ -333,8 +337,7 @@ const onDrag = ({ e, component }: { e: React.DragEvent; component: string }) => 
           answer={answer}
           hint={hint}
           refModal={modalHintRef}
-          solution={`  borrows  :`}
-          solutionTwo={` Correct carry:`}
+          solution={sol ?? ""}
         />
       </div>
     </>
