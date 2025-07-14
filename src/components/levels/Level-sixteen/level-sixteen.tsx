@@ -6,6 +6,7 @@ import {LevelComplete} from "../LevelComplete";
 import {useEffect, useRef, useState} from "react";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelSixteenProps {
   onComplete: () => void;
@@ -66,14 +67,18 @@ useEffect(() => {
 
     setProgress(newProgress);
     if (newProgress === 100) {
+      setProgress(answer ? 80 : 100);
       modalRef.current?.open();
+    }
+    else{
+      toast.error(`Answer is not correct, Try again!`);
     }
   }
 
 
 
   return (
-    <div className="flex flex-col bg-white rounded justify-center items-center rounded-xl h-[644px]  ">
+    <div className="flex flex-col bg-white  justify-center items-center rounded-xl h-[644px]  ">
       <div className="flex flex-col justify-center w-[100%] items-center  ">
         <div className="flex flex-col justify-center w-[80%] ">
           <div className=" mb-4 flex flex-col justify-center m-3">
@@ -88,7 +93,7 @@ useEffect(() => {
           </div>
         </div>
 
-        <div className="w-[50%] flex flex-col bg-[#FFE5F3] rounded justify-center items-center rounded-xl   ">
+        <div className="w-[50%] flex flex-col bg-[#FFE5F3]  justify-center items-center rounded-xl   ">
           <div className="w-[60%] flex flex-col   justify-center items-center rounded-xl  p-3 ">
             <p className="font-bold text-xl text-black p-2 m-2 w-[100%]  ">
               Toggle bits to create binary number
