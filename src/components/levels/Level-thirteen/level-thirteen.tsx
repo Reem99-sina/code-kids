@@ -23,6 +23,7 @@ import {LevelComplete} from "../LevelComplete";
 import DargedDiv from "@/components/common/level-fourteen-component";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelThirteenProps {
   onComplete: () => void;
@@ -30,6 +31,7 @@ interface LevelThirteenProps {
   open: boolean;
   hint: string;
   source: string;
+  sol?:string
 }
 const LEvelThirteen = ({
   onComplete,
@@ -37,6 +39,7 @@ const LEvelThirteen = ({
   open,
   hint,
   source,
+  sol
 }: LevelThirteenProps) => {
   const [progress, setProgress] = useState(0);
   const [appear, setAppear] = useState(false);
@@ -137,18 +140,23 @@ const LEvelThirteen = ({
   const onDrag = ({e, component}: {e: React.DragEvent; component: string}) => {
     e.dataTransfer.setData("componentType", String(component));
   };
-  const checkAnswer=()=>{
-        let score = 0;
+  const checkAnswer = () => {
+    let score = 0;
+
     for (const dropId in rules) {
       const key = dropId as DropId;
       if (correctStates[key]) {
         score += rules[key].score;
       }
-      setProgress(score)
-      if(score==100)
-        modalRef.current?.open()
-  }}
-
+      setProgress(score);
+    }
+    if (score == 100) {
+      setProgress(answer ? 80 : 100);
+      modalRef.current?.open();
+    } else {
+      toast.error(`Answer is not correct, Try again!`);
+    }
+  };
 
   return (
     <>
@@ -268,7 +276,7 @@ const LEvelThirteen = ({
             />
 
             <Button
-            onClick={checkAnswer}
+              onClick={checkAnswer}
               text="Check Answer"
               className="!max-w-[220px] !rounded-[50px]"
             />
@@ -295,8 +303,7 @@ const LEvelThirteen = ({
           answer={answer}
           hint={hint}
           refModal={modalHintRef}
-          solution={`  borrows  :`}
-          solutionTwo={` Correct carry:`}
+          solution={sol??""}
         />
       </div>
     </>
