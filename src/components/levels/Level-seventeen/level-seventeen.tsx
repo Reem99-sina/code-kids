@@ -6,6 +6,7 @@ import {useState, useRef, useEffect} from "react";
 import {LevelComplete} from "../LevelComplete";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelSeventeenProps {
   onComplete: () => void;
@@ -60,8 +61,12 @@ function checkResult(): void {
   setProgress(newProgress);
 
   if (newProgress === 100) {
+    setProgress(answer ? 80 : 100);
     modalRef.current?.open();
   }
+  else{
+        toast.error(`Answer is not correct, Try again!`);
+      }
 }
 
  
