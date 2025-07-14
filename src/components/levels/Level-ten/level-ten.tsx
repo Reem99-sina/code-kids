@@ -13,6 +13,7 @@ import clsx from "clsx";
 import ToggleButton from "@/components/common/toggleButton";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelTenProps {
   onComplete: () => void;
@@ -104,6 +105,9 @@ const LevelTen: React.FC<LevelTenProps> = ({
         
       } 
     } 
+     else {
+      toast.error(`Answer is not correct, Try again!`);
+    }
   }
   useEffect(() => {
     if (!modalHintRef?.current?.open()) {
@@ -125,9 +129,7 @@ const LevelTen: React.FC<LevelTenProps> = ({
       setTwo(generateBinary({length: level + 3, DecNumber: Math.random()}));
     } else {
       setLevel(3);
-      if(reslut=== true) {  
-      setProgress(100-20);
-      }
+      setProgress(reslut ? 80 : 100);
       modalRef.current?.open();
     }
   }, [level]);
