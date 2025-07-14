@@ -14,6 +14,7 @@ import clsx from "clsx";
 import ToggleButton from "@/components/common/toggleButton";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelElevenProps {
   onComplete: () => void;
@@ -117,6 +118,9 @@ const LevelEleven: React.FC<LevelElevenProps> = ({
         }
       } 
     } 
+     else {
+      toast.error(`Answer is not correct, Try again!`);
+    }
   }
   useEffect(() => {
     if (!modalHintRef?.current?.open()) {
@@ -139,6 +143,7 @@ const LevelEleven: React.FC<LevelElevenProps> = ({
       setBinaryB(generateBinary({length: level + 3, DecNumber: Math.random()}));
       setTwo(generateBinary({length: level + 3, DecNumber: Math.random()}));
     } else {
+      setProgress(reslut ? 80 : 100);
       setLevel(3);
       modalRef.current?.open();
     }
