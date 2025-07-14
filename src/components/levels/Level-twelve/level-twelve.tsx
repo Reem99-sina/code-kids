@@ -8,6 +8,7 @@ import {useEffect, useRef, useState} from "react";
 import {LevelComplete} from "../LevelComplete";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelTwelveProps {
   onComplete: () => void;
@@ -15,6 +16,7 @@ interface LevelTwelveProps {
   open: boolean;
   hint: string;
   source: string;
+  sol?:string
 }
 
 export const LevelTwelve = ({
@@ -23,6 +25,7 @@ export const LevelTwelve = ({
   open,
   hint,
   source,
+  sol
 }: LevelTwelveProps) => {
   const [progress, setProgress] = useState(0);
   const [lightOfButtonOne, setLightOfButtonOne] = useState([
@@ -70,7 +73,11 @@ export const LevelTwelve = ({
 
     setProgress(newProgress);
     if (newProgress === 100) {
+      setProgress(answer ? 80 : 100);
       modalRef.current?.open();
+    }
+     else {
+      toast.error(`Answer is not correct, Try again!`);
     }
   };
 
@@ -165,7 +172,7 @@ export const LevelTwelve = ({
         answer={answer}
         hint={hint}
         refModal={modalHintRef}
-        solution={`  borrows  :`}
+        solution={sol ?? ""}
       />
     </div>
   );
