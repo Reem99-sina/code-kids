@@ -15,6 +15,7 @@ interface LevelOneProps {
   open: boolean;
   hint: string;
   source?: string;
+  sol?: string;
 }
 
 export const LevelOne: React.FC<LevelOneProps> = ({
@@ -23,6 +24,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({
   open,
   hint,
   source,
+  sol
 }) => {
   const refModal = useRef<ModalRef>(null);
   const [conductorPressed, setConductorPressed] = useState(false);
@@ -179,7 +181,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({
         hint={hint}
         setAnswer={() => setAnswer(true)}
         refModal={modalHintRef}
-        solution={"press on all the button"}
+        solution={sol ?? ""}
       />
       <Modal
         ref={modalResultRef}

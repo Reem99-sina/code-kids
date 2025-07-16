@@ -6,7 +6,7 @@ import { LevelComplete } from "../LevelComplete";
 import { Button } from "@/components/common/button.component";
 import { TextInput } from "@/components/common/form/text-input.component";
 import { generateRandomDec } from "@/utils/binary.util";
-import { useForm } from "react-hook-form";
+import {  useForm } from "react-hook-form";
 
 import CommonModal from "@/components/common/common-modal";
 import toast from "react-hot-toast";
@@ -49,9 +49,9 @@ export const LevelSix: React.FC<LevelSixProps> = ({
       setProgress((prev) => (prev < 100 && prev + 25 <= 100 ? prev + 25 : 100));
 
       formData.setValue("hex", "");
-    } else {
-      toast.error(`Try again!\nCorrect : ${CorrectHex}`);
-    }
+    }  else {
+      toast.error(`Answer is not correct, Try again!`);
+    } 
     // if (answer === "101") {
     //   modalRef.current?.open();
     // }
@@ -59,6 +59,7 @@ export const LevelSix: React.FC<LevelSixProps> = ({
 
   useEffect(() => {
     if (level == 5) {
+      setProgress(answer ? 80 : 100);
       modalRef.current?.open();
     }
   }, [level]);

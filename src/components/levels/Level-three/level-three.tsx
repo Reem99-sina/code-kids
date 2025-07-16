@@ -26,6 +26,7 @@ interface LevelThreeProps {
   open: boolean;
   hint: string;
   source: string;
+  sol?:string
 }
 
 interface DragComProps {
@@ -61,6 +62,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({
   open,
   hint,
   source,
+  sol
 }) => {
   const modalRef = useRef<ModalRef>(null);
   const modalResultRef = useRef<ModalRef>(null);
@@ -234,7 +236,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({
           ></iframe>
         </div>
       </CommonModal>
-      <HelpME setAnswer={() => setAnswer(true)} answer={answer} hint={hint} refModal={modalHintRef} solution={""}/>
+      <HelpME setAnswer={() => setAnswer(true)} answer={answer} hint={hint} refModal={modalHintRef} solution={sol??""}/>
 
       <Modal ref={modalResultRef}>
         <LevelComplete level="3" onNextLevel={onComplete} onGoHome={goHome} />

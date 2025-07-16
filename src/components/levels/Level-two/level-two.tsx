@@ -40,9 +40,10 @@ interface Props {
   open: boolean;
   hint: string;
   source?: string;
+  sol?: string;
 }
 
-export const LevelTwo = ({ onComplete, goHome, open, hint, source }: Props) => {
+export const LevelTwo = ({ onComplete, goHome, open, hint, source,sol }: Props) => {
   const refModal = useRef<ModalRef>(null);
   const modalRef = useRef<ModalRef>(null);
   const modalResultRef = useRef<ModalRef>(null);
@@ -242,7 +243,7 @@ export const LevelTwo = ({ onComplete, goHome, open, hint, source }: Props) => {
           ></iframe>
         </div>
       </CommonModal>
-          <HelpME setAnswer={() => setAnswer(true)} answer={answer} hint={hint} refModal={modalHintRef} solution={""}/>
+          <HelpME setAnswer={() => setAnswer(true)} answer={answer} hint={hint} refModal={modalHintRef} solution={sol??""}/>
 
     </div>
   );

@@ -1,23 +1,32 @@
 import {Arrow} from "@/assets";
 import {Button} from "@/components/common/button.component";
 import GatComponent from "@/components/common/level-twelvec-component";
-import { Modal, ModalRef } from "@/components/common/modal.component";
+import {Modal, ModalRef} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
 import {HomeIcon} from "lucide-react";
 import {useEffect, useRef, useState} from "react";
-import { LevelComplete } from "../LevelComplete";
+import {LevelComplete} from "../LevelComplete";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelTwelveProps {
   onComplete: () => void;
   goHome: () => void;
-    open: boolean;
+  open: boolean;
   hint: string;
   source: string;
+  sol?:string
 }
 
-export const LevelTwelve = ({onComplete, goHome,open,hint,source}: LevelTwelveProps) => {
+export const LevelTwelve = ({
+  onComplete,
+  goHome,
+  open,
+  hint,
+  source,
+  sol
+}: LevelTwelveProps) => {
   const [progress, setProgress] = useState(0);
   const [lightOfButtonOne, setLightOfButtonOne] = useState([
     false,
@@ -28,8 +37,8 @@ export const LevelTwelve = ({onComplete, goHome,open,hint,source}: LevelTwelvePr
   const [lightOfButtonTwo, setLightOfButtonTwo] = useState([false, false]);
   const modalRef = useRef<ModalRef>(null);
   const modalHintRef = useRef<ModalRef>(null);
-    const [answer, setAnswer] = useState(false);
-      const refModal = useRef<ModalRef>(null);
+  const [answer, setAnswer] = useState(false);
+  const refModal = useRef<ModalRef>(null);
   function onClickLightMe(index: number) {
     const update = [...lightOfButtonOne];
     update[index] = !update[index];
@@ -40,7 +49,7 @@ export const LevelTwelve = ({onComplete, goHome,open,hint,source}: LevelTwelvePr
     update[index] = !update[index];
     setLightOfButtonTwo([...update]);
   }
-useEffect(() => {
+  useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
     }
@@ -53,22 +62,24 @@ useEffect(() => {
     refModal?.current?.open();
     modalHintRef?.current?.close();
   }, []);
-  useEffect(()=>{
 
+  const checkTheAnswer = () => {
     const result =
-    Number(lightOfButtonOne[0]) +
-    Number(lightOfButtonOne[1] ) +
-    Number(lightOfButtonOne[2]&&lightOfButtonTwo[0]) +
-    Number(lightOfButtonOne[3]||lightOfButtonTwo[1]);
+      Number(lightOfButtonOne[0]) +
+      Number(lightOfButtonOne[1]) +
+      Number(lightOfButtonOne[2] && lightOfButtonTwo[0]) +
+      Number(lightOfButtonOne[3] || lightOfButtonTwo[1]);
     const newProgress = Math.round((result / 4) * 100);
 
     setProgress(newProgress);
     if (newProgress === 100) {
+      setProgress(answer ? 80 : 100);
       modalRef.current?.open();
     }
-
-  },[lightOfButtonOne,lightOfButtonTwo])
-  
+     else {
+      toast.error(`Answer is not correct, Try again!`);
+    }
+  };
 
   return (
     <div className="flex flex-col bg-white justify-center items-center rounded-xl min-h-[500px] relative   ">
@@ -134,13 +145,18 @@ useEffect(() => {
             onClick={goHome}
           />
           <Button
+            onClick={checkTheAnswer}
             text="Check Answer"
             className="!max-w-[220px] !rounded-[50px]"
           />
         </div>
-         <Modal ref={modalRef}>
-                  <LevelComplete onNextLevel={onComplete} onGoHome={goHome} level={""} />
-                </Modal>
+        <Modal ref={modalRef}>
+          <LevelComplete
+            onNextLevel={onComplete}
+            onGoHome={goHome}
+            level={""}
+          />
+        </Modal>
       </div>
       <CommonModal refModal={refModal} title={"Teach Course"}>
         <div className="relative pt-[56.25%] w-full">
@@ -151,15 +167,13 @@ useEffect(() => {
             allowFullScreen></iframe>
         </div>
       </CommonModal>
-          <HelpME
+      <HelpME
         setAnswer={() => setAnswer(true)}
         answer={answer}
         hint={hint}
         refModal={modalHintRef}
-        solution={`  borrows  :`}
-        solutionTwo={` Correct carry:`}
+        solution={sol ?? ""}
       />
     </div>
-    
   );
 };

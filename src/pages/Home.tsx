@@ -21,7 +21,7 @@ import LevelSeventeen from "@/components/levels/Level-seventeen/level-seventeen"
 import LevelEighteen from "@/components/levels/Level-eighteen/level-eighteen";
 import { LevelFour } from "@/components/levels/level-four/level-four";
 import { getGamesQuery } from "@/services/track-service";
-import { LevelNine } from "@/components/levels/level-nine/level-nine";
+import LevelNine from "@/components/levels/level-nine/level-nine";
 
 const Home = () => {
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
@@ -70,8 +70,9 @@ const Home = () => {
           }}
           goHome={() => setSelectedLevel(0)}
           open={open}
-          hint={levels.description}
+          hint={levels?.hints ?? ""}
           source="https://edu-project-2.s3.us-east-1.amazonaws.com/static/Video+3+Transistor+Circuit+Builder.mp4"
+          sol={levels?.solution??""}
         />
       ),
     };

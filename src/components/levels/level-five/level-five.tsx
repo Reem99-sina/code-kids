@@ -71,14 +71,14 @@ export const LevelFive: React.FC<LevelFiveProps> = ({
           .join("")
       );
       formData?.setValue("transistors", "");
-    } else {
-      toast.error(
-        `Try again!\nCorrect : ${binaryString}\nCorrect transistor num: ${numOfTransitor}`
-      );
     }
+    else {
+      toast.error(`Answer is not correct, Try again!`);
+    } 
   };
   useEffect(() => {
     if (level == 5) {
+      setProgress(answer ? 80 : 100);
       modalRef.current?.open();
     }
   }, [level]);

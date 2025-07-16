@@ -67,10 +67,8 @@ const LevelEight = ({
       toast.success("Great job! Keep going!");
       setLevel((prev) => prev + 1);
       setProgress((prev) => (prev < 100 && prev + 25 <= 100 ? prev + 25 : 100));
-    } else {
-      toast.error(
-        `Try again!\nCorrect sum: ${total_carry.total}\nCorrect carry: ${total_carry.carry}`
-      );
+    }  else {
+      toast.error(`Answer is not correct, Try again!`);
     }
   };
  useEffect(() => {
@@ -107,6 +105,7 @@ const LevelEight = ({
 
   useEffect(() => {
     if (level == 5) {
+      setProgress(answer ? 80 : 100);
       modalRef.current?.open();
     }
   }, [level]);
