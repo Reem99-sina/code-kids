@@ -41,7 +41,7 @@ const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
 
       formData.setValue("binary", Array(binaryString?.length + 4).fill(0));
     } else {
-      toast.error(`Try again!\nCorrect : ${binaryString}`);
+      toast.error(`Answer is not correct, Try again!`);
     }
     // if (answer === "101") {
     //   modalRef.current?.open();
@@ -63,6 +63,7 @@ const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
 
   useEffect(() => {
     if (level == 5) {
+      setProgress(answer ? 80 : 100);
       modalRef.current?.open();
     }
   }, [level]);

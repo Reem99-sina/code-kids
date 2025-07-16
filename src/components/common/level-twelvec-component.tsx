@@ -39,14 +39,14 @@ const GatComponent = ({
 
           {andOrGate == true ? (
             <div className="flex items-center gap-x-1">
-              <Button onClick={clickedOn1} className={`bg-${pushedOne?``:`[#FF1D92]`} rounded-xl w-[5%] `}  text="" />
-              <Button onClick={clickedOn2} className={`bg-${pushedTwo?``:`[#FF1D92]`} rounded-xl w-[5%] `}  text="" />
+              <Button onClick={clickedOn1} className={`bg-${pushedOne?``:`[#FF1D92]`} rounded-l w-[5%] `}  text="" />
+              <Button onClick={clickedOn2} className={`bg-${pushedTwo?``:`[#FF1D92]`} rounded-l w-[5%] `}  text="" />
               <ArrowRight />
             </div>
           ) : (
             <div className="flex items-center gap-x-1">
               <ArrowRight />
-              <Button onClick={clickedOn1} className={`bg-${pushedOne?`green`:`[#FF1D92]`} rounded-xl w-[5%]`}  text="" />
+              <Button onClick={clickedOn1} className={`bg-${pushedOne?`green`:`[#FF1D92]`} rounded-l w-[5%]`}  text="" />
               <ArrowRight />
             </div>
           )}

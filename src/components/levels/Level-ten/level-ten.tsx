@@ -1,14 +1,19 @@
-import React, {useEffect, useRef, useState} from "react";
-import ProgressBar from "@/components/common/ProgressBar";
-import {Modal, ModalRef} from "@/components/common/modal.component";
+import {Captain, HomeIcon, Pilot,  Star} from "@/assets";
 import {Button} from "@/components/common/button.component";
-import { HomeIcon} from "@/assets";
-import {Star} from "@/assets";
+import {Modal, ModalRef} from "@/components/common/modal.component";
+import ProgressBar from "@/components/common/ProgressBar";
+
+import {useEffect, useRef, useState} from "react";
 import {LevelComplete} from "../LevelComplete";
-import {generateBinary} from "@/utils/binary.util";
+import {
+  generateBinary,
+  sumBinaryNumber,
+} from "@/utils/binary.util";
 import clsx from "clsx";
+import ToggleButton from "@/components/common/toggleButton";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelTenProps {
   onComplete: () => void;
@@ -18,102 +23,93 @@ interface LevelTenProps {
   source: string;
 }
 
-const LevelTen: React.FC<LevelTenProps> = ({onComplete, goHome,open,source,hint}) => {
+const ToggleGroup = ({
+  values,
+  onToggle,
+}: {
+  values: number[];
+  onToggle: (index: number) => void;
+}) => (
+  <>
+    {values.map((value, index) => (
+      <ToggleButton
+        key={index}
+        binaryNumbers={value}
+        toggleButton={() => onToggle(index)}
+      />
+    ))}
+  </>
+);
+
+const LevelTen: React.FC<LevelTenProps> = ({
+  onComplete,
+  goHome,
+  open,
+  hint,
+  source,
+}) => {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
-  const [binaryNumberBorrow, setBinaryNumberBorrow] = useState(
-    Array(level + 1).fill(0)
-  );
-  const [binaryResult, setBinaryResult] = useState(Array(level + 1).fill(0));
-  const modalRef = useRef<ModalRef>(null);
-  const modalHintRef = useRef<ModalRef>(null);
-    const [answer, setAnswer] = useState(false);
-      const refModal = useRef<ModalRef>(null);
-  // const [add, setAdd] = useState("01");
-  const max = 2 ** (level + 1) - 1;
+  const [add, setAdd] = useState("");
 
-  const [one, setOne] = useState(
-    generateBinary({
-      length: level + 1,
-      DecNumber: Math.floor(Math.random() * max) + 1,
-    })
-  );
+  
   const [two, setTwo] = useState(
-    generateBinary({
-      length: level + 1,
-      DecNumber: Math.floor(Math.random() * max) + 1,
-    })
+    generateBinary({length: level + 3, DecNumber: Math.random()})
   );
 
-  function subtractBinaryStrings(...binaries: string[]): {
-    result: number[];
-    borrows: number[];
-  } {
-    if (binaries.length < 2) {
-      throw new Error("Provide at least two binary numbers to subtract.");
-    }
-
-    const maxLength = Math.max(...binaries.map((b) => b.length));
-    const padded = binaries.map((b) => b.padStart(maxLength, "0"));
-
-    const result: number[] = [];
-    const borrows: number[] = [];
-    let borrow = 0;
-
-    for (let i = maxLength - 1; i >= 0; i--) {
-      const minuend = parseInt(padded[0][i]);
-      const subtrahend = padded
-        .slice(1)
-        .reduce((sum, bin) => sum + parseInt(bin[i]), 0);
-
-      const temp = minuend - subtrahend - borrow;
-
-      if (temp >= 0) {
-        result.unshift(temp);
-        borrows.unshift(0);
-        borrow = 0;
-      } else {
-        result.unshift(temp + 2);
-        borrows.unshift(1);
-        borrow = 1;
-      }
-    }
-
-    return {result, borrows};
-  }
-
-  const toggleValueResult = (index: number) => {
-    const update = [...binaryResult];
-    update[index] = update[index] === 0 ? 1 : 0;
-    setBinaryResult([...update]);
+  const onesComplement = (bit: string) => {
+    return bit
+      .split("")
+      .map((b) => (b == "0" ? "1" : "0"))
+      .join("");
   };
+
+  const [onesAndTwosNumber, setOnesNumber] = useState(
+    Array((level + 3) * 2).fill(0)
+  );
+  const modalHintRef = useRef<ModalRef>(null);
+  const [reslut, setReslut] = useState(false);
+  const refModal = useRef<ModalRef>(null);
+  const modalRef = useRef<ModalRef>(null);
 
   const toggleValue = (index: number) => {
-    const update = [...binaryNumberBorrow];
+    const update = [...onesAndTwosNumber];
+
     update[index] = update[index] === 0 ? 1 : 0;
-    setBinaryNumberBorrow([...update]);
+    setOnesNumber([...update]);
   };
 
-  function answerProgress(): void {
-    const ans = subtractBinaryStrings(one, two);
-    let r1 = 0;
-    let r2 = 0;
-    if (ans.borrows.join(``) === binaryNumberBorrow.join(``)) {
-      r1 = 1;
+  function checkTheAnswer(): void {
+    const firstComplement = onesComplement(two);
+    const ans = sumBinaryNumber({
+      first_num: firstComplement,
+      second_num: add,
+    });
+ 
+
+    if (Number(two) == 0) {
+      setTwo(generateBinary({length: level + 3, DecNumber: Math.random()}));
     }
-
-    if (ans.result.join(``) === binaryResult.join(``)) {
-      r2 = 1;
-    }
-
-    const newProgress = Math.round(((r1 + r2) / 2) * 100);
-
-    setProgress(newProgress);
-    if (newProgress == 100) {
-      setLevel((l) => l + 1);
+    if (
+      Number(onesComplement(two)) ===
+      Number(onesAndTwosNumber.slice(0, level + 3).join(""))
+    ) {
+      const secondAnswer = ans.total.slice(-(level + 3));
+      if (
+        Number(secondAnswer) ===
+        Number(onesAndTwosNumber.slice(level + 3).join(""))
+      ) {
+     
+          setLevel((prev) => prev + 1);
+          setProgress(Math.round((level / 3) * 100));
+        
+      } 
+    } 
+     else {
+      toast.error(`Answer is not correct, Try again!`);
     }
   }
-useEffect(() => {
+  useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
     }
@@ -127,134 +123,137 @@ useEffect(() => {
     modalHintRef?.current?.close();
   }, []);
   useEffect(() => {
-    setProgress(0);
     if (level <= 3) {
-      // setAdd(level == 1 ? "01" : level == 2 ? "001" : "0001");
-      setBinaryNumberBorrow(Array(level + 1).fill(0));
-      setBinaryResult(Array(level + 1).fill(0));
-      setOne(generateBinary({length: level + 1, DecNumber: Math.random()}));
-      setTwo(generateBinary({length: level + 1, DecNumber: Math.random()}));
+      setAdd(level == 1 ? "0001" : level == 2 ? "00001" : "000001");
+      setOnesNumber(Array((level + 3) * 2).fill(0));
+      setTwo(generateBinary({length: level + 3, DecNumber: Math.random()}));
     } else {
-      setLevel(4);
+      setLevel(3);
+      setProgress(reslut ? 80 : 100);
       modalRef.current?.open();
     }
   }, [level]);
 
-  useEffect(() => {
-    answerProgress();
-  }, [binaryNumberBorrow, binaryResult]);
-
-  useEffect(() => {
-    setProgress(0);
-  }, []);
-
   return (
     <>
-      <div className="flex flex-col bg-white rounded  min-h-[500px] relative ">
+      <div className="flex flex-col bg-white rounded  m-5 p-3 min-h-[500px] relative  ">
         <div className="mb-4 flex justify-center">
           <p className=" font-bold text-3xl text-black ">
-            Binary addition Game
+            Binary Subtraction Using Two’s complement{" "}
           </p>
         </div>
-        <div className="flex justify-center gap-4 ">
-          <Button
-            text="Codet"
-            startIcon={<Star className=" mx-2 h-6" />}
-            className={clsx(
-              level == 1
-                ? "bg-purpleOne text-white"
-                : "bg-white text-purpleOne",
-              "!px-8 !rounded-[10px] border border-purpleOne",
-              "w-[14%]"
-            )}
-          />
-          <Button
-            text="pilot"
-            startIcon={<Star className="mx-2 h-6" />}
-            className={clsx(
-              level == 2
-                ? "bg-purpleOne text-white"
-                : "bg-white text-purpleOne",
-              "!px-8 !rounded-[10px] border border-purpleOne",
-              "w-[14%]"
-            )}
-          />{" "}
-          
-          <Button
-            text="Commander"
-            startIcon={<Star className="mx-2 h-6" />}
-            className={clsx(
-              level == 4
-                ? "bg-purpleOne text-white"
-                : "bg-white text-purpleOne",
-              "!px-8 !rounded-[10px] border border-purpleOne",
-              "w-[14%]"
-            )}
-          />
-        </div>
+        <div className=" bg-white rounded-lg py-5 px-3 flex flex-col gap-4 w-full min-h-[500px] relative mt-6 justify-start items-center text-black">
+         <div className="flex items-center gap-4">
+                   <Button
+                     text="Codet"
+                     startIcon={<Star className="mx-2" />}
+                     className={clsx(
+                       level == 1
+                         ? "bg-purpleOne text-white"
+                         : "bg-white text-purpleOne",
+                       " !px-8 !rounded-[10px] border-purpleOne"
+                     )}
+                   />
+                   <Button
+                     text="Pilot"
+                     startIcon={<Pilot className="mx-2 h-6" />}
+                     className={clsx(
+                       level == 2
+                         ? "bg-purpleOne text-white"
+                         : "bg-white text-purpleOne",
+                       "!px-8 !rounded-[10px] border border-purpleOne"
+                     )}
+                   />
+                   <Button
+                     text="Captain"
+                     startIcon={<Captain className="mx-2 h-6" />}
+                     className={clsx(
+                       level == 3
+                         ? "bg-purpleOne text-white"
+                         : "bg-white text-purpleOne",
+                       " !px-8 !rounded-[10px] border border-purpleOne"
+                     )}
+                   />
+                 
+                 </div>
+          <p className="text-[#0E0226] font-normal text-xl">Your Progress</p>
 
-        <div className="flex flex-col items-center justify-center mx-12 p-5 m-3">
-          <p>Your Progress</p>
-          <div className="w-3/4">
+          <div className="flex w-[80%]">
             <ProgressBar progress={progress} />
           </div>
-        </div>
+          <div className="flex flex-col items-center justify-center m-3 p-5 mx-12 w-full">
+            <div className="flex flex-col justify-center m-2  w-3/4 bg-[#FFE5F3] ">
+              <div className="flex justify-center">
+                <p className="font-bold text-black  p-3 text-xl ">
+                  Numbers To Subtract:
+                </p>
+              </div>
+              <div className="flex justify-center ">
+                <div className="w-[45%] flex justify-around ">
+           
+                  <p className="flex items-center text-xl font-bold text-black m-3 p-1 ">
+                    B : <span className="text-[#FF1D92] text-3xl">{two}</span>
+                  </p>
+                </div>
+              </div>
+            
+            </div>
 
-        <div className="flex justify-center w-full">
-          <div className="flex flex-col items-center justify-center w-3/4 bg-[#FFC9E6] m-3 p-5">
-            <div className="bg-white w-[40%] justify-center rounded-xl m-4 p-3">
-              <div className="flex justify-start mx-12">
-                {binaryNumberBorrow.map((p, index) => {
-                  return (
-                    <>
-                      <button
-                        className="bg-[#FFC9E6] m-1"
-                        onClick={() => toggleValue(index)}>
-                        {p}
-                      </button>
-                    </>
-                  );
-                })}
+            <div className="flex flex-col justify-center m-2  w-3/4 bg-[#FFE5F3] ">
+              <div className="flex justify-stat">
+                <p className="flex flex-col font-bold text-black  p-3 text-sm ">
+                  Find Two’s Complement of B:
+                  <span className="opacity-50">1. One’s Complement of B: </span>
+                </p>
               </div>
-              <div className="flex justify-center flex-col items-center">
-                <p className="font-bold text-3xl text-black">{one}</p>
-                <p className="font-bold text-3xl text-blue">-</p>
-                <p className="font-bold text-3xl text-black">{two}</p>
+
+              <div className="flex justify-center ">
+                <div className="w-[45%] flex justify-center ">
+                  <ToggleGroup
+                    values={onesAndTwosNumber.slice(0, level + 3)}
+                    onToggle={(i) => toggleValue(i)}
+                  />
+                </div>
               </div>
-              <hr className="border-t-2 border-red-600 my-4" />
-              <div className="flex justify-start mx-12">
-                {binaryResult.map((p, index) => {
-                  return (
-                    <>
-                      <button
-                        className="bg-[#FFC9E6] m-1"
-                        onClick={() => toggleValueResult(index)}>
-                        {p}
-                      </button>
-                    </>
-                  );
-                })}
+              <div className="flex justify-start p-3 m-2">
+                <p className="font-bold opacity-50 text-sm">
+                  2. two’s Complement of B:{" "}
+                </p>
+              </div>
+              <div className="flex justify-center ">
+                <div className="w-[45%] flex justify-center ">
+                  <ToggleGroup
+                    values={onesAndTwosNumber.slice(level + 3)}
+                    onToggle={(i) => toggleValue(i + (level + 3))}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="flex w-full items-center justify-center gap-10">
-              <Button
-                text="Back to Home"
-                className="!max-w-[220px] !rounded-[50px] gap-2"
-                startIcon={<HomeIcon />}
-                onClick={goHome}
-              />
-              <Button
-                text="Check Answer"
-                className="!max-w-[220px] !rounded-[50px]"
-              />
-            </div>
+       
+          </div>
 
-            <Modal ref={modalRef}>
-              <LevelComplete onNextLevel={onComplete} onGoHome={goHome} level={""} />
-            </Modal>
+          <div className="flex w-full items-center justify-center gap-10">
+            <Button
+              text="Back to Home"
+              className="!max-w-[220px] !rounded-[50px] gap-2"
+              startIcon={<HomeIcon />}
+              onClick={goHome}
+            />
+            <Button
+              text="Check Answer"
+              className="!max-w-[220px] !rounded-[50px]"
+              onClick={checkTheAnswer}
+            />
           </div>
         </div>
+        <Modal ref={modalRef}>
+          <LevelComplete
+            onNextLevel={onComplete}
+            onGoHome={goHome}
+            level={""}
+          />
+        </Modal>
       </div>
       <CommonModal refModal={refModal} title={"Teach Course"}>
         <div className="relative pt-[56.25%] w-full">
@@ -265,15 +264,20 @@ useEffect(() => {
             allowFullScreen></iframe>
         </div>
       </CommonModal>
-          <HelpME
-        setAnswer={() => setAnswer(true)}
-        answer={answer}
+      <HelpME
+        setAnswer={() => setReslut(true)}
+        answer={reslut}
         hint={hint}
         refModal={modalHintRef}
-        solution={`  borrows  : ${subtractBinaryStrings(one, two).borrows}`}
-        solutionTwo={` Correct carry: ${subtractBinaryStrings(one, two).result}`}
+        solution={`  One’s Complement is : ${onesComplement(two)}`}
+        solutionTwo={`  Two’s Complement is :: ${
+          sumBinaryNumber({
+            first_num: onesComplement(two),
+            second_num: add,
+          }).total
+        } `}
+      
       />
-     
     </>
   );
 };

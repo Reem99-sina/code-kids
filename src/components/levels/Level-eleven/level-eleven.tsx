@@ -1,21 +1,25 @@
-import { HomeIcon, Star} from "@/assets";
+import {HomeIcon, Star} from "@/assets";
 import {Button} from "@/components/common/button.component";
 import {Modal, ModalRef} from "@/components/common/modal.component";
 import ProgressBar from "@/components/common/ProgressBar";
 
 import {useEffect, useRef, useState} from "react";
 import {LevelComplete} from "../LevelComplete";
-import { generateBinary, sumBinaryNumber } from "@/utils/binary.util";
+import {
+  generateBinary,
+  subtractBinaryStrings,
+  sumBinaryNumber,
+} from "@/utils/binary.util";
 import clsx from "clsx";
-import toast from "react-hot-toast";
 import ToggleButton from "@/components/common/toggleButton";
 import CommonModal from "@/components/common/common-modal";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelElevenProps {
   onComplete: () => void;
   goHome: () => void;
-    open: boolean;
+  open: boolean;
   hint: string;
   source: string;
 }
@@ -38,7 +42,13 @@ const ToggleGroup = ({
   </>
 );
 
-const LevelEleven: React.FC<LevelElevenProps> = ({onComplete, goHome,open,hint,source}) => {
+const LevelEleven: React.FC<LevelElevenProps> = ({
+  onComplete,
+  goHome,
+  open,
+  hint,
+  source,
+}) => {
   const [progress, setProgress] = useState(0);
   const [level, setLevel] = useState(1);
   const [add, setAdd] = useState("");
@@ -62,8 +72,8 @@ const LevelEleven: React.FC<LevelElevenProps> = ({onComplete, goHome,open,hint,s
   );
   const [answer, setAnswer] = useState(Array(level + 3).fill(0));
   const modalHintRef = useRef<ModalRef>(null);
-    const [reslut, setReslut] = useState(false);
-      const refModal = useRef<ModalRef>(null);
+  const [reslut, setReslut] = useState(false);
+  const refModal = useRef<ModalRef>(null);
   const modalRef = useRef<ModalRef>(null);
 
   const toggleValue = (index: number) => {
@@ -104,37 +114,15 @@ const LevelEleven: React.FC<LevelElevenProps> = ({onComplete, goHome,open,hint,s
         const realFinalAnswer = lastAns.total.slice(-(level + 3));
         if (Number(realFinalAnswer) === Number(answer.join(""))) {
           setLevel((prev) => prev + 1);
-          toast.success("Great job! Keep going! Answer is correct ");
           setProgress(Math.round((level / 3) * 100));
-        } else {
-          toast.success("One’s complement and Two’s Complement are correct");
-          toast.error(
-            "But Add A and Two’s Complement of B is incorrect " +
-              "sum:" +
-              lastAns.total.slice(-(level + 3))
-          );
         }
-      } else {
-        toast.success("One’s complement is correct");
-        toast.error(
-          "But Two’s Complement and the sum is incorrect " +
-            "Two’s Complement:" +
-            ans.total.slice(-(level + 3)) +
-            "sum:" +
-            lastAns.total.slice(-(level + 3))
-        );
-      }
-    } else
-      toast.error(
-        "No answer is correct One’s complement:" +
-          firstComplement +
-          "Two’s Complement:" +
-          ans.total.slice(-(level + 3)) +
-          "sum:" +
-          lastAns.total.slice(-(level + 3))
-      );
+      } 
+    } 
+     else {
+      toast.error(`Answer is not correct, Try again!`);
+    }
   }
-useEffect(() => {
+  useEffect(() => {
     if (!modalHintRef?.current?.open()) {
       open = false;
     }
@@ -155,6 +143,7 @@ useEffect(() => {
       setBinaryB(generateBinary({length: level + 3, DecNumber: Math.random()}));
       setTwo(generateBinary({length: level + 3, DecNumber: Math.random()}));
     } else {
+      setProgress(reslut ? 80 : 100);
       setLevel(3);
       modalRef.current?.open();
     }
@@ -168,133 +157,136 @@ useEffect(() => {
             Binary Subtraction Using Two’s complement{" "}
           </p>
         </div>
-
+        <div className=" bg-white rounded-lg py-5 px-3 flex flex-col gap-4 w-full min-h-[500px] relative mt-6 justify-start items-center text-black">
           <div className="flex justify-center gap-4 ">
-                 <Button
-                   text="Codet"
-                   startIcon={<Star className=" mx-2 h-6" />}
-                   className={clsx(
-                     level == 1
-                       ? "bg-purpleOne text-white"
-                       : "bg-white text-purpleOne",
-                     "!px-8 !rounded-[10px] border border-purpleOne",
-                     "w-[14%]"
-                   )}
-                 />
-                 <Button
-                   text="pilot"
-                   startIcon={<Star className="mx-2 h-6" />}
-                   className={clsx(
-                     level == 2
-                       ? "bg-purpleOne text-white"
-                       : "bg-white text-purpleOne",
-                     "!px-8 !rounded-[10px] border border-purpleOne",
-                     "w-[14%]"
-                   )}
-                 />{" "}
-                 
-                 <Button
-                   text="Commander"
-                   startIcon={<Star className="mx-2 h-6" />}
-                   className={clsx(
-                     level == 4
-                       ? "bg-purpleOne text-white"
-                       : "bg-white text-purpleOne",
-                     "!px-8 !rounded-[10px] border border-purpleOne",
-                     "w-[14%]"
-                   )}
-                 />
-               </div>
-        <div className="flex flex-col items-center justify-center mx-12 p-5 m-3 ">
-          <p>Your Progress</p>
-          <div className="w-3/4">
+            <Button
+              text="Codet"
+              startIcon={<Star className=" mx-2 h-6" />}
+              className={clsx(
+                level == 1
+                  ? "bg-purpleOne text-white"
+                  : "bg-white text-purpleOne",
+                "!px-8 !rounded-[10px] border border-purpleOne",
+                "w-[14%]"
+              )}
+            />
+            <Button
+              text="pilot"
+              startIcon={<Star className="mx-2 h-6" />}
+              className={clsx(
+                level == 2
+                  ? "bg-purpleOne text-white"
+                  : "bg-white text-purpleOne",
+                "!px-8 !rounded-[10px] border border-purpleOne",
+                "w-[14%]"
+              )}
+            />{" "}
+            <Button
+              text="Commander"
+              startIcon={<Star className="mx-2 h-6" />}
+              className={clsx(
+                level == 4
+                  ? "bg-purpleOne text-white"
+                  : "bg-white text-purpleOne",
+                "!px-8 !rounded-[10px] border border-purpleOne",
+                "w-[14%]"
+              )}
+            />
+          </div>
+          <p className="text-[#0E0226] font-normal text-xl">Your Progress</p>
+
+          <div className="flex w-[80%]">
             <ProgressBar progress={progress} />
           </div>
-        </div>
-        <div className="flex flex-col items-center justify-center m-3 p-5 mx-12">
-          <div className="flex flex-col justify-center m-2  w-3/4 bg-[#FFE5F3] ">
-            <div className="flex justify-stat">
-              <p className="font-bold text-black  p-3 text-sm ">
-                Numbers To Subtract:
-              </p>
-            </div>
-            <div className="flex justify-center ">
-              <div className="w-[45%] flex justify-around ">
-                <p className="flex text-xl font-bold text-black m-3 p-1 ">
-                  A :<span className="text-[#FF1D92]">{binaryA}</span>
-                </p>
-                <p className="flex text-xl font-bold text-black m-3 p-1 ">
-                  B : <span className="text-[#FF1D92]">{two}</span>
+          <div className="flex flex-col items-center justify-center m-3 p-5 mx-12 w-full">
+            <div className="flex flex-col justify-center m-2  w-3/4 bg-[#FFE5F3] ">
+              <div className="flex justify-stat">
+                <p className="font-bold text-black  p-3 text-sm ">
+                  Numbers To Subtract:
                 </p>
               </div>
+              <div className="flex justify-center ">
+                <div className="w-[45%] flex justify-around ">
+                  <p className="flex text-xl font-bold text-black m-3 p-1 ">
+                    A :<span className="text-[#FF1D92]">{binaryA}</span>
+                  </p>
+                  <p className="flex text-xl font-bold text-black m-3 p-1 ">
+                    B : <span className="text-[#FF1D92]">{two}</span>
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-center ">
+                <div className="w-[45%] flex justify-around ">
+                  <p className="flex text-xl font-bold text-black m-3 p-1 ">
+                    A - B{" "}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-center ">
-              <div className="w-[45%] flex justify-around ">
-                <p className="flex text-xl font-bold text-black m-3 p-1 ">
-                  A - B{" "}
+
+            <div className="flex flex-col justify-center m-2  w-3/4 bg-[#FFE5F3] ">
+              <div className="flex justify-stat">
+                <p className="flex flex-col font-bold text-black  p-3 text-sm ">
+                  Find Two’s Complement of B:
+                  <span className="opacity-50">1. One’s Complement of B: </span>
                 </p>
+              </div>
+
+              <div className="flex justify-center ">
+                <div className="w-[45%] flex justify-center ">
+                  <ToggleGroup
+                    values={onesAndTwosNumber.slice(0, level + 3)}
+                    onToggle={(i) => toggleValue(i)}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-start p-3 m-2">
+                <p className="font-bold opacity-50 text-sm">
+                  2. two’s Complement of B:{" "}
+                </p>
+              </div>
+              <div className="flex justify-center ">
+                <div className="w-[45%] flex justify-center ">
+                  <ToggleGroup
+                    values={onesAndTwosNumber.slice(level + 3)}
+                    onToggle={(i) => toggleValue(i + (level + 3))}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-center m-2  w-3/4 bg-[#FFE5F3] ">
+              <div className="flex justify-start p-3 m-2">
+                <p className="font-bold ">Add A and Two’s Complement of B:</p>
+              </div>
+              <div className="flex justify-center ">
+                <div className="w-[45%] flex justify-center ">
+                  <ToggleGroup values={answer} onToggle={toggleAnswer} />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col justify-center m-2  w-3/4 bg-[#FFE5F3] ">
-            <div className="flex justify-stat">
-              <p className="flex flex-col font-bold text-black  p-3 text-sm ">
-                Find Two’s Complement of B:
-                <span className="opacity-50">1. One’s Complement of B: </span>
-              </p>
-            </div>
-
-            <div className="flex justify-center ">
-              <div className="w-[45%] flex justify-center ">
-                <ToggleGroup
-                  values={onesAndTwosNumber.slice(0, level + 3)}
-                  onToggle={(i) => toggleValue(i)}
-                />
-              </div>
-            </div>
-            <div className="flex justify-start p-3 m-2">
-              <p className="font-bold opacity-50 text-sm">
-                2. two’s Complement of B:{" "}
-              </p>
-            </div>
-            <div className="flex justify-center ">
-              <div className="w-[45%] flex justify-center ">
-                <ToggleGroup
-                  values={onesAndTwosNumber.slice(level + 3)}
-                  onToggle={(i) => toggleValue(i + (level + 3))}
-                />
-              </div>
-            </div>
+          <div className="flex w-full items-center justify-center gap-10">
+            <Button
+              text="Back to Home"
+              className="!max-w-[220px] !rounded-[50px] gap-2"
+              startIcon={<HomeIcon />}
+              onClick={goHome}
+            />
+            <Button
+              text="Check Answer"
+              className="!max-w-[220px] !rounded-[50px]"
+              onClick={checkTheAnswer}
+            />
           </div>
-
-          <div className="flex flex-col justify-center m-2  w-3/4 bg-[#FFE5F3] ">
-            <div className="flex justify-start p-3 m-2">
-              <p className="font-bold ">Add A and Two’s Complement of B:</p>
-            </div>
-            <div className="flex justify-center ">
-              <div className="w-[45%] flex justify-center ">
-                <ToggleGroup values={answer} onToggle={toggleAnswer} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex w-full items-center justify-center gap-10">
-          <Button
-            text="Back to Home"
-            className="!max-w-[220px] !rounded-[50px] gap-2"
-            startIcon={<HomeIcon />}
-            onClick={goHome}
-          />
-          <Button
-            text="Check Answer"
-            className="!max-w-[220px] !rounded-[50px]"
-            onClick={checkTheAnswer}
-          />
         </div>
         <Modal ref={modalRef}>
-          <LevelComplete onNextLevel={onComplete} onGoHome={goHome} level={""} />
+          <LevelComplete
+            onNextLevel={onComplete}
+            onGoHome={goHome}
+            level={""}
+          />
         </Modal>
       </div>
       <CommonModal refModal={refModal} title={"Teach Course"}>
@@ -306,17 +298,22 @@ useEffect(() => {
             allowFullScreen></iframe>
         </div>
       </CommonModal>
-          <HelpME
+      <HelpME
         setAnswer={() => setReslut(true)}
         answer={reslut}
         hint={hint}
         refModal={modalHintRef}
-        solution={`  borrows  : `}
-        solutionTwo={` Correct carry:`}
+        solution={`  One’s Complement of B: ${onesComplement(two)}`}
+        solutionTwo={`  Two’s Complement of B:: ${
+          sumBinaryNumber({
+            first_num: onesComplement(two),
+            second_num: add,
+          }).total
+        } `}
+        solutionThree={` Add A and Two’s Complement of B: ${subtractBinaryStrings(binaryA, two).result}`}
       />
     </>
   );
 };
-
 
 export default LevelEleven;

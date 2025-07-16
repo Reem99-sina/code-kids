@@ -8,8 +8,8 @@ import { TextInput } from "@/components/common/form/text-input.component";
 import CommonModal from "@/components/common/common-modal";
 import { useForm } from "react-hook-form";
 import { generateRandomDec } from "@/utils/binary.util";
-import toast from "react-hot-toast";
 import HelpME from "@/components/common/help.me";
+import toast from "react-hot-toast";
 
 interface LevelFourProps {
   onComplete: () => void;
@@ -48,16 +48,16 @@ export const LevelFour: React.FC<LevelFourProps> = ({
       setProgress((prev) => (prev < 100 && prev + 25 <= 100 ? prev + 25 : 100));
 
       formData.setValue("decimal", "");
-    } else {
-      toast.error(`Try again!\nCorrect : ${randomDecimal}`);
-    }
-    // if (answer === "101") {
-    //   modalRef.current?.open();
-    // }
+    } 
+     else {
+      toast.error(`Answer is not correct, Try again!`);
+    } 
+  
   };
 
   useEffect(() => {
     if (level == 5) {
+      if(result) setProgress(80);
       modalRef.current?.open();
     }
   }, [level]);
@@ -142,7 +142,7 @@ export const LevelFour: React.FC<LevelFourProps> = ({
           ></iframe>
         </div>
       </CommonModal>{" "}
-              <HelpME setAnswer={() => setResult(true)} answer={result} hint={hint} refModal={modalHintRef} solution={""}/>
+              <HelpME setAnswer={() => setResult(true)} answer={result} hint={hint} refModal={modalHintRef} solution={`Answer is : ${randomDecimal}`}/>
 
     </div>
   );
