@@ -134,7 +134,7 @@ const LevelThree: React.FC<LevelThreeProps> = ({
   }, [open]);
 
   useEffect(() => {
-    modalRef?.current?.open();
+    // modalRef?.current?.open();
     modalHintRef?.current?.close();
   }, []);
 

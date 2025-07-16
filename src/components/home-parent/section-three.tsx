@@ -82,7 +82,7 @@ const SectionThree = () => {
   // const {}=useGetRecommededCourses({id:1})
 
   return (
-    <div className="bg-[url('/section-three.png')] bg-cover bg-no-repeat w-full h-auto  lg:-mt-40  bg-white  text-black">
+    <div className="bg-[url('/section-three.png')] bg-cover bg-no-repeat w-full h-auto  lg:-mt-20  bg-white  text-black">
       <div className="xl:mt-[400px] mt-[15rem]"></div>
       <div className="bg-[url('/bg-recommed.png')]  bg-[position:50px_400%]  bg-contain ">
         <div className="flex flex-col gap-20 mb-5">

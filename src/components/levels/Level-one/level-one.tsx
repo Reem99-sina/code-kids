@@ -65,7 +65,7 @@ export const LevelOne: React.FC<LevelOneProps> = ({
   }, [open]);
 
   useEffect(() => {
-    refModal?.current?.open();
+    // refModal?.current?.open();
     modalHintRef?.current?.close();
   }, []);
 

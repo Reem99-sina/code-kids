@@ -73,7 +73,7 @@ export const LevelSix: React.FC<LevelSixProps> = ({
   }, [open]);
 
   useEffect(() => {
-    refModal?.current?.open();
+    // refModal?.current?.open();
     modalHintRef?.current?.close();
   }, []);
 

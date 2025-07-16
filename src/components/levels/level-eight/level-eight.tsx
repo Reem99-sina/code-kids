@@ -83,7 +83,7 @@ const LevelEight = ({
   }, [open]);
 
   useEffect(() => {
-    refModal?.current?.open();
+    // refModal?.current?.open();
     modalHintRef?.current?.close();
   }, []);
 

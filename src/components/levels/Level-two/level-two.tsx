@@ -101,7 +101,7 @@ export const LevelTwo = ({ onComplete, goHome, open, hint, source }: Props) => {
   }, [open]);
 
   useEffect(() => {
-    modalRef?.current?.open();
+    // modalRef?.current?.open();
     modalHintRef?.current?.close();
   }, []);
   const onResult = ({ title, result }: onResultInterface) => {

@@ -57,7 +57,7 @@ const LevelSeven = ({onComplete, goHome, open, hint, source}: Props) => {
   }, [open]);
 
   useEffect(() => {
-    refModal?.current?.open();
+    // refModal?.current?.open();
     modalHintRef?.current?.close();
   }, []);
 
