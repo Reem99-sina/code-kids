@@ -1,7 +1,8 @@
 import clsx from "clsx";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { dotInfo } from "./level-one/level-one";
+import { dotInfo } from "@/utils/logic.util";
+
 
 interface DirectionDots {
   direction: "top" | "bottom" | "center";

@@ -9,7 +9,7 @@ import {
   NottIcon,
   OrOff,
   OrOn,
-  Xor
+  Xor,
 } from "@/assets";
 
 import InputBinaryComponent from "@/components/games/input-binary-component";
@@ -182,13 +182,23 @@ export const dataItems = [
     input_2: 0,
     output: 0,
   },
- {
+  {
     input_1: 1,
     input_2: 1,
     output: 0,
   },
 ];
 
+export enum Operations {
+  And = "and",
+  Or = "or",
+  LampOff = "lamp-off",
+  Input = "input",
+  Nand = "nand",
+  Not = "not",
+  Xor = "xor",
+  Nor = "Nor",
+}
 
 export const eachElement = [
   {
@@ -263,7 +273,7 @@ export interface dotInfo {
   x: number;
   y: number;
   side?: string;
-  input?: string;
+  input?: string | number;
   box?: BoxInterface;
 }
 export interface LineDirection {
@@ -349,7 +359,7 @@ export const useOutput = ({
 }: {
   input_1: number;
   input_2: number;
-  operation: string;
+  operation?: string;
 }) => {
   return operation == "nand"
     ? nandOperation({ input_1, input_2 })
@@ -365,3 +375,116 @@ export const useOutput = ({
               ? xorOperation({ input_1: input_1, input_2: input_2 })
               : 0;
 };
+
+export interface LogicTrace {
+  boxId: number;
+  title: string;
+  inputs: { fromBoxId: number; value: number }[];
+  result: number;
+}
+
+export function evaluateLogicWithTrace(
+  box: BoxInterface,
+  lines: (LineDirection | undefined)[],
+  binary: { input_1: number; input_2: number },
+  cache: Map<number, { result: number; trace: LogicTrace[] }> = new Map()
+): { result: number; trace: LogicTrace[] } {
+  if (cache.has(box.id)) return cache.get(box.id)!;
+
+  if (box.title === "input") {
+    const key = `input_${box.index}` as keyof typeof binary;
+    const value = binary[key];
+    const resultObj = {
+      result: value,
+      trace: [
+        {
+          boxId: box.id,
+          title: "input",
+          inputs: [],
+          result: value,
+        },
+      ],
+    };
+    cache.set(box.id, resultObj);
+
+    return resultObj;
+  }
+
+  const incomingLines = lines.filter((line) => line?.to?.box?.id === box.id);
+
+  const getInputBox = (direction: string): BoxInterface | undefined =>
+    incomingLines.find((line) => line?.to?.direction === direction)?.from?.box;
+
+  const collectInput = (direction: string) => {
+    const inputBox = getInputBox(direction);
+    if (!inputBox) return { value: 0, trace: [], fromBoxId: -1 };
+    const { result, trace } = evaluateLogicWithTrace(
+      inputBox,
+      lines,
+      binary,
+      cache
+    );
+
+    return { value: result, trace, fromBoxId: inputBox.id };
+  };
+
+  const inputs: { fromBoxId: number; value: number }[] = [];
+  let result = 0;
+  let trace: LogicTrace[] = [];
+
+  switch (box.title) {
+    case "not": {
+      const input = collectInput("center");
+      result = input.value === 1 ? 0 : 1;
+      trace = [...input.trace];
+      inputs.push({ fromBoxId: input.fromBoxId, value: input.value });
+      break;
+    }
+    case "and":
+    case "nand":
+    case "or":
+    case "xor": {
+      const in1 = collectInput("top");
+      const in2 = collectInput("bottom");
+
+      const a = in1.value;
+      const b = in2.value;
+      trace = [...in1.trace, ...in2.trace];
+
+      if (box.title === "and")
+        result = andOperation({ input_1: a, input_2: b });
+      else if (box.title === "nand")
+        result = nandOperation({ input_1: a, input_2: b });
+      else if (box.title === "or")
+        result = orOperation({ input_1: a, input_2: b });
+      else if (box.title === "xor")
+        result = xorOperation({ input_1: a, input_2: b });
+
+      inputs.push({ fromBoxId: in1.fromBoxId, value: a });
+      inputs.push({ fromBoxId: in2.fromBoxId, value: b });
+      break;
+    }
+    case "lamp-off":
+    case "lamp-on": {
+      const input = collectInput("center");
+      result = input.value;
+      trace = [...input.trace];
+      inputs.push({ fromBoxId: input.fromBoxId, value: input.value });
+      break;
+    }
+    default:
+      return { result: 0, trace: [] };
+  }
+
+  trace.push({
+    boxId: box.id,
+    title: box.title,
+    inputs,
+    result,
+  });
+
+  const final = { result, trace };
+  cache.set(box.id, final);
+
+  return final;
+}

@@ -2,8 +2,11 @@ import { Button } from "@/components/common/button.component";
 import {
   BoxInterface,
   componentInputProps,
+  dotInfo,
   eachElement,
+  evaluateLogicWithTrace,
   generateUniqueId,
+  orOperation,
   useLineInBoxRemove,
 } from "@/utils/logic.util";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
@@ -12,14 +15,7 @@ import IconDots from "../icon-dots";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import { LevelComplete } from "@/components/levels/LevelComplete";
 import { LampOff, LampOn } from "@/assets";
-
-export interface dotInfo {
-  color: string;
-  direction: string;
-  id: number;
-  x: number;
-  y: number;
-}
+import ModalReviewResult from "@/components/levels/Level-two/modal-review-result";
 
 interface mouseMove {
   x: number;
@@ -44,28 +40,15 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
   const [startDot, setStartDot] = useState<dotInfo | null>(null);
   const [mousePos, setMousePos] = useState<mouseMove | null>(null);
   const modalRef = useRef<ModalRef>(null);
+  const modalResultRef = useRef<ModalRef>(null);
+  const [message, setMessage] = useState({
+    title: "",
+    desc: "",
+  });
 
   const onClose = () => {
     setBoxes([]);
     setLines([]);
-  };
-
-  const handleDotClick = ({
-    dot,
-  }: {
-    event: React.MouseEvent<HTMLDivElement>;
-    dot: dotInfo;
-  }) => {
-    if (!rect) return;
-    if (!startDot) {
-      setStartDot({ ...dot, x: dot.x - rect.left, y: dot.y - rect.top });
-    } else {
-      if (dot.id !== startDot.id) {
-        setLines([...lines, { from: startDot, to: { ...dot, ...mousePos } }]);
-      }
-      setStartDot(null);
-      setMousePos(null);
-    }
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -84,9 +67,13 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
     const lamp = boxes.find((box) => box.title === "lamp-off");
 
     if (!orGate || !lamp) {
-      alert("Missing OR gate or Lamp.");
+      setMessage({
+        title: "Game Over! ",
+        desc: "Missing OR gate or Lamp.",
+      });
+      modalResultRef?.current?.open();
       onClose();
-      
+
       return;
     }
 
@@ -96,24 +83,65 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
       (line) => line?.from.id === orGate?.id && line?.to.id === lamp?.id
     );
 
-    if (inputsToOr.length > 1 && orToLamp) {
+    const result = orOperation({
+      input_1: binary["input_1"],
+      input_2: binary["input_2"],
+    });
+
+    if (inputsToOr.length > 1 && orToLamp && result == 1) {
       modalRef.current?.open();
     } else {
+      setMessage({
+        title: "Game Over! ",
+        desc: "❌ Incorrect logic, try again.",
+      });
+      modalResultRef?.current?.open();
       onClose();
-      alert("❌ Incorrect logic, try again.");
     }
   };
 
-  const output = ({
-    input_1,
-    input_2,
+  const hasLine = useMemo(() => {
+    return ({ dot, direction }: { dot: BoxInterface; direction: string }) => {
+      return {
+        line: lines.find(
+          (ele) => ele?.to?.id == dot?.id && ele?.to?.direction == direction
+        ),
+        from: lines.find(
+          (ele) => ele?.to?.id == dot?.id && ele?.to?.direction == direction
+        )?.from,
+      };
+    };
+  }, [lines]);
+
+  const handleDotClick = ({
+    dot,
+    input,
+    box,
   }: {
-    input_1: number;
-    input_2: number;
+    event: React.MouseEvent<HTMLDivElement>;
+    dot: dotInfo;
+    input?: string;
+    box: BoxInterface;
   }) => {
-    return input_1 == 1 || input_2 == 1 || (input_1 == 1 && input_2 == 1)
-      ? 1
-      : 0;
+    if (!rect) return;
+    if (!startDot) {
+      setStartDot({
+        ...dot,
+        x: dot.x - rect.left,
+        y: dot.y - rect.top,
+        input,
+        box: box,
+      });
+    } else {
+      if (dot.id !== startDot.id) {
+        setLines([
+          ...lines,
+          { from: startDot, to: { ...dot, ...mousePos, input, box: box } },
+        ]);
+      }
+      setStartDot(null);
+      setMousePos(null);
+    }
   };
 
   const hasInput = useMemo(() => {
@@ -133,6 +161,7 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
           {boxes?.map((ele, index) => {
             const Icon = ele?.Icon;
             const Reverse = ele?.Reverse;
+            const lineBottom = hasLine({ dot: ele, direction: "bottom" });
 
             return (
               <motion.div
@@ -161,7 +190,14 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                           id: ele?.id,
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ event, dot }) =>
+                        handleDotClick({
+                          dot,
+                          event,
+                          input: `input_${ele?.index}`,
+                          box: ele,
+                        })
+                      }
                     />
                   ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
                     <IconDots
@@ -169,43 +205,65 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "center",
                           color:
-                            output({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                            }) == 1
+                            evaluateLogicWithTrace(ele, lines, binary)
+                              ?.result == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
                           side: "left",
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
                     />
                   ) : (
                     <IconDots
                       direction_dots_true={[
                         {
                           direction: "top",
-                          color: binary["input_1"] == 1 ? "green" : "red",
+                          color:
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.inputs[0]?.value == 1
+                              ? "green"
+                              : "red",
                           id: ele?.id,
                         },
                         {
                           direction: "bottom",
-                          color: binary["input_2"] == 1 ? "green" : "red",
+                          color:
+                            lineBottom?.line?.to &&
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.inputs[1]?.value == 1
+                              ? "green"
+                              : "red",
                           id: ele?.id,
                         },
                         {
                           direction: "center",
-                          color: output({
-                            input_1: binary["input_1"],
-                            input_2: binary["input_2"],
-                          })
-                            ? "green"
-                            : "red",
+                          color:
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.result == 1
+                              ? "green"
+                              : "red",
                           id: ele?.id,
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
                     />
                   )}
                   {ele?.title == "input" ? (
@@ -225,18 +283,16 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                       );
                     })()
                   ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
-                    output({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                    }) == 1 ? (
+                    evaluateLogicWithTrace(ele, lines, binary)?.trace?.find(
+                      (elem) => elem?.boxId == ele?.id
+                    )?.result == 1 ? (
                       <LampOn />
                     ) : (
                       <LampOff />
                     )
-                  ) : output({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                    }) == 1 ? (
+                  ) : evaluateLogicWithTrace(ele, lines, binary)?.trace?.find(
+                      (elem) => elem?.boxId == ele?.id
+                    )?.result == 1 ? (
                     Reverse ? (
                       <Reverse />
                     ) : (
@@ -278,20 +334,17 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
                 animate={{ x2: line?.to.x, y2: line?.to.y }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 stroke={
-                  line?.from?.direction == "bottom" ||
-                  line?.to?.direction == "bottom"
+                  line?.from?.direction == "bottom"
                     ? binary["input_2"] == 1
                       ? "green"
                       : "red"
-                    : line?.from?.direction == "top" ||
-                        line?.to?.direction == "top"
+                    : line?.from?.direction == "top"
                       ? binary["input_1"] == 1
                         ? "green"
                         : "red"
-                      : output({
-                            input_1: binary["input_1"],
-                            input_2: binary["input_2"],
-                          }) == 1
+                      : line?.from?.box &&
+                          evaluateLogicWithTrace(line?.from?.box, lines, binary)
+                            ?.result == 1
                         ? "green"
                         : "red"
                 }
@@ -334,16 +387,7 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
             ]);
           }}
         />
-        <Button
-          text="Create NOT Gate"
-          className="bg-yellowFunf whitespace-nowrap !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[5], id: generateUniqueId() },
-            ]);
-          }}
-        />
+
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
@@ -376,6 +420,20 @@ const LevelTwo: React.FC<LevelTwoProps> = ({ onComplete, goHome }) => {
       </div>
       <Modal ref={modalRef}>
         <LevelComplete level="2" onNextLevel={onComplete} onGoHome={goHome} />
+      </Modal>
+      <Modal
+        ref={modalResultRef}
+        className="bg-transparent"
+        // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        // onClose={() => navigate("/")}
+      >
+        <ModalReviewResult
+          title={message?.title}
+          desc={message?.desc}
+          onClick={() => {
+            modalResultRef?.current?.close();
+          }}
+        />
       </Modal>
     </>
   );

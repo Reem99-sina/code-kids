@@ -4,6 +4,7 @@ import {
   componentInputProps,
   dotInfo,
   eachElement,
+  evaluateLogicWithTrace,
   generateUniqueId,
   LineDirection,
   mouseMove,
@@ -16,17 +17,15 @@ import IconDots from "../icon-dots";
 import { LampOff, LampOn } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import { LevelComplete } from "@/components/levels/LevelComplete";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import ModalReviewResult from "@/components/levels/Level-two/modal-review-result";
 
 interface LevelEightProps {
   onComplete: () => void;
   goHome: () => void;
 }
 
-const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
+const LevelTen: React.FC<LevelEightProps> = ({ onComplete,goHome }) => {
   const modalRef = useRef<ModalRef>(null);
-  const router=useNavigate()
   const [binary, setBinary] = useState({ input_1: 0, input_2: 0 });
   const constraintsRef = useRef<HTMLDivElement>(null);
   const rect = constraintsRef?.current?.getBoundingClientRect();
@@ -35,6 +34,11 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
   const [lines, setLines] = useState<(LineDirection | undefined)[]>([]); // Final lines
   const [startDot, setStartDot] = useState<dotInfo | null>(null); // Starting dot
   const [mousePos, setMousePos] = useState<mouseMove | null>(null); // For live line
+  const modalResultRef = useRef<ModalRef>(null);
+  const [message, setMessage] = useState({
+    title: "",
+    desc: "",
+  });
 
   const onClose = () => {
     setBoxes([]);
@@ -89,81 +93,6 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
     return boxes.filter((ele) => ele?.title == "nand");
   }, [boxes]);
 
-  const lineColor = useMemo(() => {
-    return (line?: LineDirection) =>
-      line?.from?.input
-        ? binary[line?.from?.input as keyof typeof binary] == 1
-          ? "green"
-          : "red"
-        : line?.to?.input
-          ? binary[line?.to?.input as keyof typeof binary] == 1
-            ? "green"
-            : "red"
-          : line?.from?.direction == "center"
-            ? line?.to?.direction == "top"
-              ? line?.to?.box?.repeat == 2
-                ? useOutput({
-                    input_1: binary["input_1"],
-                    input_2: binary["input_2"],
-                    operation: "nand",
-                  }) == 1
-                  ? "green"
-                  : "red"
-                : line?.to?.box?.repeat == 3
-                  ? useOutput({
-                      input_1: useOutput({
-                        input_1: binary["input_1"],
-                        input_2: binary["input_2"],
-                        operation: "nand",
-                      }),
-                      input_2: useOutput({
-                        input_1: binary["input_1"],
-                        input_2: binary["input_2"],
-                        operation: "nand",
-                      }),
-                      operation: "nand",
-                    }) == 1
-                    ? "green"
-                    : "red"
-                  : "red"
-              : line?.to?.direction == "bottom"
-                ? line?.to?.box?.repeat == 2
-                  ? useOutput({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                      operation: "nand",
-                    }) == 1
-                    ? "green"
-                    : "red"
-                  : line?.to?.box?.repeat == 3
-                    ? useOutput({
-                        input_1: useOutput({
-                          input_1: binary["input_1"],
-                          input_2: binary["input_2"],
-                          operation: "nand",
-                        }),
-                        input_2: useOutput({
-                          input_1: binary["input_1"],
-                          input_2: binary["input_2"],
-                          operation: "nand",
-                        }),
-                        operation: "nand",
-                      }) == 1
-                      ? "green"
-                      : "red"
-                    : "red"
-                : line?.to?.direction == "center"
-                  ? useOutput({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                      operation: "xor",
-                    }) == 1
-                    ? "green"
-                    : "red"
-                  : "red"
-            : "red";
-  }, [binary]);
-
   const validateConnections = () => {
     const connections = [...lines];
 
@@ -188,10 +117,13 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
 
     if (
       !lamp ||
-      result == 0 ||
       (!nandTwoGate && !nandThreeGate && !nandOneGate && !nandFourGate)
     ) {
-      toast.error("Missing NAND gate or Lamp.");
+      setMessage({
+        title: "Game Over! ",
+        desc: "Missing NAND gate or Lamp.",
+      });
+      modalResultRef?.current?.open();
       onClose();
 
       return;
@@ -216,12 +148,17 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
       andToLamp &&
       inputsToSecondAnd?.length > 1 &&
       inputsToThreeAnd?.length > 1 &&
-      inputsToFourAnd?.length > 1
+      inputsToFourAnd?.length > 1 &&
+      result == 1
     ) {
       modalRef.current?.open();
     } else {
+      setMessage({
+        title: "Game Over! ",
+        desc: "❌ Incorrect logic, try again.",
+      });
+      modalResultRef?.current?.open();
       onClose();
-      toast.error("❌ Incorrect logic, try again.");
     }
   };
 
@@ -251,6 +188,7 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
           {boxes?.map((ele, index) => {
             const Icon = ele?.Icon;
             const Reverse = ele?.Reverse;
+            const lineBottom = hasLine({ dot: ele, direction: "bottom" });
 
             return (
               <motion.div
@@ -294,229 +232,12 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
                         {
                           direction: "center",
                           color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: "xor",
-                            }) == 1
+                            evaluateLogicWithTrace(ele, lines, binary)
+                              ?.result == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
                           side: "left",
-                        },
-                      ]}
-                      onClick={({ dot, event }) =>
-                        handleDotClick({ dot, event, box: ele })
-                      }
-                    />
-                  ) : ele?.repeat == 0 && ele?.title == "nand" ? (
-                    <IconDots
-                      direction_dots_true={[
-                        {
-                          direction: "top",
-                          color:
-                            binary[
-                              (hasLine({ dot: ele, direction: "top" })?.from
-                                ?.input as keyof typeof binary) || "input_1"
-                            ] == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "bottom",
-                          color:
-                            binary[
-                              (hasLine({ dot: ele, direction: "bottom" })?.from
-                                ?.input as keyof typeof binary) || "input_2"
-                            ] == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "center",
-                          color:
-                            useOutput({
-                              input_1:
-                                binary[
-                                  (hasLine({ dot: ele, direction: "top" })?.from
-                                    ?.input as keyof typeof binary) || "input_1"
-                                ],
-                              input_2:
-                                binary[
-                                  (hasLine({ dot: ele, direction: "bottom" })
-                                    ?.from?.input as keyof typeof binary) ||
-                                    "input_2"
-                                ],
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                      ]}
-                      onClick={({ dot, event }) =>
-                        handleDotClick({ dot, event, box: ele })
-                      }
-                    />
-                  ) : ele?.repeat == 1 && ele?.title == "nand" ? (
-                    <IconDots
-                      direction_dots_true={[
-                        {
-                          direction: "top",
-                          color:
-                            binary[
-                              (hasLine({ dot: ele, direction: "top" })?.from
-                                ?.input as keyof typeof binary) || "input_1"
-                            ] == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "bottom",
-                          color:
-                            binary[
-                              (hasLine({ dot: ele, direction: "bottom" })?.from
-                                ?.input as keyof typeof binary) || "input_2"
-                            ] == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "center",
-                          color:
-                            useOutput({
-                              input_1:
-                                binary[
-                                  (hasLine({ dot: ele, direction: "top" })?.from
-                                    ?.input as keyof typeof binary) || "input_1"
-                                ],
-                              input_2:
-                                binary[
-                                  (hasLine({ dot: ele, direction: "bottom" })
-                                    ?.from?.input as keyof typeof binary) ||
-                                    "input_2"
-                                ],
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                      ]}
-                      onClick={({ dot, event }) =>
-                        handleDotClick({ dot, event, box: ele })
-                      }
-                    />
-                  ) : ele?.repeat == 2 && ele?.title == "nand" ? (
-                    <IconDots
-                      direction_dots_true={[
-                        {
-                          direction: "top",
-                          color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "bottom",
-                          color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "center",
-                          color:
-                            useOutput({
-                              input_1: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              input_2: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                      ]}
-                      onClick={({ dot, event }) =>
-                        handleDotClick({ dot, event, box: ele })
-                      }
-                    />
-                  ) : ele?.repeat == 3 && ele?.title == "nand" ? (
-                    <IconDots
-                      direction_dots_true={[
-                        {
-                          direction: "top",
-                          color:
-                            useOutput({
-                              input_1: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              input_2: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "bottom",
-                          color:
-                            useOutput({
-                              input_1: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              input_2: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "center",
-                          color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: "xor",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
                         },
                       ]}
                       onClick={({ dot, event }) =>
@@ -529,11 +250,12 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
                         {
                           direction: "top",
                           color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: ele?.title,
-                            }) == 1
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.inputs[0]?.value == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
@@ -541,11 +263,13 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
                         {
                           direction: "bottom",
                           color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: ele?.title,
-                            }) == 1
+                            lineBottom?.line?.to &&
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.inputs[1]?.value == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
@@ -553,11 +277,12 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
                         {
                           direction: "center",
                           color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: ele?.title,
-                            }) == 1
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.result == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
@@ -586,85 +311,14 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
                       );
                     })()
                   ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
-                    useOutput({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                      operation: "xor",
-                    }) == 1 ? (
+                    evaluateLogicWithTrace(ele, lines, binary)?.result == 1 ? (
                       <LampOn />
                     ) : (
                       <LampOff />
                     )
-                  ) : ele?.repeat == 0 && ele?.title == "nand" ? (
-                    useOutput({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                      operation: ele?.title,
-                    }) == 1 ? (
-                      Reverse ? (
-                        <Reverse className="w-16 h-16" />
-                      ) : (
-                        <></>
-                      )
-                    ) : (
-                      <Icon className="w-16 h-16" />
-                    )
-                  ) : ele?.repeat == 1 && ele?.title == "nand" ? (
-                    useOutput({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                      operation: ele?.title,
-                    }) == 1 ? (
-                      Reverse ? (
-                        <Reverse className="w-16 h-16" />
-                      ) : (
-                        <></>
-                      )
-                    ) : (
-                      <Icon className="w-16 h-16" />
-                    )
-                  ) : ele?.repeat == 2 && ele?.title == "nand" ? (
-                    useOutput({
-                      input_1: useOutput({
-                        input_1: binary["input_1"],
-                        input_2: binary["input_2"],
-                        operation: ele?.title,
-                      }),
-                      input_2: useOutput({
-                        input_1: binary["input_1"],
-                        input_2: binary["input_2"],
-                        operation: ele?.title,
-                      }),
-                      operation: ele?.title,
-                    }) == 1 ? (
-                      Reverse ? (
-                        <Reverse className="w-16 h-16" />
-                      ) : (
-                        <></>
-                      )
-                    ) : (
-                      <Icon className="w-16 h-16" />
-                    )
-                  ) : ele?.repeat == 3 && ele?.title == "nand" ? (
-                    useOutput({
-                      input_1: binary["input_1"],
-
-                      input_2: binary["input_2"],
-                      operation: "xor",
-                    }) == 1 ? (
-                      Reverse ? (
-                        <Reverse className="w-16 h-16" />
-                      ) : (
-                        <></>
-                      )
-                    ) : (
-                      <Icon className="w-16 h-16" />
-                    )
-                  ) : useOutput({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                      operation: ele?.title,
-                    }) == 1 ? (
+                  ) : evaluateLogicWithTrace(ele, lines, binary)?.trace?.find(
+                      (elem) => elem?.boxId == ele?.id
+                    )?.result == 1 ? (
                     Reverse ? (
                       <Reverse className="w-16 h-16" />
                     ) : (
@@ -705,7 +359,21 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
                 initial={{ x2: line?.from.x, y2: line?.from.y }}
                 animate={{ x2: line?.to.x, y2: line?.to.y }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                stroke={lineColor(line)}
+                stroke={
+                  line?.from?.direction == "bottom"
+                    ? binary["input_2"] == 1
+                      ? "green"
+                      : "red"
+                    : line?.from?.direction == "top"
+                      ? binary["input_1"] == 1
+                        ? "green"
+                        : "red"
+                      : line?.from?.box &&
+                          evaluateLogicWithTrace(line?.from?.box, lines, binary)
+                            ?.result == 1
+                        ? "green"
+                        : "red"
+                }
                 strokeWidth="2"
               />
             ))}
@@ -725,7 +393,6 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
         </div>
       </div>
       <div className="flex items-center gap-3 flex-wrap">
-        
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
@@ -749,6 +416,7 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
               },
             ]);
           }}
+          disabled={hasInput?.length == 2}
         />
         <Button
           text="Create NAND Gate"
@@ -763,6 +431,7 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
               },
             ]);
           }}
+          disabled={hasNand?.length == 4}
         />
         <Button
           text="Check Logic"
@@ -771,7 +440,25 @@ const LevelTen: React.FC<LevelEightProps> = ({  goHome }) => {
         />
       </div>
       <Modal ref={modalRef}>
-        <LevelComplete level="10" onNextLevel={()=>router("/assembly-game")} onGoHome={goHome} />
+        <LevelComplete
+          level="10"
+          onNextLevel={onComplete}
+          onGoHome={goHome}
+        />
+      </Modal>
+      <Modal
+        ref={modalResultRef}
+        className="bg-transparent"
+        // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        // onClose={() => navigate("/")}
+      >
+        <ModalReviewResult
+          title={message?.title}
+          desc={message?.desc}
+          onClick={() => {
+            modalResultRef?.current?.close();
+          }}
+        />
       </Modal>
     </>
   );

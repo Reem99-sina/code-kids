@@ -4,6 +4,7 @@ import {
   componentInputProps,
   dotInfo,
   eachElement,
+  evaluateLogicWithTrace,
   generateUniqueId,
   LineDirection,
   mouseMove,
@@ -16,7 +17,7 @@ import IconDots from "../icon-dots";
 import { LampOff, LampOn } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import { LevelComplete } from "@/components/levels/LevelComplete";
-import toast from "react-hot-toast";
+import ModalReviewResult from "@/components/levels/Level-two/modal-review-result";
 
 interface LevelSevenProps {
   onComplete: () => void;
@@ -33,6 +34,11 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
   const [lines, setLines] = useState<(LineDirection | undefined)[]>([]); // Final lines
   const [startDot, setStartDot] = useState<dotInfo | null>(null); // Starting dot
   const [mousePos, setMousePos] = useState<mouseMove | null>(null); // For live line
+  const modalResultRef = useRef<ModalRef>(null);
+  const [message, setMessage] = useState({
+    title: "",
+    desc: "",
+  });
 
   const onClose = () => {
     setBoxes([]);
@@ -46,7 +52,7 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
   }: {
     event: React.MouseEvent<HTMLDivElement>;
     dot: dotInfo;
-    input?: string;
+    input?: string | number;
     box: BoxInterface;
   }) => {
     if (!rect) return;
@@ -87,45 +93,6 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
     return boxes.filter((ele) => ele?.title == "nand");
   }, [boxes]);
 
-  const lineColor = useMemo(() => {
-    return (line?: LineDirection) =>
-      line?.from?.input
-        ? binary[line?.from?.input as keyof typeof binary] == 1
-          ? "green"
-          : "red"
-        : line?.to?.input
-          ? binary[line?.to?.input as keyof typeof binary] == 1
-            ? "green"
-            : "red"
-          : line?.from?.direction == "center"
-            ? line?.to?.direction == "top"
-              ? useOutput({
-                  input_1: binary["input_1"],
-                  input_2: binary["input_1"],
-                  operation: "nand",
-                }) == 1
-                ? "green"
-                : "red"
-              : line?.to?.direction == "bottom"
-                ? useOutput({
-                    input_1: binary["input_2"],
-                    input_2: binary["input_2"],
-                    operation: "nand",
-                  }) == 1
-                  ? "green"
-                  : "red"
-                : line?.to?.direction == "center"
-                  ? useOutput({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                      operation: "or",
-                    }) == 1
-                    ? "green"
-                    : "red"
-                  : "red"
-            : "red";
-  }, [binary]);
-
   const validateConnections = () => {
     const connections = [...lines];
 
@@ -147,10 +114,14 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
 
     if (
       !lamp ||
-      result == 0 ||
       (!nandTwoGate && !nandThreeGate && !nandOneGate)
     ) {
-      toast.error("Missing NAND gate or Lamp.");
+      setMessage({
+        title: "Game Over! ",
+        desc: "Missing NAND gate or Lamp.",
+      });
+      modalResultRef?.current?.open();
+
       onClose();
 
       return;
@@ -171,14 +142,32 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
       inputsToAnd.length > 1 &&
       andToLamp &&
       inputsToSecondAnd?.length > 1 &&
-      inputsToThreeAnd?.length > 1
+      inputsToThreeAnd?.length > 1&&
+      result==1
     ) {
       modalRef.current?.open();
     } else {
+      setMessage({
+        title: "Game Over! ",
+        desc: "❌ Incorrect logic, try again.",
+      });
+      modalResultRef?.current?.open();
       onClose();
-      toast.error("❌ Incorrect logic, try again.");
     }
   };
+
+  const hasLine = useMemo(() => {
+    return ({ dot, direction }: { dot: BoxInterface; direction: string }) => {
+      return {
+        line: lines.find(
+          (ele) => ele?.to?.id == dot?.id && ele?.to?.direction == direction
+        ),
+        from: lines.find(
+          (ele) => ele?.to?.id == dot?.id && ele?.to?.direction == direction
+        )?.from,
+      };
+    };
+  }, [lines]);
 
   return (
     <>
@@ -193,6 +182,7 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
           {boxes?.map((ele, index) => {
             const Icon = ele?.Icon;
             const Reverse = ele?.Reverse;
+            const lineBottom = hasLine({ dot: ele, direction: "bottom" });
 
             return (
               <motion.div
@@ -236,11 +226,8 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "center",
                           color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: "or",
-                            }) == 1
+                            evaluateLogicWithTrace(ele, lines, binary)
+                              ?.result == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
@@ -256,72 +243,13 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                       direction_dots_true={[
                         {
                           direction: "top",
-                          color: binary["input_1"] == 1 ? "green" : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "bottom",
-                          color: binary["input_1"] == 1 ? "green" : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "center",
                           color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_1"],
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                      ]}
-                      onClick={({ dot, event }) =>
-                        handleDotClick({ dot, event, box: ele })
-                      }
-                    />
-                  ) : ele?.repeat == 1 && ele?.title == "nand" ? (
-                    <IconDots
-                      direction_dots_true={[
-                        {
-                          direction: "top",
-                          color: binary["input_2"] == 1 ? "green" : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "bottom",
-                          color: binary["input_2"] == 1 ? "green" : "red",
-                          id: ele?.id,
-                        },
-                        {
-                          direction: "center",
-                          color:
-                            useOutput({
-                              input_1: binary["input_2"],
-                              input_2: binary["input_2"],
-                              operation: "nand",
-                            }) == 1
-                              ? "green"
-                              : "red",
-                          id: ele?.id,
-                        },
-                      ]}
-                      onClick={({ dot, event }) =>
-                        handleDotClick({ dot, event, box: ele })
-                      }
-                    />
-                  ) : ele?.repeat == 2 && ele?.title == "nand" ? (
-                    <IconDots
-                      direction_dots_true={[
-                        {
-                          direction: "top",
-                          color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_1"],
-                              operation: "nand",
-                            }) == 1
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.inputs[0]?.value == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
@@ -329,11 +257,13 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "bottom",
                           color:
-                            useOutput({
-                              input_1: binary["input_2"],
-                              input_2: binary["input_2"],
-                              operation: "nand",
-                            }) == 1
+                            lineBottom?.line?.to &&
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.inputs[1]?.value == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
@@ -341,19 +271,12 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "center",
                           color:
-                            useOutput({
-                              input_1: useOutput({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_1"],
-                                operation: "nand",
-                              }),
-                              input_2: useOutput({
-                                input_1: binary["input_2"],
-                                input_2: binary["input_2"],
-                                operation: "nand",
-                              }),
-                              operation: "nand",
-                            }) == 1
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.result == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
@@ -369,11 +292,12 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "top",
                           color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: ele?.title,
-                            }) == 1
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.inputs[0]?.value == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
@@ -381,11 +305,13 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "bottom",
                           color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: ele?.title,
-                            }) == 1
+                            lineBottom?.line?.to &&
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.inputs[1]?.value == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
@@ -393,11 +319,12 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "center",
                           color:
-                            useOutput({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                              operation: ele?.title,
-                            }) == 1
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.result == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
@@ -426,21 +353,17 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                       );
                     })()
                   ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
-                    useOutput({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                      operation: "or",
-                    }) == 1 ? (
+                    evaluateLogicWithTrace(ele, lines, binary)?.trace?.find(
+                      (elem) => elem?.boxId == ele?.id
+                    )?.result == 1 ? (
                       <LampOn />
                     ) : (
                       <LampOff />
                     )
                   ) : ele?.repeat == 0 && ele?.title == "nand" ? (
-                    useOutput({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_1"],
-                      operation: ele?.title,
-                    }) == 1 ? (
+                    evaluateLogicWithTrace(ele, lines, binary)?.trace?.find(
+                      (elem) => elem?.boxId == ele?.id
+                    )?.result == 1 ? (
                       Reverse ? (
                         <Reverse className="w-16 h-16" />
                       ) : (
@@ -450,11 +373,9 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                       <Icon className="w-16 h-16" />
                     )
                   ) : ele?.repeat == 1 && ele?.title == "nand" ? (
-                    useOutput({
-                      input_1: binary["input_2"],
-                      input_2: binary["input_2"],
-                      operation: ele?.title,
-                    }) == 1 ? (
+                    evaluateLogicWithTrace(ele, lines, binary)?.trace?.find(
+                      (elem) => elem?.boxId == ele?.id
+                    )?.result == 1 ? (
                       Reverse ? (
                         <Reverse className="w-16 h-16" />
                       ) : (
@@ -464,19 +385,9 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                       <Icon className="w-16 h-16" />
                     )
                   ) : ele?.repeat == 2 && ele?.title == "nand" ? (
-                    useOutput({
-                      input_1: useOutput({
-                        input_1: binary["input_1"],
-                        input_2: binary["input_1"],
-                        operation: ele?.title,
-                      }),
-                      input_2: useOutput({
-                        input_1: binary["input_2"],
-                        input_2: binary["input_2"],
-                        operation: ele?.title,
-                      }),
-                      operation: ele?.title,
-                    }) == 1 ? (
+                    evaluateLogicWithTrace(ele, lines, binary)?.trace?.find(
+                      (elem) => elem?.boxId == ele?.id
+                    )?.result == 1 ? (
                       Reverse ? (
                         <Reverse className="w-16 h-16" />
                       ) : (
@@ -485,11 +396,9 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                     ) : (
                       <Icon className="w-16 h-16" />
                     )
-                  ) : useOutput({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                      operation: ele?.title,
-                    }) == 1 ? (
+                  ) : evaluateLogicWithTrace(ele, lines, binary)?.trace?.find(
+                      (elem) => elem?.boxId == ele?.id
+                    )?.result == 1 ? (
                     Reverse ? (
                       <Reverse className="w-16 h-16" />
                     ) : (
@@ -530,7 +439,21 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
                 initial={{ x2: line?.from.x, y2: line?.from.y }}
                 animate={{ x2: line?.to.x, y2: line?.to.y }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                stroke={lineColor(line)}
+                stroke={
+                  line?.from?.direction == "bottom"
+                    ? binary["input_2"] == 1
+                      ? "green"
+                      : "red"
+                    : line?.from?.direction == "top"
+                      ? binary["input_1"] == 1
+                        ? "green"
+                        : "red"
+                      : line?.from?.box &&
+                          evaluateLogicWithTrace(line?.from?.box, lines, binary)
+                            ?.result == 1
+                        ? "green"
+                        : "red"
+                }
                 strokeWidth="2"
               />
             ))}
@@ -573,6 +496,7 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
               },
             ]);
           }}
+          disabled={hasInput?.length == 2}
         />
         <Button
           text="Create NAND Gate"
@@ -587,6 +511,7 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
               },
             ]);
           }}
+          disabled={hasNand?.length == 3}
         />
         <Button
           text="Check Logic"
@@ -596,6 +521,20 @@ const LevelSeven: React.FC<LevelSevenProps> = ({ goHome, onComplete }) => {
       </div>
       <Modal ref={modalRef}>
         <LevelComplete level="8" onNextLevel={onComplete} onGoHome={goHome} />
+      </Modal>
+      <Modal
+        ref={modalResultRef}
+        className="bg-transparent"
+        // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        // onClose={() => navigate("/")}
+      >
+        <ModalReviewResult
+          title={message?.title}
+          desc={message?.desc}
+          onClick={() => {
+            modalResultRef?.current?.close();
+          }}
+        />
       </Modal>
     </>
   );

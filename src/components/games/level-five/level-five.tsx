@@ -3,9 +3,11 @@ import {
   BoxInterface,
   dotInfo,
   eachElement,
+  evaluateLogicWithTrace,
   generateUniqueId,
   LineDirection,
   mouseMove,
+  nandOperation,
   useLineInBoxRemove,
 } from "@/utils/logic.util";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
@@ -14,7 +16,7 @@ import IconDots from "../icon-dots";
 import { LampOff, LampOn } from "@/assets";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import { LevelComplete } from "@/components/levels/LevelComplete";
-import toast from "react-hot-toast";
+import ModalReviewResult from "@/components/levels/Level-two/modal-review-result";
 
 interface componentInputProps {
   value?: number;
@@ -36,6 +38,11 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
   const [lines, setLines] = useState<(LineDirection | undefined)[]>([]); // Final lines
   const [startDot, setStartDot] = useState<dotInfo | null>(null); // Starting dot
   const [mousePos, setMousePos] = useState<mouseMove | null>(null); // For live line
+  const modalResultRef = useRef<ModalRef>(null);
+  const [message, setMessage] = useState({
+    title: "",
+    desc: "",
+  });
 
   const onClose = () => {
     setBoxes([]);
@@ -44,16 +51,29 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
 
   const handleDotClick = ({
     dot,
+    input,
+    box,
   }: {
     event: React.MouseEvent<HTMLDivElement>;
     dot: dotInfo;
+    input?: string | number;
+    box: BoxInterface;
   }) => {
     if (!rect) return;
     if (!startDot) {
-      setStartDot({ ...dot, x: dot.x - rect.left, y: dot.y - rect.top });
+      setStartDot({
+        ...dot,
+        x: dot.x - rect.left,
+        y: dot.y - rect.top,
+        input,
+        box: box,
+      });
     } else {
       if (dot.id !== startDot.id) {
-        setLines([...lines, { from: startDot, to: { ...dot, ...mousePos } }]);
+        setLines([
+          ...lines,
+          { from: startDot, to: { ...dot, ...mousePos, input, box: box } },
+        ]);
       }
       setStartDot(null);
       setMousePos(null);
@@ -73,29 +93,26 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
     return boxes.filter((ele) => ele?.title == "input");
   }, [boxes]);
 
-  const output = ({
-    input_1,
-    input_2,
-  }: {
-    input_1: number;
-    input_2: number;
-  }) => {
-    return (input_1 == 0 && input_2 == 0) || input_1 != input_2 ? 1 : 0;
-  };
+  const hasNand = useMemo(() => {
+    return boxes.filter((ele) => ele?.title == "nand");
+  }, [boxes]);
 
   const validateConnections = () => {
     const connections = [...lines];
 
     const nandGate = boxes.find((box) => box.title === "nand");
     const lamp = boxes.find((box) => box.title === "lamp-off");
-   
-    if (!nandGate || !lamp ) {
-      toast.error("Missing NAND gate or Lamp.");
-      onClose()
-      
+
+    if (!nandGate || !lamp) {
+      setMessage({
+        title: "Game Over! ",
+        desc: "Missing NAND gate or Lamp.",
+      });
+      modalResultRef?.current?.open();
+      onClose();
+
       return;
     }
-
 
     const inputsToAnd = connections.filter(
       (line) => line?.to.id === nandGate?.id
@@ -105,13 +122,35 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
       (line) => line?.from.id === nandGate?.id && line?.to.id === lamp?.id
     );
 
-    if (inputsToAnd.length >= 1 && andToLamp) {
+    const result = nandOperation({
+      input_1: binary["input_1"],
+      input_2: binary["input_2"],
+    });
+
+    if (inputsToAnd.length >= 1 && andToLamp && result == 1) {
       modalRef.current?.open();
     } else {
-      onClose()
-      toast.error("❌ Incorrect logic, try again.");
+      setMessage({
+        title: "Game Over! ",
+        desc: "❌ Incorrect logic, try again.",
+      });
+      modalResultRef?.current?.open();
+      onClose();
     }
   };
+
+  const hasLine = useMemo(() => {
+    return ({ dot, direction }: { dot: BoxInterface; direction: string }) => {
+      return {
+        line: lines.find(
+          (ele) => ele?.to?.id == dot?.id && ele?.to?.direction == direction
+        ),
+        from: lines.find(
+          (ele) => ele?.to?.id == dot?.id && ele?.to?.direction == direction
+        )?.from,
+      };
+    };
+  }, [lines]);
 
   return (
     <>
@@ -126,6 +165,8 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
           {boxes?.map((ele, index) => {
             const Icon = ele?.Icon;
             const Reverse = ele?.Reverse;
+            const lineTop = hasLine({ dot: ele, direction: "top" });
+            const lineBottom = hasLine({ dot: ele, direction: "bottom" });
 
             return (
               <motion.div
@@ -154,7 +195,14 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                           id: ele?.id,
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ event, dot }) =>
+                        handleDotClick({
+                          dot,
+                          event,
+                          input: `input_${ele?.index}`,
+                          box: ele,
+                        })
+                      }
                     />
                   ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
                     <IconDots
@@ -162,43 +210,72 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         {
                           direction: "center",
                           color:
-                            output({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                            }) == 1
+                            evaluateLogicWithTrace(ele, lines, binary)
+                              ?.result == 1
                               ? "green"
                               : "red",
                           id: ele?.id,
                           side: "left",
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
                     />
                   ) : (
                     <IconDots
                       direction_dots_true={[
                         {
                           direction: "top",
-                          color: binary["input_1"] == 1 ? "green" : "red",
+                          color:
+                            lineTop?.from?.input &&
+                            binary[
+                              lineTop?.from?.input as keyof typeof binary
+                            ] == 1
+                              ? "green"
+                              : evaluateLogicWithTrace(
+                                    ele,
+                                    lines,
+                                    binary
+                                  )?.trace?.find(
+                                    (elem) => elem?.boxId == ele?.id
+                                  )?.inputs[0]?.value == 1
+                                ? "green"
+                                : "red",
                           id: ele?.id,
                         },
                         {
                           direction: "bottom",
-                          color: binary["input_2"] == 1 ? "green" : "red",
+                          color:
+                            lineBottom?.from?.input &&
+                            binary[
+                              lineBottom?.from?.input as keyof typeof binary
+                            ] == 1
+                              ? "green"
+                              : lineBottom?.line?.to &&
+                                  evaluateLogicWithTrace(
+                                    ele,
+                                    lines,
+                                    binary
+                                  )?.trace?.find(
+                                    (elem) => elem?.boxId == ele?.id
+                                  )?.inputs[1]?.value == 1
+                                ? "green"
+                                : "red",
                           id: ele?.id,
                         },
                         {
                           direction: "center",
-                          color: output({
-                            input_1: binary["input_1"],
-                            input_2: binary["input_2"],
-                          })
+                          color: evaluateLogicWithTrace(ele, lines, binary)
+                            ?.result
                             ? "green"
                             : "red",
                           id: ele?.id,
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
                     />
                   )}
 
@@ -206,7 +283,7 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                     (() => {
                       const Component =
                         Icon as FunctionComponent<componentInputProps>;
-                        const id = `input_${ele?.index}` as keyof typeof binary;
+                      const id = `input_${ele?.index}` as keyof typeof binary;
 
                       return (
                         <Component
@@ -219,18 +296,13 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                       );
                     })()
                   ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
-                    output({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                    }) == 1 ? (
+                    evaluateLogicWithTrace(ele, lines, binary)?.result == 1 ? (
                       <LampOn />
                     ) : (
                       <LampOff />
                     )
-                  ) : output({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                    }) == 1 ? (
+                  ) : evaluateLogicWithTrace(ele, lines, binary)?.result ==
+                    1 ? (
                     Reverse ? (
                       <Reverse />
                     ) : (
@@ -250,7 +322,9 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                         setBoxes((prev) =>
                           prev ? prev.filter((_, ind) => ind != index) : []
                         );
-                        useLineInBoxRemove(boxes[index],lines,(linesNew)=>setLines(linesNew));
+                        useLineInBoxRemove(boxes[index], lines, (linesNew) =>
+                          setLines(linesNew)
+                        );
                         setVisible(undefined);
                       }}
                     />
@@ -280,10 +354,9 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
                       ? binary["input_1"] == 1
                         ? "green"
                         : "red"
-                      : output({
-                            input_1: binary["input_1"],
-                            input_2: binary["input_2"],
-                          }) == 1
+                      : line?.to.box &&
+                          evaluateLogicWithTrace(line?.to.box, lines, binary)
+                            ?.result == 1
                         ? "green"
                         : "red"
                 }
@@ -306,36 +379,6 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
         </div>
       </div>
       <div className="flex items-center gap-3 flex-wrap">
-        <Button
-          text="Create AND Gate"
-          className="bg-orangeTwo whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[0], id: generateUniqueId() },
-            ]);
-          }}
-        />
-        <Button
-          text="Create QR Gate"
-          className="bg-blueGreenCustom whitespace-nowrap text-white !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[1], id: generateUniqueId() },
-            ]);
-          }}
-        />
-        <Button
-          text="Create NOT Gate"
-          className="bg-yellowFunf  whitespace-nowrap !w-auto"
-          onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[5], id: generateUniqueId() },
-            ]);
-          }}
-        />
         <Button
           text="Create LAMP"
           className="bg-orangeLight whitespace-nowrap text-white !w-auto"
@@ -364,11 +407,14 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
           text="Create NAND Gate"
           className="bg-purpleNine whitespace-nowrap text-white !w-auto"
           onClick={() => {
-            setBoxes((prev) => [
-              ...prev,
-              { ...eachElement[4], id: generateUniqueId() },
-            ]);
+            if (hasNand?.length == 0) {
+              setBoxes((prev) => [
+                ...prev,
+                { ...eachElement[4], id: generateUniqueId() },
+              ]);
+            }
           }}
+          disabled={hasNand?.length == 1}
         />
         <Button
           text="Check Logic"
@@ -378,6 +424,20 @@ const LevelFive: React.FC<LevelFiveProps> = ({ goHome, onComplete }) => {
       </div>
       <Modal ref={modalRef}>
         <LevelComplete level="5" onNextLevel={onComplete} onGoHome={goHome} />
+      </Modal>
+      <Modal
+        ref={modalResultRef}
+        className="bg-transparent"
+        // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        // onClose={() => navigate("/")}
+      >
+        <ModalReviewResult
+          title={message?.title}
+          desc={message?.desc}
+          onClick={() => {
+            modalResultRef?.current?.close();
+          }}
+        />
       </Modal>
     </>
   );

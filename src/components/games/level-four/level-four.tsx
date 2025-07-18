@@ -2,7 +2,10 @@ import { Button } from "@/components/common/button.component";
 import {
   BoxInterface,
   componentInputProps,
+  dotInfo,
   eachElement,
+  evaluateLogicWithTrace,
+  nandOperation,
   useLineInBoxRemove,
 } from "@/utils/logic.util";
 import { FunctionComponent, useMemo, useRef, useState } from "react";
@@ -11,15 +14,7 @@ import IconDots from "../icon-dots";
 import { Modal, ModalRef } from "@/components/common/modal.component";
 import { LevelComplete } from "@/components/levels/LevelComplete";
 import { LampOff, LampOn } from "@/assets";
-
-export interface dotInfo {
-  color: string;
-  direction: string;
-  id: number;
-  x: number;
-  y: number;
-  side?: string;
-}
+import ModalReviewResult from "@/components/levels/Level-two/modal-review-result";
 
 interface mouseMove {
   x: number;
@@ -48,6 +43,11 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
   const [startDot, setStartDot] = useState<dotInfo | null>(null);
   const [mousePos, setMousePos] = useState<mouseMove | null>(null);
   const modalRef = useRef<ModalRef>(null);
+  const modalResultRef = useRef<ModalRef>(null);
+  const [message, setMessage] = useState({
+    title: "",
+    desc: "",
+  });
 
   const onClose = () => {
     setBoxes([]);
@@ -58,16 +58,29 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
 
   const handleDotClick = ({
     dot,
+    input,
+    box,
   }: {
     event: React.MouseEvent<HTMLDivElement>;
     dot: dotInfo;
+    input?: string | number;
+    box: BoxInterface;
   }) => {
     if (!rect) return;
     if (!startDot) {
-      setStartDot({ ...dot, x: dot.x - rect.left, y: dot.y - rect.top });
+      setStartDot({
+        ...dot,
+        x: dot.x - rect.left,
+        y: dot.y - rect.top,
+        input,
+        box: box,
+      });
     } else {
       if (dot.id !== startDot.id) {
-        setLines([...lines, { from: startDot, to: { ...dot, ...mousePos } }]);
+        setLines([
+          ...lines,
+          { from: startDot, to: { ...dot, ...mousePos, input, box: box } },
+        ]);
       }
       setStartDot(null);
       setMousePos(null);
@@ -91,9 +104,13 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
     const lamp = boxes.find((box) => box.title === "lamp-off");
 
     if (!andGate || !notGate || !lamp) {
-      alert("Missing one of the gates or lamp.");
+      setMessage({
+        title: "Game Over! ",
+        desc: "Missing one of the gates or lamp.",
+      });
+      modalResultRef?.current?.open();
       onClose();
-      
+
       return;
     }
 
@@ -106,12 +123,20 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
     const notToLamp = connections.find(
       (line) => line?.from.id === notGate.id && line?.to.id === lamp.id
     );
+    const result = nandOperation({
+      input_1: binary["input_1"],
+      input_2: binary["input_2"],
+    });
 
-    if (inputsToAND.length >= 2 && andToNot && notToLamp) {
+    if (inputsToAND.length >= 2 && andToNot && notToLamp && result == 1) {
       modalRef.current?.open();
     } else {
-      onClose()
-      alert("❌ Try again. Make sure the NAND sequence is correct.");
+      setMessage({
+        title: "Game Over! ",
+        desc: "❌ Try again. Make sure the NAND sequence is correct.",
+      });
+      modalResultRef?.current?.open();
+      onClose();
     }
   };
 
@@ -119,29 +144,18 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
     return boxes.filter((ele) => ele?.title == "input");
   }, [boxes]);
 
-  const output = ({
-    input_1,
-    input_2,
-  }: {
-    input_1: number;
-    input_2: number;
-  }) => {
-    return (input_1 == 0 && input_2 == 0) || input_1 != input_2 ? 1 : 0;
-  };
-
-  const outputAnd = ({
-    input_1,
-    input_2,
-  }: {
-    input_1: number;
-    input_2: number;
-  }) => {
-    return input_1 == 1 && input_2 == 1 ? 1 : 0;
-  };
-
-  const outputNot = ({ input_1 }: { input_1: number }) => {
-    return input_1 == 1 ? 0 : 1;
-  };
+  const hasLine = useMemo(() => {
+    return ({ dot, direction }: { dot: BoxInterface; direction: string }) => {
+      return {
+        line: lines.find(
+          (ele) => ele?.to?.id == dot?.id && ele?.to?.direction == direction
+        ),
+        from: lines.find(
+          (ele) => ele?.to?.id == dot?.id && ele?.to?.direction == direction
+        )?.from,
+      };
+    };
+  }, [lines]);
 
   return (
     <>
@@ -156,6 +170,8 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
           {boxes?.map((ele, index) => {
             const Icon = ele?.Icon;
             const Reverse = ele?.Reverse;
+            const lineTop = hasLine({ dot: ele, direction: "top" });
+            const lineBottom = hasLine({ dot: ele, direction: "bottom" });
 
             return (
               <motion.div
@@ -176,17 +192,17 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "center",
                           color:
-                            output({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                            }) == 1
+                            evaluateLogicWithTrace(ele, lines, binary)
+                              ?.result == 1
                               ? "green"
                               : "red",
                           id: ele.id,
                           side: "left",
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
                     />
                   ) : ele.title === "input" ? (
                     <IconDots
@@ -202,7 +218,14 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                           id: ele.id,
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ event, dot }) =>
+                        handleDotClick({
+                          dot,
+                          event,
+                          input: `input_${ele?.index}`,
+                          box: ele,
+                        })
+                      }
                     />
                   ) : ele.title === "not" ? (
                     <IconDots
@@ -210,10 +233,12 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "center",
                           color:
-                            outputAnd({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                            }) == 1
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.inputs[0]?.value == 1
                               ? "green"
                               : "red",
                           id: ele.id,
@@ -222,46 +247,76 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                         {
                           direction: "center",
                           color:
-                            outputNot({
-                              input_1: outputAnd({
-                                input_1: binary["input_1"],
-                                input_2: binary["input_2"],
-                              }),
-                            }) == 1
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.result == 1
                               ? "green"
                               : "red",
                           id: ele.id,
                           side: "right",
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
                     />
                   ) : (
                     <IconDots
                       direction_dots_true={[
                         {
                           direction: "top",
-                          color: binary["input_1"] == 1 ? "green" : "red",
+                          color:
+                            lineTop?.from?.input &&
+                            binary[
+                              lineTop?.from?.input as keyof typeof binary
+                            ] == 1
+                              ? "green"
+                              : evaluateLogicWithTrace(
+                                    ele,
+                                    lines,
+                                    binary
+                                  )?.trace?.find(
+                                    (elem) => elem?.boxId == ele?.id
+                                  )?.result == 1
+                                ? "green"
+                                : "red",
                           id: ele.id,
                         },
                         {
                           direction: "bottom",
-                          color: binary["input_2"] == 1 ? "green" : "red",
+                          color:
+                            lineBottom?.from?.input &&
+                            binary[
+                              lineBottom?.from?.input as keyof typeof binary
+                            ] == 1
+                              ? "green"
+                              : lineBottom?.line?.to &&
+                                  evaluateLogicWithTrace(ele, lines, binary)
+                                    ?.result == 1
+                                ? "green"
+                                : "red",
                           id: ele.id,
                         },
                         {
                           direction: "center",
                           color:
-                            outputAnd({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                            }) == 1
+                            evaluateLogicWithTrace(
+                              ele,
+                              lines,
+                              binary
+                            )?.trace?.find((elem) => elem?.boxId == ele?.id)
+                              ?.result == 1
                               ? "green"
                               : "red",
                           id: ele.id,
                         },
                       ]}
-                      onClick={handleDotClick}
+                      onClick={({ dot, event }) =>
+                        handleDotClick({ dot, event, box: ele })
+                      }
                     />
                   )}
                   {ele?.title == "input" ? (
@@ -282,21 +337,13 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                       );
                     })()
                   ) : ele?.title == "lamp-off" || ele?.title == "lamp-on" ? (
-                    output({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                    }) == 1 ? (
+                    evaluateLogicWithTrace(ele, lines, binary)?.result == 1 ? (
                       <LampOn />
                     ) : (
                       <LampOff />
                     )
                   ) : ele?.title == "not" ? (
-                    outputNot({
-                      input_1: outputAnd({
-                        input_1: binary["input_1"],
-                        input_2: binary["input_2"],
-                      }),
-                    }) == 1 ? (
+                    evaluateLogicWithTrace(ele, lines, binary)?.result == 1 ? (
                       Reverse ? (
                         <Reverse />
                       ) : (
@@ -306,10 +353,7 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                       <Icon />
                     )
                   ) : ele?.title == "and" ? (
-                    outputAnd({
-                      input_1: binary["input_1"],
-                      input_2: binary["input_2"],
-                    }) == 1 ? (
+                    evaluateLogicWithTrace(ele, lines, binary)?.result == 1 ? (
                       Reverse ? (
                         <Reverse />
                       ) : (
@@ -332,7 +376,9 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                         setBoxes((prev) =>
                           prev ? prev.filter((_, ind) => ind !== index) : []
                         );
-                        useLineInBoxRemove(boxes[index],lines,(linesNew)=>setLines(linesNew));
+                        useLineInBoxRemove(boxes[index], lines, (linesNew) =>
+                          setLines(linesNew)
+                        );
                         setVisible(undefined);
                       }}
                     />
@@ -352,30 +398,19 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
                 animate={{ x2: line?.to.x, y2: line?.to.y }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 stroke={
-                  line?.from?.direction == "bottom" ||
-                  line?.to?.direction == "bottom"
+                  line?.from?.direction == "bottom"
                     ? binary["input_2"] == 1
                       ? "green"
                       : "red"
-                    : line?.from?.direction == "top" ||
-                        line?.to?.direction == "top"
+                    : line?.from?.direction == "top"
                       ? binary["input_1"] == 1
                         ? "green"
                         : "red"
-                      : (!line?.from?.side || !line?.to?.side) &&
-                          outputAnd({
-                            input_1: binary["input_1"],
-                            input_2: binary["input_2"],
-                          }) == 1
+                      : line?.from?.box &&
+                          evaluateLogicWithTrace(line?.from?.box, lines, binary)
+                            ?.result == 1
                         ? "green"
-                        : line?.from?.side &&
-                            line?.to?.side &&
-                            output({
-                              input_1: binary["input_1"],
-                              input_2: binary["input_2"],
-                            }) == 1
-                          ? "green"
-                          : "red"
+                        : "red"
                 }
                 strokeWidth="2"
               />
@@ -449,6 +484,20 @@ const LevelFour: React.FC<LevelForProps> = ({ onComplete, goHome }) => {
       </div>
       <Modal ref={modalRef}>
         <LevelComplete level="4" onNextLevel={onComplete} onGoHome={goHome} />
+      </Modal>
+      <Modal
+        ref={modalResultRef}
+        className="bg-transparent"
+        // classNameOverlay="bg-[url('/celebrate.png')] bg-cover bg-center"
+        // onClose={() => navigate("/")}
+      >
+        <ModalReviewResult
+          title={message?.title}
+          desc={message?.desc}
+          onClick={() => {
+            modalResultRef?.current?.close();
+          }}
+        />
       </Modal>
     </>
   );
